@@ -1,0 +1,228 @@
+
+<html>
+<head>
+  <meta name="name" content="Contrast/Colorblind Color Picker">
+  <meta name="description" content="A visual filter to help pick accessible colors - show WCAG and colorblind perception.">
+  <meta itemprop="image" content="">
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>Contrast/Colorblind Color Picker</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link href=css/bootstrap.min.css rel=stylesheet>  
+  <link href=css/font-awesome.css rel=stylesheet>  
+  <link href="data:text/css;charset=utf-8," data-href=css/bootstrap-theme.min.css rel=stylesheet id=bs-theme-stylesheet>  
+  <link href=css/colorpicker.css rel=stylesheet>
+</head>
+<body>
+ 
+
+<div id="cas_colorpicker" class="cp_parent-container">
+    <div class="cp_background-container">
+        <div class="cp_dropshadow-main-area"></div>
+        <div class="cp_dropshadow-circle"></div>
+        <div class="cp_foreground-circle"></div>
+        <div class="cp_foreground-main-area"></div>
+    </div>
+    <div id="cas_colorpicker-contents" class="cp_foreground-container">
+        <div class="cp_circle-swatch-container">
+            <div id="cp_background-swatch"></div>
+            <div id="cp_font-swatch"></div>
+        </div>
+        <div class="cp_app-title">
+            <h2>Contrast/Colorblind Color Picker</h2>
+        </div>
+        <div class="cp_sample">
+            <div><input id="cp_sample-content" type="text" value="The quick fox jumped over the lazy brown dog"></div>
+        </div>
+
+        <div class="cp_settings-menu_NEW">
+          <div class="cp_settings_border-top_NEW"></div>
+          <div class="cp_settings-menu_active-tool-title_NEW">
+            <span id="cp_tool-menu" class="btn-group" tabindex="0">
+              <button type="button" class="btn btn-default dropdown-toggle btn-hide-styles" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <a id="cp_settings-button" href="javascript:void(0);">
+                  <span class="fa fa-universal-access fa-lg"></span>
+                  Accessibility Tools...
+                  <span class="cp_caret-right hide"></span>
+                </a>
+              </button>
+              <ul class="dropdown-menu">
+                <li><a href="javascript:void(0);" class="off"><span class="fa fa-close"> </span> No Tools (Off)</a></li>
+                <li><a href="javascript:void(0);" class="contrast"><span class="fa fa-adjust"> </span> Use Contrast Analysis Tools (WCAG 2.0)</a></li>
+                <li><a href="javascript:void(0);" class="colorblindness"><span class="fa fa-low-vision"> </span> Use Colorblindness Tools</a></li>
+              </ul>
+            </span>
+            <span class="cp_active-tool_title-box">
+              <h4></h4>
+            </span>
+          </div>
+          <div id="cp_settings-active-tool" class="cp_settings-menu_active-tool-container_NEW hide">
+            <div id="contrast-settings-container" class="settings-group-container hide">
+              <div id="cp_contrast-range-filter-button-group" class="btn-group">
+                <button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                  <a id="cp_range-filter-button" data-filter-state="off" href="javascript:void(0);"><span class="fa fa-adjust"></span> Contrast Range Filter <span class="caret"></span></a>
+                </button>
+                <ul class="dropdown-menu">
+                  <li><a href="javascript:void(0);" class="selected off"><span class="fa fa-circle-o"></span> None (Off)</a></li>
+                  <li><a href="javascript:void(0);" class="aa_large"><span class="fa fa-circle-o"></span> Apply AA/Large Text (3 to 1) Filter</a></li>
+                  <li><a href="javascript:void(0);" class="aa_small"><span class="fa fa-circle-o"></span> Apply AA/Small Text (4.5 to 1) Filter</a></li>
+                  <li><a href="javascript:void(0);" class="aaa_large"><span class="fa fa-circle-o"></span> Apply AAA/Large Text (4.5 to 1) Filter</a></li>
+                  <li><a href="javascript:void(0);" class="aaa_small"><span class="fa fa-circle-o"></span> Apply AAA/Small Text (7 to 1) Filter</a></li>
+                </ul>
+              </div>
+
+              <div class="cp_contrast-settings_results-region">
+                <span>Results: </span>
+                <span id="cp_a11y-status-update"></span>
+              </div>
+
+
+              <div class="cp_clear-soln"></div>
+            </div>
+
+            <div id="colorblindness-settings-container" class="settings-group-container hide">
+              <div id="cp_colorblindness-filter-button-group" class="btn-group">
+                <button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                  <a id="cp_colorblindness-filter-button" data-filter-state="normal" href="javascript:void(0);"><span class="fa fa-low-vision"></span> Colorblindness Filters <span class="caret"></span></a>
+                </button>
+                <ul class="dropdown-menu">
+                  <li><a href="javascript:void(0);" class="selected off"><span class="fa fa-circle-o"></span> Normal (Off)</a></li>
+                  <li><a href="javascript:void(0);" class="protanopia"><span class="fa fa-circle-o"></span> Protanopia (No Red)</a></li>
+                  <li><a href="javascript:void(0);" class="protanomaly"><span class="fa fa-circle-o"></span> Protanomaly (Reduced Red)</a></li>
+                  <li><a href="javascript:void(0);" class="deuteranopia"><span class="fa fa-circle-o"></span> Deuteranopia (No Green)</a></li>
+                  <li><a href="javascript:void(0);" class="deuteranomaly"><span class="fa fa-circle-o"></span> Deuteranomaly (Reduced Green)</a></li>
+                  <li><a href="javascript:void(0);" class="tritanopia"><span class="fa fa-circle-o"></span> Tritanopia (No Blue)</a></li>
+                  <li><a href="javascript:void(0);" class="tritanomaly"><span class="fa fa-circle-o"></span> Tritanomaly (Reduced Blue)</a></li>
+                  <li><a href="javascript:void(0);" class="achromatopsia"><span class="fa fa-circle-o"></span> Achromatopsia (No Color)</a></li>
+                  <li><a href="javascript:void(0);" class="achromatomaly"><span class="fa fa-circle-o"></span> Achromatomaly (Reduced Color)</a></li>
+
+                </ul>
+              </div>
+            </div>
+          </div>
+          <div class="cp_settings_border-bottom_NEW"></div>
+        </div>
+
+        <div id="cp_font-color-settings" class="cp_color-settings_container">
+          <div class="cp_color-settings_title">
+            <span class="cp_color-settings_title_bottom-bracket"></span>
+            <h3>Font</h3>
+            <span class="cp_color-settings_title_top-bracket"></span>
+          </div>
+          <div class="cp_color-settings_slider-container">
+            <span class="cp_color-settings_slide-title">
+                <h4>Red</h4> 
+            </span>
+
+            <span class="cp_color-settings_slide-marker" tabindex="0">
+              <span class="cp_color-settings_marker-color"></span>
+            </span>
+            <span class="cp_color-settings_a11y-fail-range"></span>
+            <span class="cp_color-settings_slide cp_colorblind-split"></span>
+            <span class="cp_color-settings_slide"></span> 
+
+            <span class="cp_color-settings_value">
+                <input type="text" id="cp_slider_font_first-value" class="cp_slider-textfield" value="255">
+            </span>
+          </div> 
+          <div class="cp_color-settings_slider-container">
+            <span class="cp_color-settings_slide-title">
+                <h4>Green</h4> 
+            </span>
+
+            <span class="cp_color-settings_slide-marker" tabindex="0">
+              <span class="cp_color-settings_marker-color"></span>
+            </span>
+            <span class="cp_color-settings_a11y-fail-range"></span>
+            <span class="cp_color-settings_slide cp_colorblind-split"></span>
+            <span class="cp_color-settings_slide"></span> 
+
+            <span class="cp_color-settings_value">
+                <input type="text" id="cp_slider_font_second-value" class="cp_slider-textfield" value="255">
+            </span>
+            
+
+          </div> 
+          <!-- Slide #3 -->
+          <div class="cp_color-settings_slider-container">
+            <span class="cp_color-settings_slide-title">
+                <h4>Blue</h4> 
+            </span>
+
+            <span class="cp_color-settings_slide-marker" tabindex="0">
+              <span class="cp_color-settings_marker-color"></span>
+            </span>
+            <span class="cp_color-settings_a11y-fail-range"></span>
+            <span class="cp_color-settings_slide cp_colorblind-split"></span>
+            <span class="cp_color-settings_slide"></span> <!-- INSERT Gradient -->
+            <span class="cp_color-settings_value">
+                <input type="text" id="cp_slider_font_third-value" class="cp_slider-textfield" value="255">
+            </span>
+
+          </div> 
+        </div>
+        <div id="cp_background-color-settings" class="cp_color-settings_container">
+          <div class="cp_color-settings_title">
+            <span class="cp_color-settings_title_bottom-bracket"></span>
+            <h3>Background</h3>
+            <span class="cp_color-settings_title_top-bracket"></span>
+          </div>
+          <!-- Slide #1 -->
+          <div class="cp_color-settings_slider-container">
+            <span class="cp_color-settings_slide-title">
+                <h4>Red</h4> 
+            </span>
+            
+            <span class="cp_color-settings_slide-marker" tabindex="0">
+              <span class="cp_color-settings_marker-color"></span>
+            </span>
+            <span class="cp_color-settings_a11y-fail-range"></span>
+            <span class="cp_color-settings_slide cp_colorblind-split"></span>
+            <span class="cp_color-settings_slide"></span>
+
+            <span class="cp_color-settings_value">
+                <input type="text" id="cp_slider_bg_first-value" class="cp_slider-textfield" value="0">
+            </span>
+          </div> 
+          <div class="cp_color-settings_slider-container">
+            <span class="cp_color-settings_slide-title">
+                <h4>Green</h4> 
+            </span>
+
+            <span class="cp_color-settings_slide-marker" tabindex="0">
+              <span class="cp_color-settings_marker-color"></span>
+            </span>
+            <span class="cp_color-settings_a11y-fail-range"></span>
+            <span class="cp_color-settings_slide cp_colorblind-split"></span>
+            <span class="cp_color-settings_slide"></span> 
+            <span class="cp_color-settings_value">
+                <input type="text" id="cp_slider_bg_second-value" class="cp_slider-textfield" value="0">
+            </span>
+          </div> 
+          <div class="cp_color-settings_slider-container">
+            <span class="cp_color-settings_slide-title">
+                <h4>Blue</h4> 
+            </span>
+
+            <span class="cp_color-settings_slide-marker" tabindex="0">
+              <span class="cp_color-settings_marker-color"></span>
+            </span>
+            <span class="cp_color-settings_a11y-fail-range"></span>
+            <span class="cp_color-settings_slide cp_colorblind-split"></span>
+            <span class="cp_color-settings_slide"></span> 
+            <span class="cp_color-settings_value">
+                <input type="text" id="cp_slider_bg_third-value" class="cp_slider-textfield" value="0">
+            </span>
+          </div> 
+        </div>
+
+    </div>
+</div>
+
+<script src=js/jquery.js></script>
+<script src="js/TweenLite.min.js"></script>
+<script src="js/Draggable.min.js"></script>
+<script src="js/CSSPlugin.min.js"></script>
+<script src=js/colorpicker.js></script>
+</body>
+</html>

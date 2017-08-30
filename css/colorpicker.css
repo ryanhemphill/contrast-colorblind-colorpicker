@@ -1,0 +1,1150 @@
+colorpicker.css*/
+/* ColorPicker.CSS provides the UI instructions for the colorpicker and its modal window */
+
+
+
+@font-face {
+  font-family: 'OSP-DIN';
+  src: url('css/OSP-DIN.eot'); /* IE9 Compat Modes */
+  src: url('css/OSP-DIN.eot?#iefix') format('embedded-opentype'), /* IE6-IE8 */
+       url('css/OSP-DIN.woff') format('woff'), /* Modern Browsers */
+       url('css/OSP-DIN.ttf')  format('truetype'), /* Safari, Android, iOS */
+  font-style:   normal;
+  font-weight:  400;
+}
+
+.cp_modal-window-title {
+  display: block;
+  position: absolute;
+  font-size: 20px;
+  /*transform: rotateZ(-90deg) translateX(-230px);*/
+  transform: rotateZ(-90deg) translateX(-110px);    /* if there's 3 rows, not 4 */
+  transform-origin: left top;
+  text-align: left;
+}
+
+
+.colorpicker_modalwindow {
+  display: inline-block;
+  position: absolute;
+}
+
+.colorpicker_modalwindow .cp_background {
+  display: inline-block;
+  position: absolute;
+  border-radius: 10px;
+  min-width: 300px;
+  min-height: 300px;
+  background-color: whitesmoke;
+  z-index: 0;
+}
+
+.colorpicker_modalwindow .cp_background-circle {
+  display: inline-block;
+  position: absolute;
+  width:  70px;
+  height: 70px;
+  border-radius: 50%;
+  left: -10px;
+  top:  -10px;
+  background-color: whitesmoke;
+}
+.colorpicker_modalwindow .cp_background-circle.transparent {
+  background-color: transparent;
+}
+
+.cp_close-button {
+  display: inline-block;
+  position: absolute;
+  width:  25px;
+  height: 25px;
+  background-color: white;
+  border: 3px black solid;
+  border-radius: 50%;
+  top: -10px;
+  left: 280px;
+}
+.cp_close-button:before {
+  content: 'X';
+  display: block;
+  position: absolute;
+  font-family: arial;
+  font-size: 17px;
+  font-weight: 900;
+  top: -1px;
+  margin-left: 4px;
+}
+
+.cp_body {
+  display: inline-block;
+  position: absolute;
+  min-width: 300px;
+  min-height: 300px;
+  /*background-color: transparent;*/
+  /*overflow: hidden;*/
+}
+
+.cp_colorpatch-font {
+  display: inline-block;
+  position: absolute;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  left: 7px;
+  top: 7px;
+  background-color: #4b6a88;
+}
+.cp_background, 
+.cp_background-circle.transparent, 
+.cp_colorpatch-font:focus, 
+.cp_colorpatch-font:hover, 
+.cp_colorpatch-background:focus, 
+.cp_colorpatch-background:hover, 
+.cp_slider-marker 
+.cp_ripple-dot
+{
+  -webkit-box-shadow: 0px 0px 3px 0px rgba(0,0,0,1);
+  -moz-box-shadow: 0px 0px 3px 0px rgba(0,0,0,1);
+  box-shadow: 0px 0px 3px 0px rgba(0,0,0,1);
+}
+
+.cp_colorpatch-background {
+  display: inline-block;
+  position: absolute;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  background-color: #cbdbcd;
+}
+
+.cp_sample-area {
+  display: inline-block;
+  position: relative;
+  left: 60px;
+  top: 7px;
+  width: 220px;
+  height: 60px;
+  overflow: hidden;
+  padding: 10px;
+  background-color: #cbdbcd;
+  color: #4b6a88;
+  border:none;
+  border-radius: 5px;
+}
+
+.cp_sample-area:focus {
+  background-color: whitesmoke;
+  color: black;
+}
+
+.cp_color-swatches-container.font{
+  margin-top: 15px;
+}
+
+.cp_color-swatches-container h4 {
+  display: inline-block;
+  position: relative;
+  margin: 0 !important;
+  /* padding: 0 !important; */
+  text-align: center;
+  width: 300px;
+}
+
+.cp_slider-container {
+  display: inline-block;
+  position: relative;
+  left: 20px;
+  width: 270px;
+}
+
+.cp_slider-title {
+  display: inline-block;
+  position: relative;
+  width: 50px;
+  height: 20px;
+  text-align: right;
+  font-weight: 600;
+}
+.cp_slider-bar {
+  display: inline-block;
+  position: relative;
+  border-radius: 10px;
+  top: 4px;
+  width: 148px;
+  height: 20px;
+  
+}
+
+.cp_slider-bar.red {
+  background: -moz-linear-gradient(left, rgb(0,69,0) 0%, rgb(255,69,0) 100%);
+  background: -webkit-gradient(left top, right top, color-stop(0%, rgb(0,69,0)), color-stop(100%, rgb(255,69,0)));
+  background: -webkit-linear-gradient(left, rgb(0,69,0) 0%, rgb(255,69,0) 100%);
+  background: -o-linear-gradient(left, rgb(0,69,0) 0%, rgb(255,69,0) 100%);
+  background: -ms-linear-gradient(left, rgb(0,69,0) 0%, rgb(255,69,0) 100%);
+  background: linear-gradient(to right, rgb(0,69,0) 0%, rgb(255,69,0) 100%);
+  filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#004500', endColorstr='#ff4500', GradientType=1 );
+}
+
+.cp_slider-bar.green {
+  background: -moz-linear-gradient(left, rgb(255,0,0) 0%, rgb(255,255,0) 100%);
+  background: -webkit-gradient(left top, right top, color-stop(0%, rgb(255,0,0)), color-stop(100%, rgb(255,255,0)));
+  background: -webkit-linear-gradient(left, rgb(255,0,0) 0%, rgb(255,255,0) 100%);
+  background: -o-linear-gradient(left, rgb(255,0,0) 0%, rgb(255,255,0) 100%);
+  background: -ms-linear-gradient(left, rgb(255,0,0) 0%, rgb(255,255,0) 100%);
+  background: linear-gradient(to right, rgb(255,0,0) 0%, rgb(255,255,0) 100%);
+  filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ff0000', endColorstr='#ffff00', GradientType=1 );
+}
+
+.cp_slider-bar.blue {
+  background: -moz-linear-gradient(left, rgb(255,68,0) 0%, rgb(255,68,255) 100%);
+  background: -webkit-gradient(left top, right top, color-stop(0%, rgb(255,68,0)), color-stop(100%, rgb(255,68,255)));
+  background: -webkit-linear-gradient(left, rgb(255,68,0) 0%, rgb(255,68,255) 100%);
+  background: -o-linear-gradient(left, rgb(255,68,0) 0%, rgb(255,68,255) 100%);
+  background: -ms-linear-gradient(left, rgb(255,68,0) 0%, rgb(255,68,255) 100%);
+  background: linear-gradient(to right, rgb(255,68,0) 0%, rgb(255,68,255) 100%);
+  filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ff4400', endColorstr='#ff44ff', GradientType=1 );
+}
+
+.cp_slider-a11y-warning-area {
+  display: inline-block;
+  position: absolute;
+  text-align: center;
+  height: 20px;
+  min-width: 20px;
+  top: 4px;
+  border-radius: 10px;
+  font-weight: 800;
+  font-family: Arial;
+  font-size: 13px;
+  border: rgba(0,0,0,0.5) 2px solid;
+  background-color: rgba(255,255,255,0.5);
+  z-index: 1;
+}
+
+.cp_slider-marker {
+  display: inline-block;
+  position: absolute;
+  background-color: red;
+  border: 3px solid white;
+  width:  16px;
+  height: 16px;
+  border-radius: 50%;
+  z-index: 2;
+  top:    6px;
+  left: 184px;
+}
+.cp_slider-marker.warning {
+  width:  25px;
+  height: 25px;
+  top:     2px;
+}
+.cp_slider-marker.warning:before {
+  content: '!';
+}
+
+.cp_slider-textfield {
+  display: inline-block;
+  position: relative;
+  width: 55px;
+  border: 1px solid gray;
+  padding: 1px 5px;
+}
+.range-alert .cp_slider-textfield {
+  border: 1px solid black;
+  -webkit-box-shadow: inset 0px 0px 0px 2px rgba(255,0,0,0.75);
+  -moz-box-shadow: inset 0px 0px 0px 2px rgba(255,0,0,0.75);
+  box-shadow: inset 0px 0px 0px 2px rgba(255,0,0,0.75);
+}
+
+.cp_slider-border-left {
+  display: inline-block;
+  position: absolute;
+}
+.cp_slider-border-right {
+  display: inline-block;
+  position: absolute;
+}
+
+/* START Ripple Animation for Modal Open/Close */
+
+.cp_ripple-dot {
+  display: inline-block;
+  position: absolute;
+  width:  20px;
+  height: 20px;
+  background-color: whitesmoke;
+  border-radius: 50%;
+}
+
+/* END Ripple Animation for Modal Open/Close */
+
+
+
+
+/* START new modal design */
+
+
+#cas_colorpicker.cp_parent-container {
+  display: inline-block;
+  position: absolute;
+  left: 100px;
+  top:   35px;
+  font-family: Cabin;
+}
+
+.cp_background-container {
+  display: inline-block;
+  position: absolute;
+  width: 550px;
+  height: 490px;
+  /* temp styles */
+  background-color: whitesmoke;
+  z-index: -1;
+}
+
+.cp_dropshadow-main-area {
+  display: inline-block;
+  position: absolute;
+  border-radius: 25px;
+  width: 556px;
+  height: 500px;
+  left: -1px;
+  top: -1px;
+  background-color: #CCCCCC;
+}
+.cp_dropshadow-circle {
+  display: inline-block;
+  position: absolute;
+  /*border: #CCCCCC solid 8px;*/
+  border-radius: 50%;
+  width: 110px;
+  height: 110px;
+  left: -30px;
+  top: -25px;
+  background-color: #CCCCCC;
+}
+.cp_foreground-main-area {
+  display: inline-block;
+  position: absolute;
+  border: #EDEDED solid 2px;
+  border-radius: 25px;
+  width: 550px;
+  height: 490px;
+  background-color: #EDEDED;
+}
+.cp_foreground-circle {
+  display: inline-block;
+  position: absolute;
+  border: 1px solid #CCCCCC;
+  border-radius: 50%;
+  width: 110px;
+  height: 110px;
+  left: -30px;
+  top: -30px;
+  background-color: #EDEDED;
+}
+
+
+#cas_colorpicker-contents.cp_foreground-container {
+  display: inline-block;
+  position: relative;
+  width: 550px;
+  height: 490px;
+  z-index: 1;
+}
+
+.cp_circle-swatch-container {
+  display: inline-block;
+  position: absolute;
+  left: -16px;
+  top: -16px;
+}
+
+#cp_background-swatch {
+  display: inline-block;
+  position: absolute;
+  border-radius: 50%;
+  width:  80px;
+  height: 80px;
+  background-color: whitesmoke;
+  -webkit-box-shadow: 0px 0px 5px 0px rgba(0,0,0,0.75);
+  -moz-box-shadow: 0px 0px 5px 0px rgba(0,0,0,0.75);
+  box-shadow: 0px 0px 5px 0px rgba(0,0,0,0.75);
+}
+
+#cp_font-swatch {
+  display: inline-block;
+  position: absolute;
+  border-radius: 50%;
+  width: 50px;
+  height: 50px;
+  left: 15px;
+  top: 15px;
+  background-color: gray;
+}
+
+.cp_app-title h2 {
+  display: inline-block;
+  position: absolute;
+  transform-origin: left top;
+  transform: rotate(-90deg) translate(-340px, 10px);
+  font-size: 18px;
+  z-index: 1;
+}
+
+.cp_sample {
+  /*display: block;*/
+  position: relative;
+  left: 75px;
+  margin-top: 10px;
+}
+
+#cp_sample-content {
+  display: inline-block;
+  border: 1px dotted #666666;
+  border-radius: 3px;
+  width: 430px;
+  height: 40px;
+  /* colors are merely default stand-ins*/
+  font-size: 18px;
+  background-color: whitesmoke;
+  color: gray;
+  padding: 5px;
+  text-align: center;
+}
+
+#toggle-btn-colorblindness {
+  float: right;
+  transform: translate(-5px,-40px);
+}
+
+#toggle-btn-colorblindness.toggle-on  .toggle-off,
+#toggle-btn-colorblindness.toggle-off .toggle-on  {
+  display: none;
+}
+
+
+
+
+
+
+}
+
+.cp_settings-menu {
+  display: inline-block;
+  position: relative;
+  margin-top: 40px;
+  margin-left: 80px;
+  width: 425px;
+  margin-bottom: 30px;
+}
+
+.cp_settings-menuitem {
+  display: none;
+  font-size: 16px;
+  font-weight: 400;
+  position: relative;
+  border: 1px solid #666666;
+  border-radius: 3px;
+  padding: 3px;
+}
+
+.cp_settings-menuitem.active {
+  display: block;
+  font-weight: 900;
+}
+
+.cp_color-settings_container {
+  display: block;
+  position: relative;
+  margin-bottom: 20px;
+  margin-left: 50px;
+  margin-right: 5px;
+  border-radius: 4px;
+  /* background-color: lightgray; */
+  /* border: 1px dashed grey; */
+  padding-top: 5px;
+  padding-bottom: 5px;
+  z-index: -1;
+}
+
+
+
+.cp_color-settings_title {
+  display: inline-block;
+  position: absolute;
+  transform-origin: left top;
+  /* for 4 columns... */
+  /*transform: rotate(-90deg) translate(-130px);*/
+  /* for 3 columns... */
+  transform: rotate(-90deg) translate(-110px);
+  z-index: 1;
+}
+
+#cp_background-color-settings .cp_color-settings_title {
+  /* for 4 columns... */
+  /*transform: rotate(-90deg) translate(-130px);*/
+  /* for 3 columns... */
+  transform: rotate(-90deg) translate(-110px);
+}
+
+.cp_color-settings_title h3 {
+  display: inline-block;
+  font-size: 16px;
+  font-style: italic;
+}
+
+.cp_color-settings_title_top-bracket {
+  display: inline-block;
+  position: relative;
+  width: 35px;
+  height: 10px;
+  border-top:  1.1px solid #CCCCCC;
+  border-right: 1.1px solid #CCCCCC;
+  top: 4px
+}
+
+#cp_background-color-settings .cp_color-settings_title_top-bracket {
+  width: 20px;
+}
+
+.cp_color-settings_title_bottom-bracket {
+  display: inline-block;
+  position: relative;
+  width: 40px;
+  height: 10px;
+  border-top: 1.1px solid #CCCCCC;
+  border-left: 1.1px solid #CCCCCC;
+  top: 4px;
+}
+
+#cp_background-color-settings .cp_color-settings_title_bottom-bracket {
+  width: 15px;
+}
+
+.cp_color-settings_slider-container {
+  /* border: 1px gray dotted; */
+  margin-left: 40px;
+  height: 35px;
+}
+
+.cp_color-settings_slide-title {
+  display: inline-block;
+  position: relative;
+  width: 65px;
+  text-align: right;
+  vertical-align: top;
+}
+
+.cp_color-settings_slide-title h4 {
+  font-size: 14px;
+  padding-right: 5px;
+}
+
+
+.cp_color-settings_value {
+  display: inline-block;
+  position: absolute;
+  margin-top: 3px;
+  right:     10px;
+}
+
+.cp_color-settings_slide-marker {
+  display: inline-block;
+  position: absolute;
+  outline: none;
+  width: 23px;
+  height: 23px;
+  border-radius: 50%;
+  background-color: #EDEDED;
+  -webkit-box-shadow: 1px 1px 1px 0px rgba(0,0,0,0.75);
+  -moz-box-shadow: 1px 1px 1px 0px rgba(0,0,0,0.75);
+  box-shadow: 1px 1px 1px 0px rgba(0,0,0,0.75);
+  margin-top: 3.1px;
+  margin-left: 3.2px;
+  z-index: 1000;
+}
+.range-alert .cp_color-settings_slide-marker {
+  background-color: white;
+  -webkit-box-shadow: 0px 0px 0px 5px rgba(0,0,0,0.75);
+  -moz-box-shadow: 0px 0px 0px 5px rgba(0,0,0,0.75);
+  box-shadow: 0px 0px 0px 5px rgba(0,0,0,0.75);
+}
+
+.cp_color-settings_slide-marker:focus {
+  -webkit-box-shadow: 0px 0px 3px 3px rgba(0,100,200,35.75);
+  -moz-box-shadow:    0px 0px 3px 3px rgba(0,100,200,35.75);
+  box-shadow:         0px 0px 3px 3px rgba(0,100,200,35.75);
+}
+
+.cp_color-settings_marker-color {
+  display: inline-block;
+  position: absolute;
+  width: 15px;
+  height: 15px;
+  left: 4px;
+  top: 4px;
+  border-radius: 50%;
+  background-color: yellow;
+  -webkit-box-shadow: inset 1px 1px 1px 0px rgba(0,0,0,0.75);
+  -moz-box-shadow: inset 1px 1px 1px 0px rgba(0,0,0,0.75);
+  box-shadow: inset 1px 1px 1px 0px rgba(0,0,0,0.75);
+}
+
+.cp_color-settings_a11y-fail-range {
+  display: inline-block;
+  position: absolute;
+  border: 1.9px rgba(0,0,0,0.5) solid;
+  border-radius: 30px;
+  background-color: rgba(255,255,255,0.65);
+  z-index: 1;
+  width: 280px;
+  min-width: 26px !important;
+  height: 26px;
+  margin-left: 2px;
+  margin-top: 2px;
+}
+/* This style is applied to alert user their values are not conforming with the WCAG criteria */
+.range-alert .cp_color-settings_a11y-fail-range{
+  -webkit-box-shadow: inset 0px 0px 0px 2px rgba(0,0,0,0.75);
+  -moz-box-shadow: inset 0px 0px 0px 2px rgba(0,0,0,0.75);
+  box-shadow: inset 0px 0px 0px 2px rgba(0,0,0,0.75);
+}
+
+.cp_color-settings_a11y-fail-range::before {
+  font-family: 'FontAwesome';
+  display: inline-block;
+  position: absolute;
+  color: black;
+  content: "\f071";
+  font-size: 15px;
+  font-weight: 900;
+  text-align: center;
+  width: inherit;
+  min-width: inherit;
+  height: inherit;
+  z-index: 1;
+  top: 2px;
+  margin-left: -2px;
+}
+
+.cp_color-settings_slide {
+  display: inline-block;
+  position: relative;
+  border: 1px solid #CCCCCC;
+  border-radius: 36px;
+  height: 30px;
+  width: 284px;
+  z-index: -1;
+  background: -moz-linear-gradient(left, #008034 0%, #ff8034 100%); 
+  background: -webkit-linear-gradient(left, #008034 0%,#ff8034 100%); 
+  background: linear-gradient(to right, #008034 0%,#ff8034 100%); 
+  filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#008034', endColorstr='#ff8034',GradientType=1 );
+}
+
+
+.cp_color-settings_slide.cp_colorblind-split {
+  border-top: 1px solid white;
+  position: absolute;
+  border-radius: 0px 0px 18px 18px;
+  height: 17px;
+  margin-top: 14px;
+  margin-left: 0px;
+  z-index: 0;
+}
+
+
+  /* START Color Picker Settings Menu */
+
+  .cp_menu-group {
+    /*display: inline-block;
+    position: absolute;
+    width: 90%;*/
+  }
+
+  .cp_menu-button {
+    
+  }
+
+  .cp_dropdown-menu_list {
+    display: block;
+    position: absolute;
+    border: 1.2px solid #CCCCCC;
+    border-radius: 3px;
+    background-color: whitesmoke;
+    z-index: 1000;
+  }
+
+  .cp_dropdown-menu_list li {
+    display: block;
+    position: relative;
+    list-style-type: none;
+    padding-left: 0.75em;
+    /* right: auto; */
+    white-space: nowrap;
+  }
+
+  .cp_caret-right {
+    border-bottom: 4px solid transparent;
+    border-top: 4px solid transparent;
+    border-left: 4px solid;
+    display: inline-block;
+    height: 0;
+    opacity: 1; 
+    /* opacity: 0.3; */
+    width: 0;
+    margin-right: 3px;
+  }
+
+  .cp_caret-right--before::before {
+    border-bottom: 4px solid transparent;
+    border-top: 4px solid transparent;
+    border-left: 4px solid;
+    display: inline-block;
+    position: absolute;
+    margin-left: -3px;
+    height: 0;
+    opacity: 1; 
+    /* opacity: 0.3; */
+    width: 0;
+    margin-right: 3px;
+  }
+
+
+  /* END Color Picker Settings Menu */
+
+
+  /* START Status Update Region */
+
+  .cp_status-region {
+    display: block;
+    position: relative;
+    /* background-color: whitesmoke; */
+    /* border: 1px dashed brown;*/
+    text-align: center;
+    /* vertical-align: middle; */
+    height: 33px;
+  }
+
+  #cp_a11y-status-update {
+    display: inline-block;
+    /*position: absolute;*/
+    background-color: whitesmoke;
+    margin-top: 2px;
+    padding: 4px 10px 3px 10px;
+    border-radius: 3px;
+    /*right: 75px;*/
+    border: 1px solid white;
+  }
+
+  .cp_a11y-status-update:empty {
+    display: none;
+  }
+
+  /* END Status Update Region */
+
+/* END new modal design */
+
+
+
+
+/* START Dyslexia Rotate Test */
+
+/*.cp_sample-content::before {
+  display: inline-block;
+  position: absolute;
+  opacity: 0.75;
+  transform: rotate(10deg);
+  content: "The quick fox jumped over the lazy brown dog.";
+
+}*/
+
+
+/* END Dyslexia Rotate Test */
+
+
+
+
+
+
+
+
+
+/* START Settings Menu */
+
+.cp_settings-menu-region {
+  display: block;
+  position: relative;
+}
+
+.cp_active-setting-top-border, .cp_active-setting-bottom-border {
+  display: block;
+  position: absolute;
+  margin-left: 10px;
+  margin-right: 10px;
+  margin-top: 4px;
+  height: 10px;
+  z-index: -1;
+}
+
+.cp_active-setting-bottom-border {
+  margin-top: default;
+  margin-bottom: 4px;
+}
+
+.cp_dropdown-menu_list {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  z-index: 1000;
+  display: none;
+  float: left;
+  min-width: 160px;
+  padding: 5px 0;
+  margin: 2px 0 0;
+  font-size: 14px;
+  text-align: left;
+  list-style: none;
+  background-color: #fff;
+  -webkit-background-clip: padding-box;
+  background-clip: padding-box;
+  border: 1px solid #ccc;
+  border: 1px solid rgba(0,0,0,.15);
+  border-radius: 4px;
+  -webkit-box-shadow: 0 6px 12px rgba(0,0,0,.175);
+  box-shadow: 0 6px 12px rgba(0,0,0,.175);
+  margin-bottom: 5px;
+  clear: left;
+}
+
+.cp_dropdown-menu_list.cp_active {
+  display: block;
+}
+
+.cp_dropdown-menu_listitem {
+
+}
+.cp_dropdown-menu_listitem:hover, .cp_dropdown-menu_listitem:focus {
+  background-color: black;
+  color: white;
+}
+
+.cp_button {
+
+}
+
+.cp_dropdown-menu {
+
+}
+
+.cp_menu-radio-button {
+  display: block;
+  position: absolute;
+  border-radius: 100%;
+  width: 5px;
+  height: 5px;
+  background-color: whitesmoke;
+  border: black 2px solid;
+}
+
+.cp_menu-radio-button.selected {
+
+}
+.cp_menu-radio-button.selected::before {
+  display: block;
+  position: absolute;
+  border-radius: 100%;
+  width: 5px;
+  height: 5px;
+  background-color: black;
+  margin-left: 2px;
+  margin-top: 2px;
+}
+
+ul.dropdown-menu .selected span::before {
+  content: "\f111";
+}
+
+.btn.btn-hide-styles {
+  background-color: transparent !important;
+  border-color: transparent !important;
+  -webkit-box-shadow: none !important;
+  box-shadow: none !important;
+
+}
+
+.cp_filter-setting-title  {
+  font-weight: 900;
+  display: inline-block;
+  position: absolute;
+  width: inherit;
+  text-align: center;
+  margin-top: -20px;
+  margin-left: -15px;
+}
+
+.cp_filter-setting-title [role="heading"] {
+  background-color: #EDEDED;
+  padding: 0px 5px 0px 5px;
+}
+
+.cp_filter-setting-contents  {
+  display: inline-block;
+  position: relative;
+  bottom: -1px;
+}
+
+.cp_custom-contrast-filter-textfield {
+  display: inline-block;
+  position: relative;
+  width: 2.1em;
+  text-align: center;
+}
+
+.dropdown-menu a:hover .fa-circle-o:before, .dropdown-menu a:focus .fa-circle-o:before {
+  content: "\f192" !important;
+}
+
+.dropdown-menu .selected .fa-circle-o:before {
+  content: "\f111" !important;
+}
+
+.cp_settings-menu_border-top, .cp_settings-menu_border-bottom  {
+  display: block;
+  position: absolute;
+  height: 10px;
+  width: inherit;
+  border-radius:          5px 5px 0px 0px;
+  -moz-border-radius:     5px 5px 0px 0px;
+  -webkit-border-radius:  5px 5px 0px 0px;
+  border: 1px gray dotted;
+  border-bottom: 1px transparent dotted;
+  margin-left: 12px;
+  margin-right: 12px;
+  margin-top: -10px;
+}
+
+.cp_settings-menu_border-bottom {
+  border-radius:          0px 0px 5px 5px;
+  -moz-border-radius:     0px 0px 5px 5px;
+  -webkit-border-radius:  0px 0px 5px 5px;
+  border-bottom: 1px gray dotted;
+  border-top: 1px transparent dotted;
+  bottom: -15px;
+}
+
+#settings-tool-button-group {
+  vertical-align: baseline !important;
+}
+
+#cp_contrast-range-filter-button-group {
+  margin-left: -5px;
+  margin-top: 5px;
+  
+}
+
+#cp_contrast-range-filter-button-group .dropdown-menu {
+  left: initial;
+  right: 0;
+}
+
+
+/* FLOATING THE RESULT */
+
+.cp_contrast-settings_results-region  {
+  display: inline-block;
+  position: relative;
+  padding-right: 15px;
+  float: right;
+}
+.cp_settings-centered-content > .cp_a11y-status-update {
+  /*position: relative;
+  left: 50%;*/
+}
+
+
+
+/* END Settings Menu */
+
+
+
+
+
+.cp_settings-menu_NEW {
+  margin-left: 75px;
+  padding-top: 10px;
+}
+
+.cp_settings_border-top_NEW, .cp_settings_border-bottom_NEW {
+  height: 10px;
+  width: inherit;
+  margin-top: 15px;
+  margin-left: 0;
+  border-top: 1px solid lightgray;
+  border-left: 1px solid lightgray;
+  border-right: 1px solid lightgray;
+  margin-right: 25px;
+}
+
+.cp_settings_border-bottom_NEW {
+  /*margin-top: 5px;*/
+  margin-top: 0px;
+  margin-bottom: 10px;
+  border-top: 0px solid transparent;
+  border-bottom: 1px solid lightgray;
+  border-left: 1px solid lightgray;
+  border-right: 1px solid lightgray;
+}
+
+.cp_settings-menu_active-tool-title_NEW {
+  display: inline-block;
+  background-color: #EDEDED;
+  width: inherit;
+  height:      40px; /* height and line-height must match */
+  line-height: 40px;
+  margin-top: -32px;
+  margin-left: 15px;
+}
+
+.cp_settings-menu-button_left-centered_NEW {
+  position: absolute;
+  margin-left: -12px;
+  margin-top: 5px;
+}
+
+.cp_active-tool_title-box {
+  display: inline-block;
+  background-color: #EDEDED;
+  /* border: 1px solid lightgray; */
+  margin: 0px 7px 0px 0px;
+  vertical-align: middle;
+}
+
+.cp_settings-menu_active-tool-container_NEW {
+  height: 35px;
+}
+
+.cp_clear-soln {
+  clear: both;
+}
+
+.cp_attention-text {
+  font-style: oblique;
+  font-weight: 900;
+  /*text-decoration: underline;*/
+  text-transform: capitalize;
+}
+
+
+.full-hide {
+  display: none;
+
+
+}
+
+
+
+
+/* START HTML5 Slider Version - Not Compatble with IE 9 and below */
+
+.cp_color-settings_container input[type=range] {
+  -webkit-appearance: none;
+  margin: 10px 0;
+  width: 100%;
+}
+.cp_color-settings_container input[type=range]:focus {
+  outline: none;
+}
+.cp_color-settings_container input[type=range]::-webkit-slider-runnable-track {
+  width: 100%;
+  height: 30px;
+  cursor: pointer;
+  animate: 0.2s;
+  box-shadow: 0px 0px 0px #000000, 0px 0px 0px #0d0d0d;
+  background: #ac51b5;
+  border-radius: 25px;
+  border: 0px solid #000101;
+  
+  border: 2px solid #CCCCCC;
+  background: linear-gradient(to right, rgb(195, 0, 255) 0%, rgb(195, 255, 255) 100%);
+  padding-left: 3px;
+  padding-right: 3px;
+}
+.cp_color-settings_container input[type=range]::-webkit-slider-thumb {
+  box-shadow: inset 0px 0px 0px #000000, 0px 0px 0px #0d0d0d;
+  border: 3px solid #DDD;
+  height: 21px;
+  width: 21px;
+  border-radius: 50%;
+  background: #EDEDED;
+  cursor: pointer;
+  -webkit-appearance: none;
+  margin-top: 2.25px;
+  -webkit-box-shadow: 1px 1px 2px -0.5px rgba(0,0,0,0.75), inset 2px 1.5px 2px 0.5px rgba(0,0,0,0.65);
+     -moz-box-shadow: 1px 1px 2px -0.5px rgba(0,0,0,0.75), inset 2px 1.5px 2px 0.5px rgba(0,0,0,0.65);
+          box-shadow: 1px 1px 2px -0.5px rgba(0,0,0,0.75), inset 2px 1.5px 2px 0.5px rgba(0,0,0,0.65);
+}
+.cp_color-settings_container input[type=range]:focus::-webkit-slider-runnable-track,
+.cp_color-settings_container input[type=range]:hover::-webkit-slider-runnable-track{
+/*   background: #ac51b5; */
+  border: 2px solid #A0A0A0;
+}
+.cp_color-settings_container input[type=range]::-moz-range-track {
+  width: 100%;
+  height: 30px;
+  cursor: pointer;
+  animate: 0.2s;
+  box-shadow: 0px 0px 0px #000000, 0px 0px 0px #0d0d0d;
+  background: #ac51b5;
+  border-radius: 25px;
+  border: 0px solid #000101;
+  
+  border: 2px solid #CCCCCC;
+  background: linear-gradient(to right, rgb(195, 0, 255) 0%, rgb(195, 255, 255) 100%);
+  padding-left: 3px;
+  padding-right: 3px;
+}
+.cp_color-settings_container input[type=range]::-moz-range-thumb {
+  box-shadow: inset 0px 0px 0px #000000, 0px 0px 0px #0d0d0d;
+  border: 3px solid #DDD;
+  height: 21px;
+  width: 21px;
+  border-radius: 50%;
+  background: #EDEDED;
+  cursor: pointer;
+  -webkit-appearance: none;
+  margin-top: 2.25px;
+  -webkit-box-shadow: 1px 1px 2px -0.5px rgba(0,0,0,0.75), inset 2px 1.5px 2px 0.5px rgba(0,0,0,0.65);
+     -moz-box-shadow: 1px 1px 2px -0.5px rgba(0,0,0,0.75), inset 2px 1.5px 2px 0.5px rgba(0,0,0,0.65);
+          box-shadow: 1px 1px 2px -0.5px rgba(0,0,0,0.75), inset 2px 1.5px 2px 0.5px rgba(0,0,0,0.65);
+}
+.cp_color-settings_container input[type=range]::-ms-track {
+  width: 100%;
+  height: 30px;
+  cursor: pointer;
+  animate: 0.2s;
+  box-shadow: 0px 0px 0px #000000, 0px 0px 0px #0d0d0d;
+  background: #ac51b5;
+  border-radius: 25px;
+  border: 2px solid #CCCCCC;
+  background: linear-gradient(to right, rgb(195, 0, 255) 0%, rgb(195, 255, 255) 100%);
+  padding-left: 3px;
+  padding-right: 3px;
+}
+.cp_color-settings_container input[type=range]::-ms-thumb {
+  box-shadow: inset 0px 0px 0px #000000, 0px 0px 0px #0d0d0d;
+  border: 3px solid #DDD;
+  height: 21px;
+  width: 21px;
+  border-radius: 50%;
+  background: #EDEDED;
+  cursor: pointer;
+  -webkit-appearance: none;
+  margin-top: 2.25px;
+  -webkit-box-shadow: 1px 1px 2px -0.5px rgba(0,0,0,0.75), inset 2px 1.5px 2px 0.5px rgba(0,0,0,0.65);
+     -moz-box-shadow: 1px 1px 2px -0.5px rgba(0,0,0,0.75), inset 2px 1.5px 2px 0.5px rgba(0,0,0,0.65);
+          box-shadow: 1px 1px 2px -0.5px rgba(0,0,0,0.75), inset 2px 1.5px 2px 0.5px rgba(0,0,0,0.65);
+}
+
+
+/* END Slider Version */
