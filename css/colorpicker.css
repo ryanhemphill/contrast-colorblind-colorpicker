@@ -564,6 +564,22 @@ colorpicker.css*/
   margin-left: 3.2px;
   z-index: 1000;
 }
+.cp_color-settings_slide-marker::before { /* increases clickable area */
+  content: '';
+  display: block;
+  position: absolute;
+  width: inherit;
+  height: inherit;
+  background-color: transparent;
+  /* border-radius: 100em; */
+  border: 5px solid rgba(0,0,0,0);
+  z-index: 0;
+  box-sizing: content-box;
+  margin-left: -5px;
+  margin-top: -5px;
+}
+
+
 .range-alert .cp_color-settings_slide-marker {
   background-color: white;
   -webkit-box-shadow: 0px 0px 0px 5px rgba(0,0,0,0.75);
