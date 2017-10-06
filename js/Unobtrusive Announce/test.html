@@ -1,0 +1,25 @@
+<html>
+<head>
+<title> Test </title>
+<script type="text/javascript" src="js/helpers.js"></script>
+<script type="text/javascript" src="js/unobtrusive_announce.js"></script>
+</head>
+<body>
+<div class = "pageContainer">
+
+<form onsubmit="this.say.value.announce(); return false;">
+<input title="Something to announce" type="text" name="say" />
+<button> Say from form field value string using prototyped .announce() method</button>
+</form>
+
+<button onclick="announce('San Francisco');"> Say a city </button>
+
+<button onclick="announce(this);"> Say this string using the DOM object node for this element </button>
+
+<button onclick="announce('Your session is about to time out', false, true);"> Announce a system alert </button>
+
+<button onclick="alert(String.announce.lastMsg);"> Get the last message that was announced </button>
+
+</div>
+</body>
+</html>

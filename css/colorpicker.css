@@ -619,6 +619,7 @@ colorpicker.css*/
   height: 26px;
   margin-left: 2px;
   margin-top: 2px;
+  pointer-events: none;
 }
 /* This style is applied to alert user their values are not conforming with the WCAG criteria */
 .range-alert .cp_color-settings_a11y-fail-range{
@@ -651,7 +652,7 @@ colorpicker.css*/
   border-radius: 36px;
   height: 30px;
   width: 284px;
-  z-index: -1;
+  /*z-index: -1;*/
   background: -moz-linear-gradient(left, #008034 0%, #ff8034 100%); 
   background: -webkit-linear-gradient(left, #008034 0%,#ff8034 100%); 
   background: linear-gradient(to right, #008034 0%,#ff8034 100%); 

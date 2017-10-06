@@ -122,133 +122,135 @@ $(document).ready(function() {
 
 
 function updateSampleArea( fontColorValue, backgroundColorValue ) {
-    $('#cp_sample-content')
-      .css('color', '#' + fontColorValue)
-      .css('background-color', '#' + backgroundColorValue);
-    $('#cp_font-swatch').css('background-color', '#' + fontColorValue);
-    $('#cp_background-swatch').css('background-color', '#' + backgroundColorValue);
-  }
+  $('#cp_sample-content')
+    .css('color', '#' + fontColorValue)
+    .css('background-color', '#' + backgroundColorValue);
+  $('#cp_font-swatch').css('background-color', '#' + fontColorValue);
+  $('#cp_background-swatch').css('background-color', '#' + backgroundColorValue);
+}
 
 
 
-  setupCBtoggle();
+setupCBtoggle();
 
-  function setMarkerColor( whichMarkers, hexColorValue ) {
-    if(whichMarkers == 'font')       $('#cp_font-color-settings .cp_color-settings_marker-color').css('background-color', "#" + hexColorValue);
-    if(whichMarkers == 'background') $('#cp_background-color-settings .cp_color-settings_marker-color').css('background-color', "#" + hexColorValue);
-  }
+function setMarkerColor( whichMarkers, hexColorValue ) {
+  if(whichMarkers == 'font')       $('#cp_font-color-settings .cp_color-settings_marker-color').css('background-color', "#" + hexColorValue);
+  if(whichMarkers == 'background') $('#cp_background-color-settings .cp_color-settings_marker-color').css('background-color', "#" + hexColorValue);
+}
 
-  function setSampleArea( fontColorValue, backgroundColorValue ) {
-    $('#cp_sample-content')
-      .css('color', '#' + fontColorValue)
-      .css('background-color', '#' + backgroundColorValue);
-    $('#cp_font-swatch').css('background-color', '#' + fontColorValue);
-    $('#cp_background-swatch').css('background-color', '#' + backgroundColorValue);
-  }
-
-
-
-  function updateSampleArea( fontColorValue, backgroundColorValue ) {
-    $('#cp_sample-content')
-      .css('color', '#' + fontColorValue)
-      .css('background-color', '#' + backgroundColorValue);
-    $('#cp_font-swatch').css('background-color', '#' + fontColorValue);
-    $('#cp_background-swatch').css('background-color', '#' + backgroundColorValue);
-  }
+function setSampleArea( fontColorValue, backgroundColorValue ) {
+  $('#cp_sample-content')
+    .css('color', '#' + fontColorValue)
+    .css('background-color', '#' + backgroundColorValue);
+  $('#cp_font-swatch').css('background-color', '#' + fontColorValue);
+  $('#cp_background-swatch').css('background-color', '#' + backgroundColorValue);
+}
 
 
 
-  // function setMarkerPlacement( colorDataObj ) {}
-  moveMarker( $('#cp_font-color-settings .cp_color-settings_slide-marker').eq(0), colorDataObj.fontColors.r );
-  moveMarker( $('#cp_font-color-settings .cp_color-settings_slide-marker').eq(1), colorDataObj.fontColors.g );
-  moveMarker( $('#cp_font-color-settings .cp_color-settings_slide-marker').eq(2), colorDataObj.fontColors.b );
+function updateSampleArea( fontColorValue, backgroundColorValue ) {
+  $('#cp_sample-content')
+    .css('color', '#' + fontColorValue)
+    .css('background-color', '#' + backgroundColorValue);
+  $('#cp_font-swatch').css('background-color', '#' + fontColorValue);
+  $('#cp_background-swatch').css('background-color', '#' + backgroundColorValue);
+}
+
+
+
+// function setMarkerPlacement( colorDataObj ) {}
+moveMarker( $('#cp_font-color-settings .cp_color-settings_slide-marker').eq(0), colorDataObj.fontColors.r );
+moveMarker( $('#cp_font-color-settings .cp_color-settings_slide-marker').eq(1), colorDataObj.fontColors.g );
+moveMarker( $('#cp_font-color-settings .cp_color-settings_slide-marker').eq(2), colorDataObj.fontColors.b );
+
+moveMarker( $('#cp_background-color-settings .cp_color-settings_slide-marker').eq(0), colorDataObj.bgColors.r );
+moveMarker( $('#cp_background-color-settings .cp_color-settings_slide-marker').eq(1), colorDataObj.bgColors.g );
+moveMarker( $('#cp_background-color-settings .cp_color-settings_slide-marker').eq(2), colorDataObj.bgColors.b );
+// }
+
+
+
+
+var fontSliders = $('#cp_font-color-settings .cp_color-settings_slide');
+buildCSSgradient(fontSliders.eq(0), 'red',   colorDataObj.fontColorInHex);
+buildCSSgradient(fontSliders.eq(1), 'green', colorDataObj.fontColorInHex);
+buildCSSgradient(fontSliders.eq(2), 'blue',  colorDataObj.fontColorInHex);
+
+var backgroundSliders = $('#cp_background-color-settings .cp_color-settings_slide');
+buildCSSgradient(backgroundSliders.eq(0), 'red',   colorDataObj.bgColorInHex);
+buildCSSgradient(backgroundSliders.eq(1), 'green', colorDataObj.bgColorInHex);
+buildCSSgradient(backgroundSliders.eq(2), 'blue',  colorDataObj.bgColorInHex); 
   
-  moveMarker( $('#cp_background-color-settings .cp_color-settings_slide-marker').eq(0), colorDataObj.bgColors.r );
-  moveMarker( $('#cp_background-color-settings .cp_color-settings_slide-marker').eq(1), colorDataObj.bgColors.g );
-  moveMarker( $('#cp_background-color-settings .cp_color-settings_slide-marker').eq(2), colorDataObj.bgColors.b );
-  // }
+  
+  
+  
+var textfieldElements = $('.cp_slider-textfield');
+var slideMarkers = $('.cp_color-settings_slide-marker');
+applyColorblindnessFilters(colorDataObj.colorblindActiveFilter);
 
+enableClickDrag('.cp_color-settings_slider-container');
 
-  var fontSliders = $('#cp_font-color-settings .cp_color-settings_slide');
-  buildCSSgradient(fontSliders.eq(0), 'red',   colorDataObj.fontColorInHex);
+textfieldElements.focus(function() { var self = $(this); setTimeout(function () { self.select(); }, 50); });
+
+textfieldElements.change(function() {
+
+  colorDataObj = initColorAnalysis( colorDataObj ); 
+
+  setMarkerColor('font', colorDataObj.fontColorInHex);
+  setMarkerColor('background', colorDataObj.bgColorInHex);
+
+  if($('#toggle-btn-colorblindness').hasClass('toggle-off')) { // non-colorblind
+    
+    setSampleArea( colorDataObj.fontColorInHex, colorDataObj.bgColorInHex );
+  } else { // [ TASK - update with colorblindness toggle feature ]
+    
+    setSampleArea( colorDataObj.fontColorInHex, colorDataObj.bgColorInHex );
+  }
+  
+  var contrastUpdateString = colorDataObj.currentContrast;  
+  contrastUpdateString = contrastUpdateString.toFixed(1);
+
+  if(colorDataObj.targetContrast != 0) {
+    if(colorDataObj.targetContrast >= colorDataObj.currentContrast) contrastUpdateString = contrastUpdateString + ':1 Contrast, Fails Filter <span class="fa fa-exclamation-triangle" style="color:red;"></span>'
+    if(colorDataObj.targetContrast <  colorDataObj.currentContrast) contrastUpdateString = contrastUpdateString + ':1 Contrast, Passes Filter <span class="fa fa-check" style="color:green;"></span>'
+  }
+  else if(colorDataObj.targetContrast == 0) {
+    if(contrastUpdateString < 3) contrastUpdateString = contrastUpdateString + ', Fails all WCAG 2.0 Criteria <span class="fa fa-exclamation-triangle" style="color:red;"></span>';
+    if(contrastUpdateString >= 3 && contrastUpdateString < 4.5) contrastUpdateString = contrastUpdateString + ', AA large text only <span class="fa fa-check" style="color:green;"></span>';
+    if(contrastUpdateString >= 4.5 && contrastUpdateString < 7) contrastUpdateString = contrastUpdateString + ', AAA large text & AA small <span class="fa fa-check" style="color:green;"></span>';
+    if(contrastUpdateString >= 7) contrastUpdateString = contrastUpdateString + ', Pass: AAA small text <span class="fa fa-check" style="color:green;"></span>';
+  }
+
+  $('#cp_a11y-status-update').html(contrastUpdateString);
+
+  var fontSliders = $('#cp_font-color-settings .cp_color-settings_slide').not('.cp_colorblind-split');
+  buildCSSgradient(fontSliders.eq(0), 'red', colorDataObj.fontColorInHex);
   buildCSSgradient(fontSliders.eq(1), 'green', colorDataObj.fontColorInHex);
-  buildCSSgradient(fontSliders.eq(2), 'blue',  colorDataObj.fontColorInHex);
+  buildCSSgradient(fontSliders.eq(2), 'blue', colorDataObj.fontColorInHex);
   
-  var backgroundSliders = $('#cp_background-color-settings .cp_color-settings_slide');
-  buildCSSgradient(backgroundSliders.eq(0), 'red',   colorDataObj.bgColorInHex);
-  buildCSSgradient(backgroundSliders.eq(1), 'green', colorDataObj.bgColorInHex);
-  buildCSSgradient(backgroundSliders.eq(2), 'blue',  colorDataObj.bgColorInHex); 
+  var backgroundSliders = $('#cp_background-color-settings .cp_color-settings_slide').not('.cp_colorblind-split');
+  buildCSSgradient( backgroundSliders.eq(0), 'red',   colorDataObj.bgColorInHex);
+  buildCSSgradient( backgroundSliders.eq(1), 'green', colorDataObj.bgColorInHex);
+  buildCSSgradient( backgroundSliders.eq(2), 'blue',  colorDataObj.bgColorInHex); 
+
   
-  
-  
-  
-  var textfieldElements = $('.cp_slider-textfield');
-  var slideMarkers = $('.cp_color-settings_slide-marker');
-  applyColorblindnessFilters(colorDataObj.colorblindActiveFilter);
+  $('#font-luminosity-result').text( colorDataObj.fontLuminance   );
+  $('#bg-luminosity-result').text(   colorDataObj.bgLuminance     );
+  $('#current-contrast').text(       colorDataObj.currentContrast );
 
 
-  textfieldElements.focus(function() { var self = $(this); setTimeout(function () { self.select(); }, 50); });
-  
-  textfieldElements.change(function() {
+  if(colorDataObj.currentContrast < colorDataObj.contrastTarget) $('.cp_color-settings_container').addClass('range-alert');
+  if(colorDataObj.currentContrast > colorDataObj.contrastTarget) $('.cp_color-settings_container').removeClass('range-alert');
 
 
-    colorDataObj = initColorAnalysis( colorDataObj ); 
+  if(colorDataObj.currentActiveTool == 'contrast') {
+    setRangesForUI( colorDataObj );
+  }
 
-    setMarkerColor('font', colorDataObj.fontColorInHex);
-    setMarkerColor('background', colorDataObj.bgColorInHex);
-
-    if($('#toggle-btn-colorblindness').hasClass('toggle-off')) { // non-colorblind
-      
-      setSampleArea( colorDataObj.fontColorInHex, colorDataObj.bgColorInHex );
-    } else { // [ TASK - update with colorblindness toggle feature ]
-      
-      setSampleArea( colorDataObj.fontColorInHex, colorDataObj.bgColorInHex );
-    }
-    
-    var contrastUpdateString = colorDataObj.currentContrast;  
-    contrastUpdateString = contrastUpdateString.toFixed(1);
-
-    if(colorDataObj.targetContrast != 0) {
-      if(colorDataObj.targetContrast >= colorDataObj.currentContrast) contrastUpdateString = contrastUpdateString + ':1 Contrast, Fails Filter <span class="fa fa-exclamation-triangle" style="color:red;"></span>'
-      if(colorDataObj.targetContrast <  colorDataObj.currentContrast) contrastUpdateString = contrastUpdateString + ':1 Contrast, Passes Filter <span class="fa fa-check" style="color:green;"></span>'
-    }
-    else if(colorDataObj.targetContrast == 0) {
-      if(contrastUpdateString < 3) contrastUpdateString = contrastUpdateString + ', Fails all WCAG 2.0 Criteria <span class="fa fa-exclamation-triangle" style="color:red;"></span>';
-      if(contrastUpdateString >= 3 && contrastUpdateString < 4.5) contrastUpdateString = contrastUpdateString + ', AA large text only <span class="fa fa-check" style="color:green;"></span>';
-      if(contrastUpdateString >= 4.5 && contrastUpdateString < 7) contrastUpdateString = contrastUpdateString + ', AAA large text & AA small <span class="fa fa-check" style="color:green;"></span>';
-      if(contrastUpdateString >= 7) contrastUpdateString = contrastUpdateString + ', Pass: AAA small text <span class="fa fa-check" style="color:green;"></span>';
-    }
-
-    $('#cp_a11y-status-update').html(contrastUpdateString);
-
-    var fontSliders = $('#cp_font-color-settings .cp_color-settings_slide').not('.cp_colorblind-split');
-    buildCSSgradient(fontSliders.eq(0), 'red', colorDataObj.fontColorInHex);
-    buildCSSgradient(fontSliders.eq(1), 'green', colorDataObj.fontColorInHex);
-    buildCSSgradient(fontSliders.eq(2), 'blue', colorDataObj.fontColorInHex);
-    
-    var backgroundSliders = $('#cp_background-color-settings .cp_color-settings_slide').not('.cp_colorblind-split');
-    buildCSSgradient( backgroundSliders.eq(0), 'red',   colorDataObj.bgColorInHex);
-    buildCSSgradient( backgroundSliders.eq(1), 'green', colorDataObj.bgColorInHex);
-    buildCSSgradient( backgroundSliders.eq(2), 'blue',  colorDataObj.bgColorInHex); 
-
-    
-    $('#font-luminosity-result').text( colorDataObj.fontLuminance   );
-    $('#bg-luminosity-result').text(   colorDataObj.bgLuminance     );
-    $('#current-contrast').text(       colorDataObj.currentContrast );
-
-
-    if(colorDataObj.currentContrast < colorDataObj.contrastTarget) $('.cp_color-settings_container').addClass('range-alert');
-    if(colorDataObj.currentContrast > colorDataObj.contrastTarget) $('.cp_color-settings_container').removeClass('range-alert');
-
-
-    if(colorDataObj.currentActiveTool == 'contrast') {
-      setRangesForUI( colorDataObj );
-    }
-
-    if(colorDataObj.currentActiveTool == 'colorblindness') {
-      colorDataObj.colorblindActiveFilter = $('#cp_colorblindness-filter-button').attr('data-filter-state');
-      updateColorBlindnessGradient(colorDataObj.colorblindActiveFilter);
-    }
+  if(colorDataObj.currentActiveTool == 'colorblindness') {
+    colorDataObj.colorblindActiveFilter = $('#cp_colorblindness-filter-button').attr('data-filter-state');
+    updateColorBlindnessGradient(colorDataObj.colorblindActiveFilter);
+  }
 
   });
 
@@ -340,6 +342,34 @@ function moveMarker( targetMarker, newValue ) { //
     targetMarker.css('transform', 'translate3d(' + newValue + 'px, 0px, 0px)');
   }
 }
+
+function enableClickDrag( targetGroup ) {
+  targetGroup = $(targetGroup);
+  targetGroup.each(function() {
+    var thisSlide = $(this).find('.cp_color-settings_slide');
+    thisSlide.click(function(e){
+      var slider = $(this);
+      var container = slider.parent('.cp_color-settings_slider-container');
+      var sliderOffset = slider.offset();
+      var rel_X = Math.round(e.pageX - sliderOffset.left -15);
+      if(rel_X > 255) { rel_X = 255; } else if(rel_X < 0) { rel_X = 0; }
+      container.find('.cp_slider-textfield')
+        .val(rel_X)
+        .attr('value', rel_X)
+        .trigger('change');
+      moveMarker(container.find('.cp_color-settings_slide-marker'), rel_X);
+    });
+  });
+  
+}
+
+// $("#test").click(function(e) {
+//   var offset = $(this).offset();
+//   var relativeX = (e.pageX - offset.left);
+//   var relativeY = (e.pageY - offset.top);
+//   alert(relativeX+':'+relativeY);
+//   $(".position").val("afaf");
+// });
 
 
 function enableMarkerDrag( targetElement, targetTextField ) {
@@ -839,14 +869,8 @@ function removeLuminanceMultiplier( targetAdjustedValue ) { // same as getOrigin
 
 function calcRequiredLuminance( greaterLuminance, lesserLuminance, targetContrast, colorDataObj ) {
   var greaterLuminanceTarget = colorDataObj.targetContrast * ( lesserLuminance + 0.05 ) - 0.05;
-  // var greaterLuminanceTarget = targetContrast * ( lesserLuminance + 0.05 ) - 0.05; // DELETE
-
-  // var greaterLuminanceTarget = ((lesserLuminance + 0.05)  * targetContrast ) - 0.05;
-  
   var lesserLuminanceTarget =  ((greaterLuminance + 0.05) / colorDataObj.targetContrast ) - 0.05;
-  // var lesserLuminanceTarget =  ((greaterLuminance + 0.05) / targetContrast ) - 0.05; // DELETE
   var returnObject = colorDataObj;
-  // returnObject.targetContrast = targetContrast;
   returnObject.greaterLumTarget = greaterLuminanceTarget;
   returnObject.lesserLumTarget  = lesserLuminanceTarget;
   return returnObject;
@@ -919,22 +943,28 @@ function setRangesForUI( colorDataObj ) {
   if(colorDataObj.brighterColorIs == 'font' && colorDataObj.targetContrast != 0) {
 
     $('#cp_font-color-settings .cp_color-settings_a11y-fail-range').eq(0)
+      .attr('data-fail-value', normalizeRange(colorDataObj.fontRangeRed))
       .css('width', (normalizeRange(colorDataObj.fontRangeRed)) + 'px')
       .css('right', '');
     $('#cp_font-color-settings .cp_color-settings_a11y-fail-range').eq(1)
+      .attr('data-fail-value', normalizeRange(colorDataObj.fontRangeGreen))
       .css('width', (normalizeRange(colorDataObj.fontRangeGreen)) + 'px')
       .css('right', '');
     $('#cp_font-color-settings .cp_color-settings_a11y-fail-range').eq(2)
+      .attr('data-fail-value', normalizeRange(colorDataObj.fontRangeBlue))
       .css('width', (normalizeRange(colorDataObj.fontRangeBlue)) + 'px')
       .css('right', '');
 
     $('#cp_background-color-settings .cp_color-settings_a11y-fail-range').eq(0)
+      .attr('data-fail-value', 260 - normalizeRange(colorDataObj.bgRangeRed))
       .css('width', (260 - normalizeRange(colorDataObj.bgRangeRed)) + 'px')
       .css('right', '105px');
     $('#cp_background-color-settings .cp_color-settings_a11y-fail-range').eq(1)
+      .attr('data-fail-value', 260 - normalizeRange(colorDataObj.bgRangeGreen))
       .css('width', (260 - normalizeRange(colorDataObj.bgRangeGreen)) + 'px')
       .css('right', '105px');
     $('#cp_background-color-settings .cp_color-settings_a11y-fail-range').eq(2)
+      .attr('data-fail-value', 260 - normalizeRange(colorDataObj.bgRangeBlue))
       .css('width', (260 - normalizeRange(colorDataObj.bgRangeBlue)) + 'px')
       .css('right', '105px');
     $('.cp_color-settings_a11y-fail-range')
@@ -947,22 +977,28 @@ function setRangesForUI( colorDataObj ) {
 
   if(colorDataObj.brighterColorIs == 'bg' && colorDataObj.targetContrast != 0) {
     $('#cp_background-color-settings .cp_color-settings_a11y-fail-range').eq(0)
+      .attr('data-fail-value', normalizeRange(colorDataObj.bgRangeRed))
       .css('width', (normalizeRange(colorDataObj.bgRangeRed)) + 'px')
       .css('right', '');
     $('#cp_background-color-settings .cp_color-settings_a11y-fail-range').eq(1)
+      .attr('data-fail-value', normalizeRange(colorDataObj.bgRangeGreen))
       .css('width', (normalizeRange(colorDataObj.bgRangeGreen)) + 'px')
       .css('right', '');
     $('#cp_background-color-settings .cp_color-settings_a11y-fail-range').eq(2)
+      .attr('data-fail-value', normalizeRange(colorDataObj.bgRangeBlue))
       .css('width', (normalizeRange(colorDataObj.bgRangeBlue)) + 'px')
       .css('right', '');
 
     $('#cp_font-color-settings .cp_color-settings_a11y-fail-range').eq(0)
+      .attr('data-fail-value', 260 - normalizeRange(colorDataObj.fontRangeRed))
       .css('width', (260 - normalizeRange(colorDataObj.fontRangeRed)) + 'px')
       .css('right', '105px');
     $('#cp_font-color-settings .cp_color-settings_a11y-fail-range').eq(1)
+      .attr('data-fail-value', 260 - normalizeRange(colorDataObj.fontRangeGreen))
       .css('width', (260 - normalizeRange(colorDataObj.fontRangeGreen)) + 'px')
       .css('right', '105px');
     $('#cp_font-color-settings .cp_color-settings_a11y-fail-range').eq(2)
+      .attr('data-fail-value', 260 - normalizeRange(colorDataObj.fontRangeBlue))
       .css('width', (260 - normalizeRange(colorDataObj.fontRangeBlue)) + 'px')
       .css('right', '105px');
     $('.cp_color-settings_a11y-fail-range')
