@@ -667,7 +667,8 @@ colorpicker.css*/
   height: 17px;
   margin-top: 14px;
   margin-left: 0px;
-  z-index: 1;
+  z-index: 1; /* req'd > keeps split visible */
+
 }
 
 
