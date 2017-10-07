@@ -1,22 +1,4 @@
 // contrast-colorblind-colorpicker.js
-// Colorpicker.JS provides the following features for the CAS colorpicker, version 1
-// 1. location-dependent modal window popup [ DONE ]
-// 2. realtime build of background gradient for each slider's color values
-// 3. realtime update of current value to the text field and vice versa when text field value is changed
-// 4. validation of values for text fields AND retention of previous value for text field if input is in error
-// 5. drag-drop functionality to "save a palette" (font/background color pairing)
-// 6. all features can be activated and tasks performed via focus management (plans for blind accessibility as well.)
-
-
-
-// [ TASKS COMPLETED ]
-// 15 minutes...
-// close function for modal window
-// first TweenLite animation sequence
-
-// 15 minutes...
-// TweenLite animation of close
-//
 
 // START Utilities 
 
