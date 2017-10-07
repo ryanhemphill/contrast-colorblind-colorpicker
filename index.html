@@ -32,7 +32,7 @@
             <h2>Contrast/Colorblind Color Picker</h2>
         </div>
         <div class="cp_sample">
-            <div><input id="cp_sample-content" type="text" value="The quick fox jumped over the lazy brown dog"></div>
+            <div><input aria-label="text sample area" id="cp_sample-content" type="text" value="The quick fox jumped over the lazy brown dog"></div>
         </div>
 
         <div class="cp_settings-menu_NEW">
@@ -73,7 +73,7 @@
 
               <div class="cp_contrast-settings_results-region">
                 <span>Results: </span>
-                <span id="cp_a11y-status-update"></span>
+                <span id="cp_a11y-status-update" role="status" aria-live="polite"></span>
               </div>
 
 
@@ -111,34 +111,34 @@
           </div>
           <div class="cp_color-settings_slider-container">
             <span class="cp_color-settings_slide-title">
-                <h4>Red</h4> 
+                <h4>Red<span class="sr-only"> for font color</span></h4> 
             </span>
 
-            <span class="cp_color-settings_slide-marker" tabindex="0">
+            <span class="cp_color-settings_slide-marker" tabindex="0" role="slider" aria-valuemin="1" aria-valuemax="255" aria-valuenow="0">
               <span class="cp_color-settings_marker-color"></span>
             </span>
-            <span class="cp_color-settings_a11y-fail-range"></span>
+            <span class="cp_color-settings_a11y-fail-range" aria-hidden="true"></span>
             <span class="cp_color-settings_slide cp_colorblind-split"></span>
             <span class="cp_color-settings_slide"></span> 
 
             <span class="cp_color-settings_value">
-                <input type="text" id="cp_slider_font_first-value" class="cp_slider-textfield" value="0">
+                <input type="text" aria-label="red value" id="cp_slider_font_first-value" class="cp_slider-textfield" value="0">
             </span>
           </div> 
           <div class="cp_color-settings_slider-container">
             <span class="cp_color-settings_slide-title">
-                <h4>Green</h4> 
+                <h4>Green<span class="sr-only"> for font color</span></h4> 
             </span>
 
-            <span class="cp_color-settings_slide-marker" tabindex="0">
+            <span class="cp_color-settings_slide-marker" tabindex="0" role="slider" aria-valuemin="1" aria-valuemax="255" aria-valuenow="0">
               <span class="cp_color-settings_marker-color"></span>
             </span>
-            <span class="cp_color-settings_a11y-fail-range"></span>
+            <span class="cp_color-settings_a11y-fail-range" aria-hidden="true"></span>
             <span class="cp_color-settings_slide cp_colorblind-split"></span>
             <span class="cp_color-settings_slide"></span> 
 
             <span class="cp_color-settings_value">
-                <input type="text" id="cp_slider_font_second-value" class="cp_slider-textfield" value="0">
+                <input type="text" aria-label="green value" id="cp_slider_font_second-value" class="cp_slider-textfield" value="0">
             </span>
             
 
@@ -146,17 +146,17 @@
           <!-- Slide #3 -->
           <div class="cp_color-settings_slider-container">
             <span class="cp_color-settings_slide-title">
-                <h4>Blue</h4> 
+                <h4>Blue<span class="sr-only"> for font color</span></h4> 
             </span>
 
-            <span class="cp_color-settings_slide-marker" tabindex="0">
+            <span class="cp_color-settings_slide-marker" tabindex="0" role="slider" aria-valuemin="1" aria-valuemax="255" aria-valuenow="0">
               <span class="cp_color-settings_marker-color"></span>
             </span>
-            <span class="cp_color-settings_a11y-fail-range"></span>
+            <span class="cp_color-settings_a11y-fail-range" aria-hidden="true"></span>
             <span class="cp_color-settings_slide cp_colorblind-split"></span>
             <span class="cp_color-settings_slide"></span> <!-- INSERT Gradient -->
             <span class="cp_color-settings_value">
-                <input type="text" id="cp_slider_font_third-value" class="cp_slider-textfield" value="0">
+                <input type="text" aria-label="green value" id="cp_slider_font_third-value" class="cp_slider-textfield" value="0">
             </span>
 
           </div> 
@@ -170,48 +170,49 @@
           <!-- Slide #1 -->
           <div class="cp_color-settings_slider-container">
             <span class="cp_color-settings_slide-title">
-                <h4>Red</h4> 
+                <h4>Red<span class="sr-only"> for background color</span></h4> 
             </span>
             
-            <span class="cp_color-settings_slide-marker" tabindex="0">
+            <span class="cp_color-settings_slide-marker" tabindex="0" role="slider" aria-valuemin="1" aria-valuemax="255" aria-valuenow="255">
               <span class="cp_color-settings_marker-color"></span>
             </span>
-            <span class="cp_color-settings_a11y-fail-range"></span>
+            <span class="cp_color-settings_a11y-fail-range" aria-hidden="true"></span>
             <span class="cp_color-settings_slide cp_colorblind-split"></span>
             <span class="cp_color-settings_slide"></span>
 
+
             <span class="cp_color-settings_value">
-                <input type="text" id="cp_slider_bg_first-value" class="cp_slider-textfield" value="255">
+                <input type="text" aria-label="red value" id="cp_slider_bg_first-value" class="cp_slider-textfield" value="255">
             </span>
           </div> 
           <div class="cp_color-settings_slider-container">
             <span class="cp_color-settings_slide-title">
-                <h4>Green</h4> 
+                <h4>Green<span class="sr-only"> for background color</span></h4> 
             </span>
 
-            <span class="cp_color-settings_slide-marker" tabindex="0">
+            <span class="cp_color-settings_slide-marker" tabindex="0" role="slider" aria-valuemin="1" aria-valuemax="255" aria-valuenow="255">
               <span class="cp_color-settings_marker-color"></span>
             </span>
-            <span class="cp_color-settings_a11y-fail-range"></span>
+            <span class="cp_color-settings_a11y-fail-range" aria-hidden="true"></span>
             <span class="cp_color-settings_slide cp_colorblind-split"></span>
             <span class="cp_color-settings_slide"></span> 
             <span class="cp_color-settings_value">
-                <input type="text" id="cp_slider_bg_second-value" class="cp_slider-textfield" value="255">
+                <input type="text" aria-label="blue value" id="cp_slider_bg_second-value" class="cp_slider-textfield" value="255">
             </span>
           </div> 
           <div class="cp_color-settings_slider-container">
             <span class="cp_color-settings_slide-title">
-                <h4>Blue</h4> 
+                <h4>Blue<span class="sr-only"> for background color</span></h4> 
             </span>
 
-            <span class="cp_color-settings_slide-marker" tabindex="0">
+            <span class="cp_color-settings_slide-marker" tabindex="0" role="slider" aria-valuemin="1" aria-valuemax="255" aria-valuenow="255">
               <span class="cp_color-settings_marker-color"></span>
             </span>
-            <span class="cp_color-settings_a11y-fail-range"></span>
+            <span class="cp_color-settings_a11y-fail-range" aria-hidden="true"></span>
             <span class="cp_color-settings_slide cp_colorblind-split"></span>
             <span class="cp_color-settings_slide"></span> 
             <span class="cp_color-settings_value">
-                <input type="text" id="cp_slider_bg_third-value" class="cp_slider-textfield" value="255">
+                <input type="text" aria-label="green value" id="cp_slider_bg_third-value" class="cp_slider-textfield" value="255">
             </span>
           </div> 
         </div>
