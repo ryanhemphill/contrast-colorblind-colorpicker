@@ -339,7 +339,9 @@ function stepNumber( targetElement, passedEvent, newValue) {
 function moveMarker( targetMarker, newValue ) { // 
   // get width
   if(newValue > -1 && newValue < 256) {
-    targetMarker.css('transform', 'translate3d(' + newValue + 'px, 0px, 0px)');
+    targetMarker
+      .css('transform', 'translate3d(' + newValue + 'px, 0px, 0px)')
+      .attr('aria-valuenow', newValue);
   }
 }
 
