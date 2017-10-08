@@ -102,17 +102,6 @@ $(document).ready(function() {
   setSampleArea( colorDataObj.fontColorInHex, colorDataObj.bgColorInHex );
 
 
-
-function updateSampleArea( fontColorValue, backgroundColorValue ) {
-  $('#cp_sample-content')
-    .css('color', '#' + fontColorValue)
-    .css('background-color', '#' + backgroundColorValue);
-  $('#cp_font-swatch').css('background-color', '#' + fontColorValue);
-  $('#cp_background-swatch').css('background-color', '#' + backgroundColorValue);
-}
-
-
-
 setupCBtoggle();
 
 function setMarkerColor( whichMarkers, hexColorValue ) {
@@ -126,16 +115,14 @@ function setSampleArea( fontColorValue, backgroundColorValue ) {
     .css('background-color', '#' + backgroundColorValue);
   $('#cp_font-swatch').css('background-color', '#' + fontColorValue);
   $('#cp_background-swatch').css('background-color', '#' + backgroundColorValue);
-}
-
-
-
-function updateSampleArea( fontColorValue, backgroundColorValue ) {
-  $('#cp_sample-content')
-    .css('color', '#' + fontColorValue)
-    .css('background-color', '#' + backgroundColorValue);
-  $('#cp_font-swatch').css('background-color', '#' + fontColorValue);
-  $('#cp_background-swatch').css('background-color', '#' + backgroundColorValue);
+  var fontColorName = findClosestColorHex(fontColorValue);
+  var backgroundColorName = findClosestColorHex(backgroundColorValue);
+  $('#font-color-name')
+    // .attr('aria-label', convertColorNameToReadable(fontColorName))
+    .html(convertColorNameToReadable(fontColorName));
+  $('#background-color-name')
+    // .attr('aria-label', convertColorNameToReadable(backgroundColorName))
+    .html(convertColorNameToReadable(backgroundColorName));
 }
 
 
@@ -1269,7 +1256,11 @@ function monochrome(r) { var z=Math.round(r[0]*.299+r[1]*.587+r[2]*.114); return
 // closest color matching solution
 
 function convertColorNameToReadable(stringArg) {
+<<<<<<< HEAD
   var returnResult = stringArg.replace(/((?!\b)[A-Z])/g, "-$&");
+=======
+  var returnResult = stringArg.replace(/((?!\b)[A-Z])/g, '<span class="sr-hide"> </span>$&');
+>>>>>>> master
   return returnResult;
 }
 
@@ -1437,11 +1428,19 @@ var Hex2RGB = function(hex) {
     return {r:r, g:g, b:b};
 };
 
+<<<<<<< HEAD
 function findClosestColorHex(hex, table) {
+=======
+function findClosestColorHex(hex) {
+>>>>>>> master
   var rgb = Hex2RGB(hex);
   var delta = 3 * 256*256;
   var temp = {r:0, g:0, b:0};
   var nameFound = 'black';
+<<<<<<< HEAD
+=======
+  var table = ColorTable;
+>>>>>>> master
   
   for(i=0; i<table.length; i++)
   {
@@ -1455,11 +1454,19 @@ function findClosestColorHex(hex, table) {
   return nameFound;
 }
 
+<<<<<<< HEAD
 function findClosestColorRGB(r, g, b, table) {
+=======
+function findClosestColorRGB(r, g, b) {
+>>>>>>> master
   var rgb = {r:r, g:g, b:b};
   var delta = 3 * 256*256;
   var temp = {r:0, g:0, b:0};
   var nameFound = 'black';
+<<<<<<< HEAD
+=======
+  var table = ColorTable;
+>>>>>>> master
   
   for(i=0; i<table.length; i++)
   {
