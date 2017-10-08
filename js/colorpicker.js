@@ -136,10 +136,10 @@ function setSampleArea( fontColorValue, backgroundColorValue ) {
   var fontColorName = findClosestColorHex(fontColorValue);
   var backgroundColorName = findClosestColorHex(backgroundColorValue);
   $('#font-color-name')
-    // .attr('aria-label', convertColorNameToReadable(fontColorName))
+    .attr('data-colorname', fontColorName)
     .html(convertColorNameToReadable(fontColorName));
   $('#background-color-name')
-    // .attr('aria-label', convertColorNameToReadable(backgroundColorName))
+    .attr('data-colorname', backgroundColorName)
     .html(convertColorNameToReadable(backgroundColorName));
 }
 
@@ -1278,6 +1278,64 @@ function convertColorNameToReadable(stringArg) {
   return returnResult;
 }
 
+function searchColorHexByName(colorNameArg) {
+  colorNameArg = colorNameArg.toLowerCase();
+  var table = ColorTable;
+  for(i=0; i<table.length; i++) {
+    var thisColorName = table[i].name.toLowerCase();
+    if(colorNameArg == thisColorName) {
+      return table[i].hex;
+    }
+  }
+  return false; // color name not found
+}
+
+// applyColorNameToRGB('#cp_background-color-settings', 'Maroon')
+
+$('#background-color-name').bind('click', function() {
+  var self = $(this),
+      targetContainer = $(this).parents('.cp_color-settings_container'),
+      colorNameArg = self.attr('data-colorname');
+  applyColorNameToRGB(targetContainer, colorNameArg);
+});
+
+$('#font-color-name').bind('click', function() {
+  var self = $(this),
+      targetContainer = $(this).parents('.cp_color-settings_container'),
+      colorNameArg = self.attr('data-colorname');
+  applyColorNameToRGB(targetContainer, colorNameArg);
+});
+
+
+
+function applyColorNameToRGB(targetContainer, colorNameArg) {
+  var colorNameInHex = searchColorHexByName(colorNameArg);
+  var colorNameInRGB = Hex2RGB(colorNameInHex);
+  targetContainer = $(targetContainer);
+  var redTextfield    = targetContainer.find('[aria-label="red value"]'),
+      greenTextfield  = targetContainer.find('[aria-label="green value"]'),
+      blueTextfield   = targetContainer.find('[aria-label="blue value"]'),
+      redMarker       = targetContainer.find('.cp_color-settings_slide-marker').eq(0),
+      greenMarker     = targetContainer.find('.cp_color-settings_slide-marker').eq(1),
+      blueMarker      = targetContainer.find('.cp_color-settings_slide-marker').eq(2);
+
+  // var alphaTextfield = targetContainer.find('[aria-label="alpha-value"]');
+  // var alphaMarker = targetContainer.find('.cp_color-settings_marker-color').eq(3);
+  // alphaTextfield.val(1).attr('value','1'); // resets alpha to 1
+  redTextfield
+    .val(colorNameInRGB['r'])
+    .attr('value', colorNameInRGB['r']);
+  blueTextfield
+    .val(colorNameInRGB['b'])
+    .attr('value', colorNameInRGB['b']);
+  greenTextfield
+    .val(colorNameInRGB['g'])
+    .attr('value', colorNameInRGB['g'])
+    .trigger('change'); // activates color shift
+  moveMarker( redMarker, colorNameInRGB['r'] );
+  moveMarker( greenMarker, colorNameInRGB['g'] );
+  moveMarker( blueMarker, colorNameInRGB['b'] );
+}
 
 var ColorTable = [
   { name: 'Black', hex: '000000' }, 
