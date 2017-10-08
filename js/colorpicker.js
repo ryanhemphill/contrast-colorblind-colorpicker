@@ -120,17 +120,6 @@ $(document).ready(function() {
   setSampleArea( colorDataObj.fontColorInHex, colorDataObj.bgColorInHex );
 
 
-
-function updateSampleArea( fontColorValue, backgroundColorValue ) {
-  $('#cp_sample-content')
-    .css('color', '#' + fontColorValue)
-    .css('background-color', '#' + backgroundColorValue);
-  $('#cp_font-swatch').css('background-color', '#' + fontColorValue);
-  $('#cp_background-swatch').css('background-color', '#' + backgroundColorValue);
-}
-
-
-
 setupCBtoggle();
 
 function setMarkerColor( whichMarkers, hexColorValue ) {
@@ -144,16 +133,14 @@ function setSampleArea( fontColorValue, backgroundColorValue ) {
     .css('background-color', '#' + backgroundColorValue);
   $('#cp_font-swatch').css('background-color', '#' + fontColorValue);
   $('#cp_background-swatch').css('background-color', '#' + backgroundColorValue);
-}
-
-
-
-function updateSampleArea( fontColorValue, backgroundColorValue ) {
-  $('#cp_sample-content')
-    .css('color', '#' + fontColorValue)
-    .css('background-color', '#' + backgroundColorValue);
-  $('#cp_font-swatch').css('background-color', '#' + fontColorValue);
-  $('#cp_background-swatch').css('background-color', '#' + backgroundColorValue);
+  var fontColorName = findClosestColorHex(fontColorValue);
+  var backgroundColorName = findClosestColorHex(backgroundColorValue);
+  $('#font-color-name')
+    // .attr('aria-label', convertColorNameToReadable(fontColorName))
+    .html(convertColorNameToReadable(fontColorName));
+  $('#background-color-name')
+    // .attr('aria-label', convertColorNameToReadable(backgroundColorName))
+    .html(convertColorNameToReadable(backgroundColorName));
 }
 
 
@@ -1287,7 +1274,7 @@ function monochrome(r) { var z=Math.round(r[0]*.299+r[1]*.587+r[2]*.114); return
 // closest color matching solution
 
 function convertColorNameToReadable(stringArg) {
-  var returnResult = stringArg.replace(/((?!\b)[A-Z])/g, "-$&");
+  var returnResult = stringArg.replace(/((?!\b)[A-Z])/g, '<span class="sr-hide"> </span>$&');
   return returnResult;
 }
 
@@ -1455,11 +1442,12 @@ var Hex2RGB = function(hex) {
     return {r:r, g:g, b:b};
 };
 
-function findClosestColorHex(hex, table) {
+function findClosestColorHex(hex) {
   var rgb = Hex2RGB(hex);
   var delta = 3 * 256*256;
   var temp = {r:0, g:0, b:0};
   var nameFound = 'black';
+  var table = ColorTable;
   
   for(i=0; i<table.length; i++)
   {
@@ -1473,11 +1461,12 @@ function findClosestColorHex(hex, table) {
   return nameFound;
 }
 
-function findClosestColorRGB(r, g, b, table) {
+function findClosestColorRGB(r, g, b) {
   var rgb = {r:r, g:g, b:b};
   var delta = 3 * 256*256;
   var temp = {r:0, g:0, b:0};
   var nameFound = 'black';
+  var table = ColorTable;
   
   for(i=0; i<table.length; i++)
   {
@@ -1496,50 +1485,10 @@ function findClosestColorRGB(r, g, b, table) {
 
 
 // Example code
-
-// $('document').ready(function(){
- 
-//   $('#slider_r').val(0);
-//   $('#slider_g').val(0);
-//   $('#slider_b').val(0);
-  
-  // findClosestColorRGB(redVal, blueVal, greenVal, ColorTable);
-
-
-//   function ReCalc()
-//   {
-//     $('#selected_color').css('background-color', 'rgb('+$('#slider_r').val()+', '+$('#slider_g').val()+', '+$('#slider_b').val()+')');
-//     var ret = findClosestColorRGB($('#slider_r').val(), $('#slider_g').val(), $('#slider_b').val(), ColorTable);
-//     $('#matched_color').css('background-color', ret);
-//     $('#color_name').html(ret);
-//   }
-  
-//   $('#slider_r').change(function(){
-//     $('#value_r').val($('#slider_r').val());
-//     ReCalc();
-//   });
-//   $('#slider_g').change(function(){
-//     $('#value_g').val($('#slider_g').val());
-//     ReCalc();
-//   });
-//   $('#slider_b').change(function(){
-//     $('#value_b').val($('#slider_b').val());
-//     ReCalc();
-//   });
-
-// });
-
-
-
+// findClosestColorRGB(redVal, blueVal, greenVal, ColorTable);
 // credits
 
 // CSS Color Name Matcher - https://stackoverflow.com/users/8005142/todor-simeonov
 
 
 
-// key event testing
-
-$('body').keyup(function(event) {
-  var test = 'hello world';
-  return event;
-});
