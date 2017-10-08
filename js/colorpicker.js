@@ -1,4 +1,22 @@
 // contrast-colorblind-colorpicker.js
+// Colorpicker.JS provides the following features for the CAS colorpicker, version 1
+// 1. location-dependent modal window popup [ DONE ]
+// 2. realtime build of background gradient for each slider's color values
+// 3. realtime update of current value to the text field and vice versa when text field value is changed
+// 4. validation of values for text fields AND retention of previous value for text field if input is in error
+// 5. drag-drop functionality to "save a palette" (font/background color pairing)
+// 6. all features can be activated and tasks performed via focus management (plans for blind accessibility as well.)
+
+
+
+// [ TASKS COMPLETED ]
+// 15 minutes...
+// close function for modal window
+// first TweenLite animation sequence
+
+// 15 minutes...
+// TweenLite animation of close
+//
 
 // START Utilities 
 
@@ -1256,11 +1274,7 @@ function monochrome(r) { var z=Math.round(r[0]*.299+r[1]*.587+r[2]*.114); return
 // closest color matching solution
 
 function convertColorNameToReadable(stringArg) {
-<<<<<<< HEAD
-  var returnResult = stringArg.replace(/((?!\b)[A-Z])/g, "-$&");
-=======
   var returnResult = stringArg.replace(/((?!\b)[A-Z])/g, '<span class="sr-hide"> </span>$&');
->>>>>>> master
   return returnResult;
 }
 
@@ -1428,19 +1442,12 @@ var Hex2RGB = function(hex) {
     return {r:r, g:g, b:b};
 };
 
-<<<<<<< HEAD
-function findClosestColorHex(hex, table) {
-=======
 function findClosestColorHex(hex) {
->>>>>>> master
   var rgb = Hex2RGB(hex);
   var delta = 3 * 256*256;
   var temp = {r:0, g:0, b:0};
   var nameFound = 'black';
-<<<<<<< HEAD
-=======
   var table = ColorTable;
->>>>>>> master
   
   for(i=0; i<table.length; i++)
   {
@@ -1454,19 +1461,12 @@ function findClosestColorHex(hex) {
   return nameFound;
 }
 
-<<<<<<< HEAD
-function findClosestColorRGB(r, g, b, table) {
-=======
 function findClosestColorRGB(r, g, b) {
->>>>>>> master
   var rgb = {r:r, g:g, b:b};
   var delta = 3 * 256*256;
   var temp = {r:0, g:0, b:0};
   var nameFound = 'black';
-<<<<<<< HEAD
-=======
   var table = ColorTable;
->>>>>>> master
   
   for(i=0; i<table.length; i++)
   {
