@@ -66,9 +66,10 @@ $(document).ready(function() {
  
   function pullValuesFromRgbTexfields() {
     
-    var fontRed = Number($('#cp_font-color-settings .cp_slider-textfield').eq(0).val());
+    var fontRed   = Number($('#cp_font-color-settings .cp_slider-textfield').eq(0).val());
     var fontGreen = Number($('#cp_font-color-settings .cp_slider-textfield').eq(1).val());
-    var fontBlue = Number($('#cp_font-color-settings .cp_slider-textfield').eq(2).val());
+    var fontBlue  = Number($('#cp_font-color-settings .cp_slider-textfield').eq(2).val());
+    var fontAlpha = Number($('#cp_font-color-settings .cp_slider-textfield').eq(3).val()) * .01;
     var fontHEX = rgbToHex(fontRed, fontGreen, fontBlue);
 
     var bgRed = Number($('#cp_background-color-settings .cp_slider-textfield').eq(0).val());
@@ -80,8 +81,10 @@ $(document).ready(function() {
     colorDataObj.fontColors.r = fontRed;
     colorDataObj.fontColors.g = fontGreen;
     colorDataObj.fontColors.b = fontBlue;
-
+    colorDataObj.fontColors.a = fontAlpha;
     colorDataObj.fontColorsInHex = fontHEX;
+
+    
 
     colorDataObj.bgColors = {};
     colorDataObj.bgColors.r = bgRed;
@@ -89,6 +92,8 @@ $(document).ready(function() {
     colorDataObj.bgColors.b = bgBlue;
 
     colorDataObj.bgColorsInHex = bgHEX;
+    
+    colorDataObj.fontColorSansAlpha = convertRGBwithAlphaChannel(colorDataObj.fontColors, colorDataObj.bgColors);
 
     return colorDataObj;
   }
@@ -117,24 +122,36 @@ $(document).ready(function() {
 
   // setSampleArea( fontHEX, bgHEX ); // DELETE
 
-  setSampleArea( colorDataObj.fontColorInHex, colorDataObj.bgColorInHex );
-
+  // setSampleArea( colorDataObj.fontColorInHex, colorDataObj.bgColorInHex );
+  setSampleArea( colorDataObj.fontColors, colorDataObj.bgColors );
+  
 
 setupCBtoggle();
 
-function setMarkerColor( whichMarkers, hexColorValue ) {
-  if(whichMarkers == 'font')       $('#cp_font-color-settings .cp_color-settings_marker-color').css('background-color', "#" + hexColorValue);
-  if(whichMarkers == 'background') $('#cp_background-color-settings .cp_color-settings_marker-color').css('background-color', "#" + hexColorValue);
+function setMarkerColor( whichMarkers, colorValue ) {
+  if(typeof colorValue === 'string') { colorValue = hexToRgb(colorValue); }
+  colorValue['a'] = 1; 
+  if(whichMarkers == 'font')       $('#cp_font-color-settings .cp_color-settings_marker-color').css('background-color', "rgba("+colorValue.r +','+colorValue.g+','+colorValue.b+','+colorValue.a+')');
+  if(whichMarkers == 'background') $('#cp_background-color-settings .cp_color-settings_marker-color').css('background-color', "rgba("+colorValue.r +','+colorValue.g+','+colorValue.b+','+colorValue.a+')');
+  if(whichMarkers == 'font')       $('#cp_font-color-settings .cp_color-settings_marker-color').css('background-color', "rgb("+colorDataObj.fontColorSansAlpha.r +','+colorDataObj.fontColorSansAlpha.g+','+colorDataObj.fontColorSansAlpha.b+')');
+  // if(whichMarkers == 'background') $('#cp_background-color-settings .cp_color-settings_marker-color').css('background-color', "rgba("+colorValue.r +','+colorValue.g+','+colorValue.b+','+colorValue.a+')');
 }
 
 function setSampleArea( fontColorValue, backgroundColorValue ) {
+  if(typeof fontColorValue        === 'string') { fontColorValue        = hexToRgb(fontColorValue); }
+  if(typeof backgroundColorValue  === 'string') { backgroundColorValue  = hexToRgb(backgroundColorValue); }
+  if(!fontColorValue.a && fontColorValue.a != 0){ fontColorValue.a      = 100 ;}
+  var fontColorString = "rgba("+fontColorValue.r +','+fontColorValue.g+','+fontColorValue.b+','+(fontColorValue.a * 0.01)+')';
+  var bgColorString   = "rgb("+backgroundColorValue.r +','+backgroundColorValue.g+','+backgroundColorValue.b+')';
   $('#cp_sample-content')
-    .css('color', '#' + fontColorValue)
-    .css('background-color', '#' + backgroundColorValue);
-  $('#cp_font-swatch').css('background-color', '#' + fontColorValue);
-  $('#cp_background-swatch').css('background-color', '#' + backgroundColorValue);
-  var fontColorName = findClosestColorHex(fontColorValue);
-  var backgroundColorName = findClosestColorHex(backgroundColorValue);
+    .css('color',            fontColorString)
+    .css('background-color', bgColorString);
+  $('#cp_font-swatch').css('background-color', fontColorString);
+  $('#cp_background-swatch').css('background-color', bgColorString);
+  // note - by converting the rgba font color to a rgb value set, it makes closestMatch still accurate
+  var fontColorSansAlpha  = convertRGBwithAlphaChannel(fontColorValue, backgroundColorValue);
+  var fontColorName       = findClosestColorRGB(fontColorSansAlpha);
+  var backgroundColorName = findClosestColorRGB(backgroundColorValue);
   $('#font-color-name')
     .attr('data-colorname', fontColorName)
     .html(convertColorNameToReadable(fontColorName));
@@ -149,7 +166,7 @@ function setSampleArea( fontColorValue, backgroundColorValue ) {
 moveMarker( $('#cp_font-color-settings .cp_color-settings_slide-marker').eq(0), colorDataObj.fontColors.r );
 moveMarker( $('#cp_font-color-settings .cp_color-settings_slide-marker').eq(1), colorDataObj.fontColors.g );
 moveMarker( $('#cp_font-color-settings .cp_color-settings_slide-marker').eq(2), colorDataObj.fontColors.b );
-
+moveMarker( $('#cp_font-color-settings .cp_color-settings_slide-marker').eq(3), colorDataObj.fontColors.a, 255 );
 moveMarker( $('#cp_background-color-settings .cp_color-settings_slide-marker').eq(0), colorDataObj.bgColors.r );
 moveMarker( $('#cp_background-color-settings .cp_color-settings_slide-marker').eq(1), colorDataObj.bgColors.g );
 moveMarker( $('#cp_background-color-settings .cp_color-settings_slide-marker').eq(2), colorDataObj.bgColors.b );
@@ -188,10 +205,12 @@ textfieldElements.change(function() {
 
   if($('#toggle-btn-colorblindness').hasClass('toggle-off')) { // non-colorblind
     
-    setSampleArea( colorDataObj.fontColorInHex, colorDataObj.bgColorInHex );
+    // setSampleArea( colorDataObj.fontColorInHex, colorDataObj.bgColorInHex );
+    setSampleArea( colorDataObj.fontColors, colorDataObj.bgColors );
   } else { // [ TASK - update with colorblindness toggle feature ]
     
-    setSampleArea( colorDataObj.fontColorInHex, colorDataObj.bgColorInHex );
+    // setSampleArea( colorDataObj.fontColorInHex, colorDataObj.bgColorInHex );
+    setSampleArea( colorDataObj.fontColors, colorDataObj.bgColors );
   }
   
   var contrastUpdateString = colorDataObj.currentContrast;  
@@ -214,21 +233,20 @@ textfieldElements.change(function() {
   buildCSSgradient(fontSliders.eq(0), 'red', colorDataObj.fontColorInHex);
   buildCSSgradient(fontSliders.eq(1), 'green', colorDataObj.fontColorInHex);
   buildCSSgradient(fontSliders.eq(2), 'blue', colorDataObj.fontColorInHex);
-  
+  //updateCheckerboardPattern('#alpha-checkerboard-pattern', '#alpha-subcheckerboard-pattern', colorDataObj.fontColorInRGB, colorDataObj.bgInRGB)
+  updateCheckerboardPattern('#alpha-checkerboard-pattern', '#alpha-subcheckerboard-pattern', colorDataObj.fontColors, colorDataObj.bgColors );
+
   var backgroundSliders = $('#cp_background-color-settings .cp_color-settings_slide').not('.cp_colorblind-split');
   buildCSSgradient( backgroundSliders.eq(0), 'red',   colorDataObj.bgColorInHex);
   buildCSSgradient( backgroundSliders.eq(1), 'green', colorDataObj.bgColorInHex);
   buildCSSgradient( backgroundSliders.eq(2), 'blue',  colorDataObj.bgColorInHex); 
-
   
   $('#font-luminosity-result').text( colorDataObj.fontLuminance   );
   $('#bg-luminosity-result').text(   colorDataObj.bgLuminance     );
   $('#current-contrast').text(       colorDataObj.currentContrast );
 
-
   if(colorDataObj.currentContrast < colorDataObj.contrastTarget) $('.cp_color-settings_container').addClass('range-alert');
   if(colorDataObj.currentContrast > colorDataObj.contrastTarget) $('.cp_color-settings_container').removeClass('range-alert');
-
 
   if(colorDataObj.currentActiveTool == 'contrast') {
     setRangesForUI( colorDataObj );
@@ -240,15 +258,23 @@ textfieldElements.change(function() {
   }
 
   });
+});  
 
-  $('.cp_color-settings_slide-marker, .cp_slider-textfield').keydown(function( event ) { event.stopImmediatePropagation(); stepNumber($(this),event);});
-  $('.cp_color-settings_slide-marker').each(function() { 
+$('.cp_color-settings_slide-marker, .cp_slider-textfield')
+  .keydown(       function( event ) { event.stopImmediatePropagation(); stepNumber($(this),event);})
+
+$('.cp_color-settings_slide-marker')
+  .bind('keyup',  function(event) { 
+    if(event.keyCode == 13) { // enter == 13
+      setTimeout(function() { $('#cp_a11y-status-update').attr('aria-live', 'assertive'); }, 1);
+      setTimeout(function() { $('#cp_a11y-status-update').attr('aria-live', 'off'); }, 1500);
+    }
+  })
+  .each(function() { 
     var self = $(this); 
     var textFieldTarget = self.parent().find('.cp_slider-textfield'); 
     enableMarkerDrag(self, textFieldTarget); 
   });
-});  
-
 
 function stepNumber( targetElement, passedEvent, newValue) {
   targetElement = $(targetElement);
@@ -264,132 +290,167 @@ function stepNumber( targetElement, passedEvent, newValue) {
     var targetElement, thisValue;
     if(targetElement.hasClass('cp_slider-textfield')) {
       thisValue = Number(targetElement.val());
+      var targetMarker = targetElement.parent().parent().find('.cp_color-settings_slide-marker');
+      var maxValue = parseInt(targetMarker.attr('aria-valuemax'));
+      var minValue = parseInt(targetMarker.attr('aria-valuemin'));
+      newValue = parseInt(targetMarker.attr('aria-valuenow'));
       if(thisKeyCode == 38) {
         thisValue++;
-        if(thisValue < 256) {
+        if(thisValue <= maxValue) {
           targetElement
             .val(thisValue)
             .attr('value', thisValue)
             .trigger('change');
+          var xPosition = Number.parseInt( (255 * newValue / (maxValue-minValue)) + minValue );
           setTimeout(function () { targetElement.select(); }, 50);
-          var targetMarker = targetElement.parent().parent().find('.cp_color-settings_slide-marker');
-          moveMarker( targetMarker, thisValue );  
+          moveMarker( targetMarker, thisValue, xPosition );  
         }
         
       } 
       if(thisKeyCode == 40) {
         thisValue--;
-        if(thisValue > -1) {
+        if(thisValue >= minValue) {
           targetElement
             .val(thisValue)
             .attr('value', thisValue)
             .trigger('change');
           setTimeout(function () { targetElement.select(); }, 50);
-          var targetMarker = targetElement.parent().parent().find('.cp_color-settings_slide-marker');
-          moveMarker( targetMarker, thisValue );
+          var xPosition = Number.parseInt( (255 * newValue / (maxValue-minValue)) + minValue );
+          // var targetMarker = targetElement.parent().parent().find('.cp_color-settings_slide-marker');
+          moveMarker( targetMarker, thisValue, xPosition );
         }
         
       }
       if(thisKeyCode >= 48 && thisKeyCode <= 57 || thisKeyCode == 8 || thisKeyCode == 46 || thisKeyCode == 13) {
         setTimeout(function () { 
           thisValue = Number(targetElement.val());
-          var targetMarker = targetElement.parent().parent().find('.cp_color-settings_slide-marker');
-          moveMarker( targetMarker, thisValue );
+          // var targetMarker = targetElement.parent().parent().find('.cp_color-settings_slide-marker');
+          var xPosition = Number.parseInt( (255 * newValue / (maxValue-minValue)) + minValue );
+          moveMarker( targetMarker, thisValue, xPosition );
          }, 50);
       }
     }
     if(targetElement.hasClass('cp_color-settings_slide-marker')) {
+      var targetMarker = targetElement;
+      var maxValue = parseInt(targetMarker.attr('aria-valuemax'));
+      var minValue = parseInt(targetMarker.attr('aria-valuemin'));
       var textfieldElement = targetElement.parent().find('.cp_slider-textfield');
+
       if(thisKeyCode == 39 || thisKeyCode == 33 && passedEvent.shiftKey == true) {
         thisValue = Number(textfieldElement.val());
-        if(thisValue+1 <=255) {
+
+        if(thisValue+1 <= maxValue) {
           thisValue++;
+          var xPosition = Number.parseInt( (255 * thisValue / (maxValue-minValue)) + minValue );
+      
           textfieldElement
             .val(thisValue)
             .attr('value', thisValue)
             .trigger('change');
-          moveMarker( targetElement, thisValue );
+          moveMarker( targetElement, thisValue, xPosition );
         }
       } 
       if(thisKeyCode == 37 || thisKeyCode == 34 && passedEvent.shiftKey == true) {
         thisValue = Number(textfieldElement.val());
-        if(thisValue-1 >= 0) {
+        if(thisValue-1 >= minValue) {
           thisValue--;
+          var xPosition = Number.parseInt( (255 * thisValue / (maxValue-minValue)) + minValue );
+      
           textfieldElement
             .val(thisValue)
             .attr('value', thisValue)
             .trigger('change');
-          moveMarker( targetElement, thisValue );
+          moveMarker( targetElement, thisValue, xPosition );
         }  
       }
       if(thisKeyCode == 33 && passedEvent.shiftKey == false) { // MacOS > pageUp
-          thisValue = Number(textfieldElement.val());
-          if(thisValue +10 < 256) { thisValue = thisValue+10; }
-          else { thisValue = 255; }
-          textfieldElement
-            .val(thisValue)
-            .attr('value', thisValue)
-            .trigger('change');
-          moveMarker( targetElement, thisValue );
-        }
-        if(thisKeyCode == 34 && passedEvent.shiftKey == false) { // MacOS > pageDown ()
-          thisValue = Number(textfieldElement.val());
-          if(thisValue -10 > 0) { thisValue = thisValue-10; }
-          else { thisValue = 0; }
-          textfieldElement
-            .val(thisValue)
-            .attr('value', thisValue)
-            .trigger('change');
-          moveMarker( targetElement, thisValue );
-        }
-        if(thisKeyCode == 36) { // MacOS > Home (start of slider)
-          thisValue = 0;
-          textfieldElement
-            .val(thisValue)
-            .attr('value', thisValue)
-            .trigger('change');
-          moveMarker( targetElement, thisValue );
-        }
-        if(thisKeyCode == 35) { // MacOS > End (end of slider)
-          thisValue = 255;
-          textfieldElement
-            .val(thisValue)
-            .attr('value', thisValue)
-            .trigger('change');
-          moveMarker( targetElement, thisValue );
-        }
+        thisValue = Number(textfieldElement.val());
+        if(thisValue +10 <= maxValue) { thisValue = thisValue+10; }
+        else { thisValue = maxValue; }
+        var xPosition = Number.parseInt( (255 * thisValue / (maxValue-minValue)) + minValue );
+      
+        textfieldElement
+          .val(thisValue)
+          .attr('value', thisValue)
+          .trigger('change');
+        moveMarker( targetElement, thisValue, xPosition );
+      }
+      if(thisKeyCode == 34 && passedEvent.shiftKey == false) { // MacOS > pageDown ()
+        thisValue = Number(textfieldElement.val());
+        if(thisValue -10 >= minValue) { thisValue = thisValue-10; }
+        else { thisValue = minValue; }
+        var xPosition = Number.parseInt( (255 * thisValue / (maxValue-minValue)) + minValue );
+      
+        textfieldElement
+          .val(thisValue)
+          .attr('value', thisValue)
+          .trigger('change');
+        moveMarker( targetElement, thisValue, xPosition );
+      }
+      if(thisKeyCode == 36) { // MacOS > Home (start of slider)
+        thisValue = minValue;
+        var xPosition = Number.parseInt( (255 * thisValue / (maxValue-minValue)) + minValue );
+      
+        textfieldElement
+          .val(thisValue)
+          .attr('value', thisValue)
+          .trigger('change');
+        moveMarker( targetElement, thisValue, xPosition );
+      }
+      if(thisKeyCode == 35) { // MacOS > End (end of slider)
+        thisValue = maxValue;
+        var xPosition = Number.parseInt( (255 * thisValue / (maxValue-minValue)) + minValue );
+      
+        textfieldElement
+          .val(thisValue)
+          .attr('value', thisValue)
+          .trigger('change');
+        moveMarker( targetElement, thisValue, xPosition );
+      }
 
     }
   }
 } 
 
-function moveMarker( targetMarker, newValue ) { // 
+function moveMarker( targetMarker, newValue, xPosition ) { // 
   // get width
-  if(newValue > -1 && newValue < 256) {
+  if(!xPosition) xPosition = newValue;
+  var minValue = parseInt(targetMarker.attr('aria-valuemin'));
+  var maxValue = parseInt(targetMarker.attr('aria-valuemax'));
+  if(newValue >= minValue && newValue <= maxValue) {
+    var valueDiff = maxValue - minValue;
+    var percentAsPixels = 256 * (newValue/maxValue);
+
     targetMarker
-      .css('transform', 'translate3d(' + newValue + 'px, 0px, 0px)')
-      .attr('aria-valuenow', newValue);
+      .css('transform', 'translate3d(' + xPosition + 'px, 0px, 0px)')
+      .attr('aria-valuenow', newValue)
+      .attr('aria-valuetext', targetMarker.attr('data-slider-text-before') + ' equals ' + newValue + targetMarker.attr('data-slider-text-after'));
   }
 }
 
 function enableClickDrag( targetGroup ) {
   targetGroup = $(targetGroup);
   targetGroup.each(function() {
-    var thisSlide = $(this).find('.cp_color-settings_slide');
+    var thisSlide = $(this).find('.cp_color-settings_slide:not(.events-disabled)');
     thisSlide.click(function(e){
-      var slider = $(this);
-      var container = slider.parent('.cp_color-settings_slider-container');
-      var sliderOffset = slider.offset();
-      var rel_X = Math.round(e.pageX - sliderOffset.left -15);
-      if(rel_X > 255) { rel_X = 255; } else if(rel_X < 0) { rel_X = 0; }
+      var sliderBackground = $(this);
+      var container         = sliderBackground.parent('.cp_color-settings_slider-container');
+      var sliderMarker      = container.find('.cp_color-settings_slide-marker');
+      var greatestValue     = parseInt(sliderMarker.attr('aria-valuemax'));
+      var lowestValue       = parseInt(sliderMarker.attr('aria-valuemin')); 
+      var sliderBgOffset    = sliderBackground.offset();
+      var rel_X             = Math.round(e.pageX - sliderBgOffset.left -15);
+      if(     rel_X > 255)  { rel_X = 255; } 
+      else if(rel_X < 0)    { rel_X = 0;   }
+      var relativeValue = Number.parseInt((rel_X/255 *(greatestValue-lowestValue)) + lowestValue);
+      // 254 value insures that max value is 100% of greatestValue
       container.find('.cp_slider-textfield')
-        .val(rel_X)
-        .attr('value', rel_X)
+        .val(relativeValue)
+        .attr('value', relativeValue)
         .trigger('change');
-      moveMarker(container.find('.cp_color-settings_slide-marker'), rel_X);
+      moveMarker(sliderMarker, relativeValue, rel_X);
     });
   });
-  
 }
 
 // $("#test").click(function(e) {
@@ -410,8 +471,13 @@ function enableMarkerDrag( targetElement, targetTextField ) {
   });
 
   function update() {
-    var xValue = slideMarker[0].x;
-    stepNumber( targetTextField, null, xValue );
+    var newValue = slideMarker[0].x;
+    var valueMin = parseInt(targetElement.attr('aria-valuemin'));
+    var valueMax = parseInt(targetElement.attr('aria-valuemax'));
+    var valueDiff = valueMax - valueMin;
+    var relativeValue = Number.parseInt(newValue/254 * valueDiff ); 
+    // division by 254 was chosen instead of 255 to insure that 100% of valuemax would translate 
+    stepNumber( targetTextField, null, relativeValue );
   }
 }
 
@@ -787,22 +853,36 @@ function addSliderMarkerMouseDrag( targetMarker, targetTextField, targetBoundary
 
 
 
-function defineGreaterLuminance( fontColorSample, bgColorSample ) {
+function defineGreaterLuminance( fontColorSample, bgColorSample, fontColorSansAlpha ) {
   var fontColorObj  = hexToRgb( fontColorSample );
   var bgColorObj    = hexToRgb( bgColorSample );
-  var fontColorLuminance = calcLuminance( fontColorObj.r, fontColorObj.g, fontColorObj.b );
-  var bgColorLuminance = calcLuminance( bgColorObj.r, bgColorObj.g, bgColorObj.b );
+  var fontColorLuminance            = calcLuminance( fontColorObj.r, fontColorObj.g, fontColorObj.b );
+  var bgColorLuminance              = calcLuminance( bgColorObj.r, bgColorObj.g, bgColorObj.b );
+  if(fontColorSansAlpha) {
+    var fontColorLuminanceSansAlpha = calcLuminance( fontColorSansAlpha.r, fontColorSansAlpha.g, fontColorSansAlpha.b );
+  }
   var greaterLuminanceValue = function() {
     if(fontColorLuminance > bgColorLuminance) return 'font';
     if(fontColorLuminance < bgColorLuminance) return 'bg';
     else return 'equal';
   }
+  if(fontColorSansAlpha) {
+    var greaterLuminanceValueSansAlpha = function() {
+      if(fontColorLuminance > bgColorLuminance) return 'font';
+      if(fontColorLuminance < bgColorLuminance) return 'bg';
+      else return 'equal';
+    }
+  }
   var returnObject = {};
   returnObject.fontColorObj = fontColorObj;
-  returnObject.bgColorObj = bgColorObj;
-  returnObject.fontLum = fontColorLuminance;
-  returnObject.bgLum = bgColorLuminance;
-  returnObject.greaterLum = greaterLuminanceValue;
+  returnObject.bgColorObj   = bgColorObj;
+  returnObject.fontLum      = fontColorLuminance;
+  returnObject.bgLum        = bgColorLuminance;
+  returnObject.greaterLum   = greaterLuminanceValue;
+  if(fontColorSansAlpha) {
+    returnObject.fontLumSansAlpha     = fontColorLuminanceSansAlpha;
+    returnObject.greaterLumSansAlpha  = greaterLuminanceValueSansAlpha;
+  }
   return returnObject;
 }
 
@@ -814,18 +894,19 @@ function initColorAnalysis( colorDataObj ) {
   if(!colorDataObj.targetContrast) colorDataObj.targetContrast = 0;
   // colorDataObj.targetContrast = targetContrast;
   
-  var fontRed   = Number($('#cp_slider_font_first-value').val()); 
-  var fontGreen = Number($('#cp_slider_font_second-value').val()); 
-  var fontBlue  = Number($('#cp_slider_font_third-value').val()); 
-  var fontColorInHex = rgbToHex( fontRed, fontGreen, fontBlue );
-  var bgRed     = Number($('#cp_slider_bg_first-value').val()); 
-  var bgGreen   = Number($('#cp_slider_bg_second-value').val()); 
-  var bgBlue    = Number($('#cp_slider_bg_third-value').val()); 
-  var bgColorInHex = rgbToHex( bgRed, bgGreen, bgBlue );
+  var fontRed             = Number($('#cp_slider_font_first-value').val()); 
+  var fontGreen           = Number($('#cp_slider_font_second-value').val()); 
+  var fontBlue            = Number($('#cp_slider_font_third-value').val()); 
+  var fontAlpha           = Number($('#cp_slider_font_fourth-value').val());
+  var fontInRGBA          = { r: fontRed, g: fontGreen, b: fontBlue, a: fontAlpha }; 
+  var fontColorInHex      = rgbToHex( fontRed, fontGreen, fontBlue );
+  var bgRed               = Number($('#cp_slider_bg_first-value').val()); 
+  var bgGreen             = Number($('#cp_slider_bg_second-value').val()); 
+  var bgBlue              = Number($('#cp_slider_bg_third-value').val()); 
+  var bgInRGB             = { r: bgRed, g: bgGreen, b: bgBlue };
+  var bgColorInHex        = rgbToHex( bgRed, bgGreen, bgBlue );
   
-  colorDataObj = buildColorDataObject( fontColorInHex, bgColorInHex, colorDataObj );
-  
-
+  colorDataObj = buildColorDataObject( fontInRGBA, bgInRGB, fontColorInHex, bgColorInHex, colorDataObj );
   colorDataObj.currentContrast = calcContrast( colorDataObj );
   
   if(colorDataObj.targetContrast != 0) {
@@ -833,8 +914,7 @@ function initColorAnalysis( colorDataObj ) {
     $('#target-contrast').text(colorDataObj.targetContrast);
 
     if(colorDataObj.brighterColorIs == 'font') colorDataObj = calcRequiredLuminance( colorDataObj.fontLuminance, colorDataObj.bgLuminance, colorDataObj.targetContrast, colorDataObj );
-    if(colorDataObj.brighterColorIs == 'bg')   colorDataObj = calcRequiredLuminance( colorDataObj.bgLuminance, colorDataObj.fontLuminance, colorDataObj.targetContrast, colorDataObj );
-
+    if(colorDataObj.brighterColorIs == 'bg'  ) colorDataObj = calcRequiredLuminance( colorDataObj.bgLuminance, colorDataObj.fontLuminance, colorDataObj.targetContrast, colorDataObj );
     
     if(colorDataObj.currentActiveTool == 'contrast') {
       colorDataObj = getContrastRangeValues_NEW( colorDataObj );
@@ -848,22 +928,22 @@ function initColorAnalysis( colorDataObj ) {
 
 
 
-function buildColorDataObject( fontColorInHex, bgColorInHex, colorDataObj ) {
+function buildColorDataObject( fontInRGBA, bgInRGB, fontColorInHex, bgColorInHex, colorDataObj ) {
   
   var returnDataObject = colorDataObj;
 
   returnDataObject.fontColorInHex = fontColorInHex;
-  returnDataObject.bgColorInHex = bgColorInHex;
+  returnDataObject.bgColorInHex   = bgColorInHex;
+  returnDataObject.fontColors     = fontInRGBA;
+  returnDataObject.bgColors       = bgInRGB;
   
-  var fontColors = hexToRgb( fontColorInHex );
-  returnDataObject.fontColors = fontColors;
-  var bgColors = hexToRgb( bgColorInHex );
-  returnDataObject.bgColors = bgColors;
-  
-  var fontLuminance = calcLuminance( fontColors.r, fontColors.g, fontColors.b );
+  var fontColorSansAlpha = convertRGBwithAlphaChannel(fontInRGBA, bgInRGB);
+  returnDataObject.fontColorSansAlpha = fontColorSansAlpha;
+
+  var fontLuminance = calcLuminance( fontColorSansAlpha.r, fontColorSansAlpha.g, fontColorSansAlpha.b );
   returnDataObject.fontLuminance = fontLuminance;
   
-  var bgLuminance = calcLuminance( bgColors.r, bgColors.g, bgColors.b );
+  var bgLuminance = calcLuminance( bgInRGB.r, bgInRGB.g, bgInRGB.b );
   returnDataObject.bgLuminance = bgLuminance;
   
   if( fontLuminance > bgLuminance ) returnDataObject.brighterColorIs = 'font';
@@ -914,15 +994,22 @@ function getContrastRangeValues_NEW( colorDataObj ) {
 
   if( colorDataObj.brighterColorIs == 'font' && colorDataObj.targetContrast != 0 ) {
     // get font range values first
-    var adjRed_font    = useLuminanceMultiplier(colorDataObj.fontColors.r);
-    var adjGreen_font  = useLuminanceMultiplier(colorDataObj.fontColors.g);
-    var adjBlue_font   = useLuminanceMultiplier(colorDataObj.fontColors.b);
+    // var adjRed_font    = useLuminanceMultiplier(colorDataObj.fontColors.r);
+    // var adjGreen_font  = useLuminanceMultiplier(colorDataObj.fontColors.g);
+    // var adjBlue_font   = useLuminanceMultiplier(colorDataObj.fontColors.b);
+    // fontColorSans
+
+    var adjRed_font    = useLuminanceMultiplier(colorDataObj.fontColorSansAlpha.r);
+    var adjGreen_font  = useLuminanceMultiplier(colorDataObj.fontColorSansAlpha.g);
+    var adjBlue_font   = useLuminanceMultiplier(colorDataObj.fontColorSansAlpha.b);
+
     var fontRangeRed    = ( colorDataObj.greaterLumTarget - ( 0.7152 * adjGreen_font )  - ( 0.0722 * adjBlue_font ) )  / 0.2126;
     var fontRangeGreen  = ( colorDataObj.greaterLumTarget - ( 0.2126 * adjRed_font   )  - ( 0.0722 * adjBlue_font ) )  / 0.7152;
     var fontRangeBlue   = ( colorDataObj.greaterLumTarget - ( 0.7152 * adjGreen_font )  - ( 0.2126 * adjRed_font  ) )  / 0.0722;
     colorDataObj.fontRangeRed   = removeLuminanceMultiplier( fontRangeRed );
     colorDataObj.fontRangeGreen = removeLuminanceMultiplier( fontRangeGreen );
     colorDataObj.fontRangeBlue  = removeLuminanceMultiplier( fontRangeBlue );
+
 
     // get bg range values second
     var adjRed_bg    = useLuminanceMultiplier(colorDataObj.bgColors.r);
@@ -938,9 +1025,9 @@ function getContrastRangeValues_NEW( colorDataObj ) {
 
   else if(colorDataObj.brighterColorIs == 'bg' && colorDataObj.targetContrast != 0 ) {
     // get font range values first
-    var adjRed_font    = useLuminanceMultiplier(colorDataObj.fontColors.r);
-    var adjGreen_font  = useLuminanceMultiplier(colorDataObj.fontColors.g);
-    var adjBlue_font   = useLuminanceMultiplier(colorDataObj.fontColors.b);
+    var adjRed_font    = useLuminanceMultiplier(colorDataObj.fontColorSansAlpha.r); 
+    var adjGreen_font  = useLuminanceMultiplier(colorDataObj.fontColorSansAlpha.g);
+    var adjBlue_font   = useLuminanceMultiplier(colorDataObj.fontColorSansAlpha.b);
     var fontRangeRed    = ( colorDataObj.lesserLumTarget - ( 0.7152 * adjGreen_font )  - ( 0.0722 * adjBlue_font ) )  / 0.2126;
     var fontRangeGreen  = ( colorDataObj.lesserLumTarget - ( 0.2126 * adjRed_font   )  - ( 0.0722 * adjBlue_font ) )  / 0.7152;
     var fontRangeBlue   = ( colorDataObj.lesserLumTarget - ( 0.7152 * adjGreen_font )  - ( 0.2126 * adjRed_font  ) )  / 0.0722;
@@ -1315,13 +1402,19 @@ function applyColorNameToRGB(targetContainer, colorNameArg) {
   var redTextfield    = targetContainer.find('[aria-label="red value"]'),
       greenTextfield  = targetContainer.find('[aria-label="green value"]'),
       blueTextfield   = targetContainer.find('[aria-label="blue value"]'),
+      alphaTextfield  = targetContainer.find('[aria-label="alpha channel"]'),
       redMarker       = targetContainer.find('.cp_color-settings_slide-marker').eq(0),
       greenMarker     = targetContainer.find('.cp_color-settings_slide-marker').eq(1),
-      blueMarker      = targetContainer.find('.cp_color-settings_slide-marker').eq(2);
+      blueMarker      = targetContainer.find('.cp_color-settings_slide-marker').eq(2),
+      alphaMarker     = targetContainer.find('.cp_color-settings_slide-marker').eq(3);
+
 
   // var alphaTextfield = targetContainer.find('[aria-label="alpha-value"]');
   // var alphaMarker = targetContainer.find('.cp_color-settings_marker-color').eq(3);
   // alphaTextfield.val(1).attr('value','1'); // resets alpha to 1
+  alphaTextfield
+    .val(100)
+    .attr('value', 100);
   redTextfield
     .val(colorNameInRGB['r'])
     .attr('value', colorNameInRGB['r']);
@@ -1332,9 +1425,10 @@ function applyColorNameToRGB(targetContainer, colorNameArg) {
     .val(colorNameInRGB['g'])
     .attr('value', colorNameInRGB['g'])
     .trigger('change'); // activates color shift
-  moveMarker( redMarker, colorNameInRGB['r'] );
-  moveMarker( greenMarker, colorNameInRGB['g'] );
-  moveMarker( blueMarker, colorNameInRGB['b'] );
+  moveMarker( redMarker,    colorNameInRGB['r'] );
+  moveMarker( greenMarker,  colorNameInRGB['g'] );
+  moveMarker( blueMarker,   colorNameInRGB['b'] );
+  moveMarker( alphaMarker, 100, 255 );
 }
 
 var ColorTable = [
@@ -1519,11 +1613,12 @@ function findClosestColorHex(hex) {
   return nameFound;
 }
 
-function findClosestColorRGB(r, g, b) {
-  var rgb = {r:r, g:g, b:b};
+function findClosestColorRGB(colorSet) {
+  //var rgb = {r:r, g:g, b:b};
+  var rgb = colorSet;
   var delta = 3 * 256*256;
   var temp = {r:0, g:0, b:0};
-  var nameFound = 'black';
+  var nameFound = 'XXXXX';
   var table = ColorTable;
   
   for(i=0; i<table.length; i++)
@@ -1549,4 +1644,43 @@ function findClosestColorRGB(r, g, b) {
 // CSS Color Name Matcher - https://stackoverflow.com/users/8005142/todor-simeonov
 
 
+// Alpha Channel Font rgba > rgb calculator
+
+// convertRGBwithAlphaChannel({ r: 255, g: 0, b: 0, a: 1 }, { r: 255, g: 255, b: 255 })
+function convertRGBwithAlphaChannel(fontColorRGBA, bgColorRGB) {
+  var alpha     = fontColorRGBA.a * 0.01,
+      fontRed   = fontColorRGBA.r,
+      fontGreen = fontColorRGBA.g,
+      fontBlue  = fontColorRGBA.b,
+      bgRed     = bgColorRGB.r,
+      bgGreen   = bgColorRGB.g,
+      bgBlue    = bgColorRGB.b;
+
+  var calculatedRed, calculatedGreen, calculatedBlue;
+  var invertedAlpha = 1 - alpha;
+  var calculatedRed   = Math.round((alpha * (fontRed   / 255) + (invertedAlpha * (bgRed   / 255))) * 255);
+  var calculatedGreen = Math.round((alpha * (fontGreen / 255) + (invertedAlpha * (bgGreen / 255))) * 255);
+  var calculatedBlue  = Math.round((alpha * (fontBlue  / 255) + (invertedAlpha * (bgBlue  / 255))) * 255);
+  colorDataObj.fontColorSansAlpha = { r: calculatedRed, g: calculatedGreen, b: calculatedBlue };
+  return colorDataObj.fontColorSansAlpha;
+}
+
+// updateCheckerboardPattern('#alpha-checkerboard-pattern', '#alpha-subcheckerboard-pattern', { r: colorDataObj.fontColors.r, g: colorDataObj.fontColors.g, b: colorDataObj.fontColors.b, colorDataObj.fontColors.a }, { r: colorDataObj.bgColors.r, g: colorDataObj.bgColors.g, b: colorDataObj.bgColors.b })
+function updateCheckerboardPattern(targetSlideCheckerboard, targetSlideBackground, bgColors, fontColors) {
+  targetSlideCheckerboard = $(targetSlideCheckerboard);
+  targetSlideBackground   = $(targetSlideBackground);
+  var fontRed     = fontColors.r,
+      fontGreen   = fontColors.g,
+      fontBlue    = fontColors.b,
+      bgRed       = bgColors.r,
+      bgGreen     = bgColors.g,
+      bgBlue      = bgColors.b;
+  var backgroundImageVal = 'linear-gradient(45deg, rgb('+bgRed+','+bgGreen+','+bgBlue+') 25%, transparent 25%, transparent 75%, rgb('+bgRed+','+bgGreen+','+bgBlue+') 75%, rgb('+bgRed+','+bgGreen+','+bgBlue+')), linear-gradient(45deg, rgb('+bgRed+','+bgGreen+','+bgBlue+') 25%, transparent 25%, transparent 75%, rgb('+bgRed+','+bgGreen+','+bgBlue+') 75%, rgb('+bgRed+','+bgGreen+','+bgBlue+'))';
+  targetSlideCheckerboard
+    .css('background-image', backgroundImageVal);
+  targetSlideBackground
+    .css('background',    '-moz-linear-gradient(left,     rgb('+fontRed+','+fontGreen+','+fontBlue+') 0%, rgb('+bgRed+','+bgGreen+','+bgBlue+') 95%)')
+    .css('background', '-webkit-linear-gradient(left,     rgb('+fontRed+','+fontGreen+','+fontBlue+') 0%, rgb('+bgRed+','+bgGreen+','+bgBlue+') 95%)')
+    .css('background',         'linear-gradient(to right, rgb('+fontRed+','+fontGreen+','+fontBlue+') 0%, rgb('+bgRed+','+bgGreen+','+bgBlue+') 95%)');
+}
 
