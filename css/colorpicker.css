@@ -307,8 +307,8 @@ colorpicker.css*/
   position: absolute;
   border-radius: 25px;
   width: 556px;
-  height: 500px;
-  height: 560px;
+  height: 500px;    
+  height: 600px;
   left: -1px;
   top: -1px;
   background-color: #CCCCCC;
@@ -331,7 +331,7 @@ colorpicker.css*/
   border-radius: 25px;
   width: 550px;
   height: 490px;
-  height: 550px;
+  height: 590px;
   background-color: #EDEDED;
 }
 .cp_foreground-circle {
