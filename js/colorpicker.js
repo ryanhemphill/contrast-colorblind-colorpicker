@@ -1,22 +1,5 @@
 // contrast-colorblind-colorpicker.js
-// Colorpicker.JS provides the following features for the CAS colorpicker, version 1
-// 1. location-dependent modal window popup [ DONE ]
-// 2. realtime build of background gradient for each slider's color values
-// 3. realtime update of current value to the text field and vice versa when text field value is changed
-// 4. validation of values for text fields AND retention of previous value for text field if input is in error
-// 5. drag-drop functionality to "save a palette" (font/background color pairing)
-// 6. all features can be activated and tasks performed via focus management (plans for blind accessibility as well.)
 
-
-
-// [ TASKS COMPLETED ]
-// 15 minutes...
-// close function for modal window
-// first TweenLite animation sequence
-
-// 15 minutes...
-// TweenLite animation of close
-//
 
 // START Utilities 
 
@@ -128,6 +111,8 @@ $(document).ready(function() {
 
 setupCBtoggle();
 
+enableConvertToRGBSansAlpha( '.convert-sans-alpha-button' );
+
 function setMarkerColor( whichMarkers, colorValue ) {
   if(typeof colorValue === 'string') { colorValue = hexToRgb(colorValue); }
   colorValue['a'] = 1; 
@@ -152,12 +137,14 @@ function setSampleArea( fontColorValue, backgroundColorValue ) {
   var fontColorSansAlpha  = convertRGBwithAlphaChannel(fontColorValue, backgroundColorValue);
   var fontColorName       = findClosestColorRGB(fontColorSansAlpha);
   var backgroundColorName = findClosestColorRGB(backgroundColorValue);
-  $('#font-color-name')
+  $('#font-color-name').find('.color-name')
     .attr('data-colorname', fontColorName)
     .html(convertColorNameToReadable(fontColorName));
-  $('#background-color-name')
+  $('#background-color-name').find('.color-name')
     .attr('data-colorname', backgroundColorName)
     .html(convertColorNameToReadable(backgroundColorName));
+  updateConvertRGBSansAlphaButton( '#cp_font-color-settings', colorDataObj.fontColorSansAlpha);
+  updateConvertRGBSansAlphaButton( '#cp_background-color-settings', colorDataObj.bgColors);
 }
 
 
@@ -426,6 +413,29 @@ function moveMarker( targetMarker, newValue, xPosition ) { //
       .attr('aria-valuenow', newValue)
       .attr('aria-valuetext', targetMarker.attr('data-slider-text-before') + ' equals ' + newValue + targetMarker.attr('data-slider-text-after'));
   }
+}
+
+function enableConvertToRGBSansAlpha( targetButton ) {
+  targetButton = $(targetButton);
+  updateConvertRGBSansAlphaButton( targetButton );
+  targetButton.click(function() {
+    targetContainer = targetButton.parents('.cp_color-settings_container');
+    var colorArg;
+    if(targetContainer.attr('id')         == 'cp_font-color-settings') {
+      colorArg = colorDataObj.fontColorRGBSansAlpha;
+      if(!colorArg) { colorArg = convertRGBwithAlphaChannel(colorDataObj.fontColors, colorDataObj.bgColors ); }
+    } else if(targetContainer.attr('id')  == 'cp_background-color-settings') {
+      colorArg = colorDataObj.bgColors;
+    }
+    applyColorToRGB(targetContainer, colorArg);
+  });
+}
+
+function updateConvertRGBSansAlphaButton( targetButton, fontColorRGBSansAlpha ) {
+  targetButton = $(targetButton);
+  if(!fontColorRGBSansAlpha) { fontColorRGBSansAlpha = colorDataObj.fontColorSansAlpha; }
+  if(!fontColorRGBSansAlpha) { fontColorSansAlpha = convertRGBwithAlphaChannel(colorDataObj.fontColors, colorDataObj.bgColors); }
+  targetButton.find('.convert-value').text('rgb('+fontColorRGBSansAlpha.r+','+fontColorRGBSansAlpha.g+','+fontColorRGBSansAlpha.b+')');
 }
 
 function enableClickDrag( targetGroup ) {
@@ -1382,22 +1392,27 @@ function searchColorHexByName(colorNameArg) {
 $('#background-color-name').bind('click', function() {
   var self = $(this),
       targetContainer = $(this).parents('.cp_color-settings_container'),
-      colorNameArg = self.attr('data-colorname');
-  applyColorNameToRGB(targetContainer, colorNameArg);
+      colorNameArg = self.find('.color-name').attr('data-colorname');
+  applyColorToRGB(targetContainer, colorNameArg);
 });
 
 $('#font-color-name').bind('click', function() {
   var self = $(this),
       targetContainer = $(this).parents('.cp_color-settings_container'),
-      colorNameArg = self.attr('data-colorname');
-  applyColorNameToRGB(targetContainer, colorNameArg);
+      colorNameArg = self.find('.color-name').attr('data-colorname');
+  applyColorToRGB(targetContainer, colorNameArg);
 });
 
 
 
-function applyColorNameToRGB(targetContainer, colorNameArg) {
-  var colorNameInHex = searchColorHexByName(colorNameArg);
-  var colorNameInRGB = Hex2RGB(colorNameInHex);
+function applyColorToRGB(targetContainer, colorArg) {
+  var colorNameInHex, colorNameInRGB;
+  if(typeof colorArg === 'string') {
+    colorNameInHex = searchColorHexByName(colorArg);
+    colorNameInRGB = Hex2RGB(colorNameInHex);
+  } else {
+    colorNameInRGB = colorArg;
+  }
   targetContainer = $(targetContainer);
   var redTextfield    = targetContainer.find('[aria-label="red value"]'),
       greenTextfield  = targetContainer.find('[aria-label="green value"]'),
