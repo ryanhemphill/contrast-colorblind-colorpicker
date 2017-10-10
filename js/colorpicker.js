@@ -1,6 +1,5 @@
 // contrast-colorblind-colorpicker.js
 
-//
 
 // START Utilities 
 
@@ -454,7 +453,6 @@ function enableClickDrag( targetGroup ) {
       if(     rel_X > 255)  { rel_X = 255; } 
       else if(rel_X < 0)    { rel_X = 0;   }
       var relativeValue = Number.parseInt((rel_X/255 *(greatestValue-lowestValue)) + lowestValue);
-      // 254 value insures that max value is 100% of greatestValue
       container.find('.cp_slider-textfield')
         .val(relativeValue)
         .attr('value', relativeValue)
@@ -486,25 +484,13 @@ function enableMarkerDrag( targetElement, targetTextField ) {
     var valueMin = parseInt(targetElement.attr('aria-valuemin'));
     var valueMax = parseInt(targetElement.attr('aria-valuemax'));
     var valueDiff = valueMax - valueMin;
-    var relativeValue = Number.parseInt(newValue/254 * valueDiff ); 
+    var relativeValue = Number.parseInt(newValue/255 * valueDiff ); 
     // division by 254 was chosen instead of 255 to insure that 100% of valuemax would translate 
     stepNumber( targetTextField, null, relativeValue );
   }
 }
 
 
-
-function addSliderMarkerMouseDrag( targetMarker, targetTextField, targetBoundary ) {
-  var sliderValue = targetTextField.val();
-  var markerDrag = Draggable.create(targetMarker, {type:"x", 
-    onDrag: updateMarker
-
-    });
-  function updateMarker() {
-    TweenLite.set(targetMarker, {x:sliderValue + 3.5}); //, onUpdate: )
-  }
-  updateMarker();
-}
   
 
 
