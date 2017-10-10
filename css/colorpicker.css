@@ -307,8 +307,8 @@ colorpicker.css*/
   position: absolute;
   border-radius: 25px;
   width: 556px;
-  height: 500px;
-  height: 560px;
+  height: 500px;    
+  height: 600px;
   left: -1px;
   top: -1px;
   background-color: #CCCCCC;
@@ -331,7 +331,7 @@ colorpicker.css*/
   border-radius: 25px;
   width: 550px;
   height: 490px;
-  height: 550px;
+  height: 590px;
   background-color: #EDEDED;
 }
 .cp_foreground-circle {
@@ -680,16 +680,25 @@ colorpicker.css*/
 }
 
 #font-details-container h4, #background-details-container h4 {
-  display: inline;
-  font-weight: 400;
+  /*display: inline;*/
+  font-weight: 600;
   font-size: 14px;
 }
 
-#font-color-name, #background-color-name {
-  font-style: oblique;
-  font-weight: 900;
+#font-details-container button, #background-details-container button {
+  display: inline-block;
 }
 
+/*#font-color-name, #background-color-name {
+  font-style: oblique;
+  font-weight: 900;
+}*/
+
+#font-details-container .color-name, 
+#font-details-container .convert-value,
+#background-details-container .color-name {
+  text-decoration: underline;
+}
 
   /* START Color Picker Settings Menu */
 
