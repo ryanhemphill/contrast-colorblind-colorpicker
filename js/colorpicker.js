@@ -485,7 +485,7 @@ function enableMarkerDrag( targetElement, targetTextField ) {
     var valueMin = parseInt(targetElement.attr('aria-valuemin'));
     var valueMax = parseInt(targetElement.attr('aria-valuemax'));
     var valueDiff = valueMax - valueMin;
-    var relativeValue = Number.parseInt(newValue/254 * valueDiff ); 
+    var relativeValue = Number.parseInt(newValue/255 * valueDiff ); 
     // division by 254 was chosen instead of 255 to insure that 100% of valuemax would translate 
     stepNumber( targetTextField, null, relativeValue );
   }
