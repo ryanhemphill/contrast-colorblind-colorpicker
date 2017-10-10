@@ -31,6 +31,20 @@
         <div class="cp_app-title">
             <h2>Contrast/Colorblind Color Picker</h2>
         </div>
+        <span class="sr-hide">
+          <h2>Instructions for Screen Readers</h2>
+          <ul>
+            <li>Key Slider Instructions
+              <ul>
+                <li>Plus or Minus 1 Step. Press the Right and Left Arrow keys to move 1 step.</li>
+                <li>Alternate Plus or Minus 1 Step for Mac VoiceOver bug. Press Shift plus Page Up or Page Down to move 1 step. (Function Key plus Shift plus Up or Down Arrow Key)</li>
+                <li>Plus or Minus 10 Steps. Press the Page Up or Page Down. (Mac VoiceOver is Function plus Up or Down Arrow Key)</li>
+                <li>Move to Slider's Start or End Value. Press the Home or End Key. (Mac VoiceOver is Function plus Left or Right Arrow Key)</li>
+                <li>Get Update on Contrast Analysis. When Contrast Analysis Tool is Active, Clicking the Slider will Offer the Update of Pass or Fail for the current selection. (Mac Voice, Control plus Alt plus Spacebar)</li>
+              </ul>
+            </li>
+          </ul>
+        </span>
         <div class="cp_sample">
             <div><input aria-label="text sample area" id="cp_sample-content" type="text" value="The quick fox jumped over the lazy brown dog"></div>
         </div>
@@ -111,10 +125,10 @@
           </div>
           <div class="cp_color-settings_slider-container">
             <span class="cp_color-settings_slide-title">
-                <h4>Red<span class="sr-only"> for font color</span></h4> 
+              <h4>Red<span class="sr-only"> for font color</span></h4> 
             </span>
 
-            <span class="cp_color-settings_slide-marker" tabindex="0" role="slider" aria-valuemin="1" aria-valuemax="255" aria-valuenow="0">
+            <span class="cp_color-settings_slide-marker" tabindex="0" role="slider" aria-valuemin="0" aria-valuemax="255" aria-valuenow="0"  data-slider-text-before="red" data-slider-text-after=" ">
               <span class="cp_color-settings_marker-color"></span>
             </span>
             <span class="cp_color-settings_a11y-fail-range" aria-hidden="true"></span>
@@ -122,15 +136,15 @@
             <span class="cp_color-settings_slide"></span> 
 
             <span class="cp_color-settings_value">
-                <input type="text" aria-label="red value" id="cp_slider_font_first-value" class="cp_slider-textfield" value="0">
+              <input type="text" aria-label="red value" id="cp_slider_font_first-value" class="cp_slider-textfield" value="0">
             </span>
           </div> 
           <div class="cp_color-settings_slider-container">
             <span class="cp_color-settings_slide-title">
-                <h4>Green<span class="sr-only"> for font color</span></h4> 
+              <h4>Green<span class="sr-only"> for font color</span></h4> 
             </span>
 
-            <span class="cp_color-settings_slide-marker" tabindex="0" role="slider" aria-valuemin="1" aria-valuemax="255" aria-valuenow="0">
+            <span class="cp_color-settings_slide-marker" tabindex="0" role="slider" aria-valuemin="0" aria-valuemax="255" aria-valuenow="0"  data-slider-text-before="green" data-slider-text-after=" ">
               <span class="cp_color-settings_marker-color"></span>
             </span>
             <span class="cp_color-settings_a11y-fail-range" aria-hidden="true"></span>
@@ -138,7 +152,7 @@
             <span class="cp_color-settings_slide"></span> 
 
             <span class="cp_color-settings_value">
-                <input type="text" aria-label="green value" id="cp_slider_font_second-value" class="cp_slider-textfield" value="0">
+              <input type="text" aria-label="green value" id="cp_slider_font_second-value" class="cp_slider-textfield" value="0">
             </span>
             
 
@@ -149,7 +163,7 @@
                 <h4>Blue<span class="sr-only"> for font color</span></h4> 
             </span>
 
-            <span class="cp_color-settings_slide-marker" tabindex="0" role="slider" aria-valuemin="1" aria-valuemax="255" aria-valuenow="0">
+            <span class="cp_color-settings_slide-marker" tabindex="0" role="slider" aria-valuemin="0" aria-valuemax="255" aria-valuenow="0"  data-slider-text-before="blue" data-slider-text-after=" ">
               <span class="cp_color-settings_marker-color"></span>
             </span>
             <span class="cp_color-settings_a11y-fail-range" aria-hidden="true"></span>
@@ -158,14 +172,32 @@
             <span class="cp_color-settings_value">
                 <input type="text" aria-label="blue value" id="cp_slider_font_third-value" class="cp_slider-textfield" value="0">
             </span>
+          </div> 
 
+          <!-- Slider #4  -->
+          <div class="cp_color-settings_slider-container">
+            <span class="cp_color-settings_slide-title">
+                <h4>Alpha<span class="sr-only">Channel for font color (only)</span></h4> 
+            </span>
+
+            <span class="cp_color-settings_slide-marker" tabindex="0" role="slider" aria-valuemin="0" aria-valuemax="100" aria-valuenow="100" data-slider-text-before="alpha" data-slider-text-after=" percent">
+              <span class="cp_color-settings_marker-color"></span>
+            </span>
+            <!-- <span class="cp_color-settings_a11y-fail-range" aria-hidden="true"></span> -->
+            
+            <span id="alpha-checkerboard-pattern" class="cp_color-settings_slide checkerboard-pattern"></span>
+            <span id="alpha-subcheckerboard-pattern" class="cp_color-settings_slide events-disabled"></span>
+             <!-- INSERT Gradient -->
+            <span class="cp_color-settings_value">
+              <input type="text" aria-label="alpha channel" id="cp_slider_font_fourth-value" class="cp_slider-textfield" value="100">
+            </span>
           </div> 
 
           <div id="font-details-container">
             <h4>Font Color Analysis:</h4>
             <span class="">Color is
               <span class="name-status"> closest to </span> 
-              <button aria-label="click to apply this color" id="font-color-name" tabindex="0">Black</button>
+              <button id="font-color-name" tabindex="0">Black</button><span class="sr-hide">Click button to apply this color</span>
             </span>
           </div>
 
@@ -182,7 +214,7 @@
                 <h4>Red<span class="sr-only"> for background color</span></h4> 
             </span>
             
-            <span class="cp_color-settings_slide-marker" tabindex="0" role="slider" aria-valuemin="1" aria-valuemax="255" aria-valuenow="255">
+            <span class="cp_color-settings_slide-marker" tabindex="0" role="slider" aria-valuemin="0" aria-valuemax="255" aria-valuenow="255"  data-slider-text-before="red" data-slider-text-after=" ">
               <span class="cp_color-settings_marker-color"></span>
             </span>
             <span class="cp_color-settings_a11y-fail-range" aria-hidden="true"></span>
@@ -199,7 +231,7 @@
                 <h4>Green<span class="sr-only"> for background color</span></h4> 
             </span>
 
-            <span class="cp_color-settings_slide-marker" tabindex="0" role="slider" aria-valuemin="1" aria-valuemax="255" aria-valuenow="255">
+            <span class="cp_color-settings_slide-marker" tabindex="0" role="slider" aria-valuemin="0" aria-valuemax="255" aria-valuenow="255"  data-slider-text-before="green" data-slider-text-after=" ">
               <span class="cp_color-settings_marker-color"></span>
             </span>
             <span class="cp_color-settings_a11y-fail-range" aria-hidden="true"></span>
@@ -214,7 +246,7 @@
                 <h4>Blue<span class="sr-only"> for background color</span></h4> 
             </span>
 
-            <span class="cp_color-settings_slide-marker" tabindex="0" role="slider" aria-valuemin="1" aria-valuemax="255" aria-valuenow="255">
+            <span class="cp_color-settings_slide-marker" tabindex="0" role="slider" aria-valuemin="0" aria-valuemax="255" aria-valuenow="255" data-slider-text-before="blue" data-slider-text-after=" ">
               <span class="cp_color-settings_marker-color"></span>
             </span>
             <span class="cp_color-settings_a11y-fail-range" aria-hidden="true"></span>
@@ -229,7 +261,7 @@
             <h4>Background Color Analysis:</h4>
             <span class="">Color is
               <span class="name-status"> closest to </span> 
-              <button aria-label="click to apply this color" id="background-color-name" tabindex="0">White</button>
+              <button id="background-color-name" tabindex="0">White</button><span class="sr-hide">Click button to apply this color</span>
             </span>
           </div>
 
