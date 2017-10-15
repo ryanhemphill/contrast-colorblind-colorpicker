@@ -635,7 +635,8 @@ colorpicker.css*/
   display: inline-block;
   position: absolute;
   color: black;
-  content: "\f071";
+  content: "\f071"; /* triangle-exclamation */
+  content: "\f05e"; /* fa-ban (circle-slash visual) */
   font-size: 15px;
   font-weight: 900;
   text-align: center;
@@ -643,7 +644,7 @@ colorpicker.css*/
   min-width: inherit;
   height: inherit;
   z-index: 1;
-  top: 2px;
+  top: 1px;
   margin-left: -2px;
 }
 
