@@ -445,12 +445,14 @@ svg.ui-display.trap-blue {
 /*   background-color: gray; */
 }
 svg.ui-display.trap-yellow {
+  /*top: -31px;
+  height: 30px;*/
   top: -31px;
-  height: 30px;
+  height: 35px;
 /*   background-color: gray; */
 }
 svg.ui-display.trap-gray {
-  top: -40px;
+  top: -45px;
   height: 55px;
   height: 60px;
 /*   background-color: gray; */
