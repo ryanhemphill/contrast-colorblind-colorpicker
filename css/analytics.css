@@ -364,12 +364,14 @@ body {
 
 .swatch-container .bg-swatch {
   margin-top: 1em;
+  margin-top: 0.6em;
   margin-left: 0.7em;
   background-color: ivory; /* default color */
 }
 
 .swatch-container .font-swatch {
   margin-top: 1.65em;
+  margin-top: 1.25em;
   margin-left: 1.25em;
   background-color: black; /* default color */
   z-index: 1 !important;
