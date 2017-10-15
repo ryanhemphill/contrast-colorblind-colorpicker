@@ -381,7 +381,7 @@ body {
 .tooltip-above span.tooltip-content {
   position: absolute;
   width: 220px;
-  height: 12px;
+  height: 22px;
   line-height: 10px;
   padding: 2px;
   font-size: 16px;
@@ -405,7 +405,7 @@ body {
   opacity: 1;
   visibility: visible;
 /*   margin-left: -25px; */
-  margin-top: 55px;
+  margin-top: 60px;
 }
 
 span.tooltip-content:after {
@@ -452,6 +452,7 @@ svg.ui-display.trap-yellow {
 svg.ui-display.trap-gray {
   top: -40px;
   height: 55px;
+  height: 60px;
 /*   background-color: gray; */
 }
 .wcag-key-container {
@@ -476,6 +477,7 @@ svg.ui-display.trap-gray {
 
 .wcag-key.wcag-key-2xwidth {
   width: 112px;
+  width: 125px;
   white-space: nowrap;
   text-align: left;
 }
@@ -503,10 +505,8 @@ svg.ui-display.trap-gray {
   top: -2px;
 }
 
-.aaa-small {
-  background-color: rgb(154,205,50);
-}
-.aaa-small::before {
+
+.wcag-key-container [role="button"]::before {
   content:'';
   display: inline-block;
   position: relative;
@@ -515,50 +515,33 @@ svg.ui-display.trap-gray {
   margin-left: 3px;
   margin-right: 5px;
   border-radius: 100px;
-  background: white;
+  background: black;
+  background-size: contain;
 }
-.aa-small-aaa-large {
-  background-color: rgb(0,206,209);
+.wcag-key-container [role="button"].aaa-small {
+  background-color: rgb(215,235,175);
+}
+.wcag-key-container [role="button"].aaa-small::before {
+  background-image: url('../media/trans-triple-check.png');
+}
+.wcag-key-container [role="button"].aa-small-aaa-large {
+  background-color: rgb(160,235,235);
 }
 
-.aa-small-aaa-large::before {
-  content:'';
-  display: inline-block;
-  position: relative;
-  width: 25px;
-  height: 25px;
-  margin-left: 3px;
-  margin-right: 5px;
-  border-radius: 100px;
-  background: white;
+.wcag-key-container [role="button"].aa-small-aaa-large::before {
+  background-image: url('../media/trans-double-check.png');
 }
-.aa-large {
-  background-color: rgb(255,215,0);
+.wcag-key-container [role="button"].aa-large {
+  background-color: rgb(255,240,140);
 }
-.aa-large::before {
-  content:'';
-  display: inline-block;
-  position: relative;
-  width: 25px;
-  height: 25px;
-  margin-left: 3px;
-  margin-right: 5px;
-  border-radius: 100px;
-  background: white;
+.wcag-key-container [role="button"].aa-large::before {
+  background-image: url('../media/trans-single-check.png');
 }
-.no-pass {
-  background-color: rgb(200,200,200);
+.wcag-key-container [role="button"].no-pass {
+  background-color: rgb(210,210,210);
 }
-.no-pass::before {
-  content:'';
-  display: inline-block;
-  position: relative;
-  width: 25px;
-  height: 25px;
-  margin-left: 3px;
-  margin-right: 5px;
-  border-radius: 100px;
-  background: white;
+.wcag-key-container [role="button"].no-pass::before {
+  background-image: url('../media/trans-fail.png');
 }
 
 /* END SVG Display-Pointer Shapes */
