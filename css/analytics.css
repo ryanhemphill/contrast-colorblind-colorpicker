@@ -223,6 +223,10 @@ body {
 .data-cell.active .data-tag::before,
 .data-tag.active::before {
 /*   outline: red solid 5px; */
+  /*transition: 0.5s;*/
+  background-image: url(../media/trans-fail.png);
+  background-size: contain;
+  box-shadow: none;
 }
 
 .data-tag[data-wcag-value="aaa-small"]::before {
@@ -242,20 +246,34 @@ body {
 .data-cell.active .data-tag[data-wcag-value]::before {
   width: 25px;
   height: 25px;
+  width: 30px;
+  height: 30px;
   margin-top: -4px;
-  left: 2px;
+  /*left: 2px;*/
 }
-.data-cell.active .data-tag[data-wcag-value="aaa-small"]::before {
+.data-cell.active .data-tag[data-wcag-value="aaa-small"]::before,
+.data-tag.active[data-wcag-value="aaa-small"]::before {
   /*   background:  */
+  background-color: rgb(0,0,0);
+  background-image: url(../media/trans-triple-check.png);
 }
-.data-cell.active .data-tag[data-wcag-value="aa-small-aaa-large"]::before {
+.data-cell.active .data-tag[data-wcag-value="aa-small-aaa-large"]::before,
+.data-tag.active[data-wcag-value="aa-small-aaa-large"]::before {
 /*   background-color: blue; */
+  background-color: rgb(0,0,0);
+  background-image: url(../media/trans-double-check.png);
 }
-.data-cell.active .data-tag[data-wcag-value="aa-large"]::before {
+.data-cell.active .data-tag[data-wcag-value="aa-large"]::before,
+.data-tag.active[data-wcag-value="aa-large"]::before {
   background-color: orange;
+  background-color: rgb(0,0,0);
+  background-image: url(../media/trans-single-check.png);
 }
-.data-cell.active .data-tag[data-wcag-value="fail"]::before {
-  background-color: rgb(75,75,75)
+.data-cell.active .data-tag[data-wcag-value="fail"]::before,
+.data-tag.active[data-wcag-value="fail"]::before {
+  background-color: rgb(75,75,75);
+  background-color: rgb(0,0,0);
+  background-image: url(../media/trans-fail.png);
 }
 
 .data-cell.white-right-border, /* > .filter, */
@@ -309,9 +327,10 @@ body {
 
 
 .data-cell .swatch-container {
-  height: 46px;
+  
 /*     position: relative; */
     padding-top: 5px;
+    height: 55px;
 }
 
 .data-cell .swatch-container .font-swatch, 
@@ -344,15 +363,15 @@ body {
 }
 
 .swatch-container .bg-swatch {
-  margin-top: 0.6em;
-  margin-left: 0.6em;
-  background-color: ivory;
+  margin-top: 1em;
+  margin-left: 0.7em;
+  background-color: ivory; /* default color */
 }
 
 .swatch-container .font-swatch {
-  margin-top: 1.2em;
-  margin-left: 1.2em;
-  background-color: black;
+  margin-top: 1.65em;
+  margin-left: 1.25em;
+  background-color: black; /* default color */
   z-index: 1 !important;
 }
 
