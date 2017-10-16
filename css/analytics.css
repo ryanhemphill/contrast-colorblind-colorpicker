@@ -2,7 +2,8 @@
 /* Description : */
 
 /* START Alteration to Native UI */
-.cp_dropshadow-main-area {
+.analytics-mode .cp_dropshadow-main-area {
+  transition: 1s;
   display: inline-block;
   position: absolute;
   border-radius: 25px;
@@ -13,7 +14,8 @@
   top: -1px;
   background-color: #CCCCCC;
 }
-.cp_foreground-main-area {
+.analytics-mode .cp_foreground-main-area {
+  transition: 0.8s;
   display: inline-block;
   position: absolute;
   border: #EDEDED solid 2px;

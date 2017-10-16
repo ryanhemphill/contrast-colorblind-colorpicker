@@ -1,6 +1,9 @@
-colorpicker.css*/
+/*colorpicker.css*/
 /* ColorPicker.CSS provides the UI instructions for the colorpicker and its modal window */
 
+body {
+  font-family: 'Avenir';
+}
 
 
 @font-face {
@@ -303,6 +306,7 @@ colorpicker.css*/
 }
 
 .cp_dropshadow-main-area {
+  transition: 1s;
   display: inline-block;
   position: absolute;
   border-radius: 25px;
@@ -325,6 +329,7 @@ colorpicker.css*/
   background-color: #CCCCCC;
 }
 .cp_foreground-main-area {
+  transition: 0.8s;
   display: inline-block;
   position: absolute;
   border: #EDEDED solid 2px;
@@ -348,6 +353,7 @@ colorpicker.css*/
 
 
 #cas_colorpicker-contents.cp_foreground-container {
+  transition: 1s;
   display: inline-block;
   position: relative;
   width: 550px;
