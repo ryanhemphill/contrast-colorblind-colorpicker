@@ -3,21 +3,6 @@
 
 // START Utilities 
 
-Object.byString = function(o, s) {
-    s = String(s);
-    s = s.replace(/\[(\w+)\]/g, '.$1'); // convert indexes to properties
-    s = s.replace(/^\./, '');           // strip a leading dot
-    var a = s.split('.');
-    for (var i = 0, n = a.length; i < n; ++i) {
-        var k = a[i];
-        if (k in o) {
-            o = o[k];
-        } else {
-            return;
-        }
-    }
-    return o;
-}
 
 // END Utilities
 
@@ -43,7 +28,7 @@ $(document).ready(function() {
   $('#cp_colorblindness-filter-button-group .dropdown-menu a.off').trigger('click');
   $('.cp_slider-textfield').trigger('change');
   
-  setTimeout(function () { $('.cp_slider-textfield').first().trigger('change'); }, 500);
+  setTimeout(function () { $('.cp_slider-textfield').first().trigger('change'); }, 5);
   
   colorDataObj = pullValuesFromRgbTexfields( colorDataObj );
  
@@ -109,144 +94,158 @@ $(document).ready(function() {
   setSampleArea( colorDataObj.fontColors, colorDataObj.bgColors );
   
 
-setupCBtoggle();
+  setupCBtoggle();
 
-enableConvertToRGBSansAlpha( '.convert-sans-alpha-button' );
+  enableConvertToRGBSansAlpha( '.convert-sans-alpha-button' );
 
-function setMarkerColor( whichMarkers, colorValue ) {
-  if(typeof colorValue === 'string') { colorValue = hexToRgb(colorValue); }
-  colorValue['a'] = 1; 
-  if(whichMarkers == 'font')       $('#cp_font-color-settings .cp_color-settings_marker-color').css('background-color', "rgba("+colorValue.r +','+colorValue.g+','+colorValue.b+','+colorValue.a+')');
-  if(whichMarkers == 'background') $('#cp_background-color-settings .cp_color-settings_marker-color').css('background-color', "rgba("+colorValue.r +','+colorValue.g+','+colorValue.b+','+colorValue.a+')');
-  if(whichMarkers == 'font')       $('#cp_font-color-settings .cp_color-settings_marker-color').css('background-color', "rgb("+colorDataObj.fontColorSansAlpha.r +','+colorDataObj.fontColorSansAlpha.g+','+colorDataObj.fontColorSansAlpha.b+')');
-  // if(whichMarkers == 'background') $('#cp_background-color-settings .cp_color-settings_marker-color').css('background-color', "rgba("+colorValue.r +','+colorValue.g+','+colorValue.b+','+colorValue.a+')');
-}
-
-function setSampleArea( fontColorValue, backgroundColorValue ) {
-  if(typeof fontColorValue        === 'string') { fontColorValue        = hexToRgb(fontColorValue); }
-  if(typeof backgroundColorValue  === 'string') { backgroundColorValue  = hexToRgb(backgroundColorValue); }
-  if(!fontColorValue.a && fontColorValue.a != 0){ fontColorValue.a      = 100 ;}
-  var fontColorString = "rgba("+fontColorValue.r +','+fontColorValue.g+','+fontColorValue.b+','+(fontColorValue.a * 0.01)+')';
-  var bgColorString   = "rgb("+backgroundColorValue.r +','+backgroundColorValue.g+','+backgroundColorValue.b+')';
-  $('#cp_sample-content')
-    .css('color',            fontColorString)
-    .css('background-color', bgColorString);
-  $('#cp_font-swatch').css('background-color', fontColorString);
-  $('#cp_background-swatch').css('background-color', bgColorString);
-  // note - by converting the rgba font color to a rgb value set, it makes closestMatch still accurate
-  var fontColorSansAlpha  = convertRGBwithAlphaChannel(fontColorValue, backgroundColorValue);
-  var fontColorName       = findClosestColorRGB(fontColorSansAlpha);
-  var backgroundColorName = findClosestColorRGB(backgroundColorValue);
-  $('#font-color-name').find('.color-name')
-    .attr('data-colorname', fontColorName)
-    .html(convertColorNameToReadable(fontColorName));
-  $('#background-color-name').find('.color-name')
-    .attr('data-colorname', backgroundColorName)
-    .html(convertColorNameToReadable(backgroundColorName));
-  updateConvertRGBSansAlphaButton( '#cp_font-color-settings', colorDataObj.fontColorSansAlpha);
-  updateConvertRGBSansAlphaButton( '#cp_background-color-settings', colorDataObj.bgColors);
-}
-
-
-
-// function setMarkerPlacement( colorDataObj ) {}
-moveMarker( $('#cp_font-color-settings .cp_color-settings_slide-marker').eq(0), colorDataObj.fontColors.r );
-moveMarker( $('#cp_font-color-settings .cp_color-settings_slide-marker').eq(1), colorDataObj.fontColors.g );
-moveMarker( $('#cp_font-color-settings .cp_color-settings_slide-marker').eq(2), colorDataObj.fontColors.b );
-moveMarker( $('#cp_font-color-settings .cp_color-settings_slide-marker').eq(3), colorDataObj.fontColors.a, 255 );
-moveMarker( $('#cp_background-color-settings .cp_color-settings_slide-marker').eq(0), colorDataObj.bgColors.r );
-moveMarker( $('#cp_background-color-settings .cp_color-settings_slide-marker').eq(1), colorDataObj.bgColors.g );
-moveMarker( $('#cp_background-color-settings .cp_color-settings_slide-marker').eq(2), colorDataObj.bgColors.b );
-// }
-
-
-
-
-var fontSliders = $('#cp_font-color-settings .cp_color-settings_slide');
-buildCSSgradient(fontSliders.eq(0), 'red',   colorDataObj.fontColorInHex);
-buildCSSgradient(fontSliders.eq(1), 'green', colorDataObj.fontColorInHex);
-buildCSSgradient(fontSliders.eq(2), 'blue',  colorDataObj.fontColorInHex);
-
-var backgroundSliders = $('#cp_background-color-settings .cp_color-settings_slide');
-buildCSSgradient(backgroundSliders.eq(0), 'red',   colorDataObj.bgColorInHex);
-buildCSSgradient(backgroundSliders.eq(1), 'green', colorDataObj.bgColorInHex);
-buildCSSgradient(backgroundSliders.eq(2), 'blue',  colorDataObj.bgColorInHex); 
-  
-  
-  
-  
-var textfieldElements = $('.cp_slider-textfield');
-var slideMarkers = $('.cp_color-settings_slide-marker');
-applyColorblindnessFilters(colorDataObj.colorblindActiveFilter);
-
-enableClickDrag('.cp_color-settings_slider-container');
-
-textfieldElements.focus(function() { var self = $(this); setTimeout(function () { self.select(); }, 50); });
-
-textfieldElements.change(function() {
-
-  colorDataObj = initColorAnalysis( colorDataObj ); 
-
-  setMarkerColor('font', colorDataObj.fontColorInHex);
-  setMarkerColor('background', colorDataObj.bgColorInHex);
-
-  if($('#toggle-btn-colorblindness').hasClass('toggle-off')) { // non-colorblind
-    
-    // setSampleArea( colorDataObj.fontColorInHex, colorDataObj.bgColorInHex );
-    setSampleArea( colorDataObj.fontColors, colorDataObj.bgColors );
-  } else { // [ TASK - update with colorblindness toggle feature ]
-    
-    // setSampleArea( colorDataObj.fontColorInHex, colorDataObj.bgColorInHex );
-    setSampleArea( colorDataObj.fontColors, colorDataObj.bgColors );
-  }
-  
-  var contrastUpdateString = colorDataObj.currentContrast;  
-  contrastUpdateString = contrastUpdateString.toFixed(1);
-
-  if(colorDataObj.targetContrast != 0) {
-    if(colorDataObj.targetContrast >= colorDataObj.currentContrast) contrastUpdateString = contrastUpdateString + ':1 Contrast, Fails Filter <span class="fa fa-ban" style="color:red;"></span>'
-    if(colorDataObj.targetContrast <  colorDataObj.currentContrast) contrastUpdateString = contrastUpdateString + ':1 Contrast, Passes Filter <span class="fa fa-check" style="color:green;"></span>'
-  }
-  else if(colorDataObj.targetContrast == 0) {
-    if(contrastUpdateString < 3) contrastUpdateString = contrastUpdateString + ', Fails all WCAG 2.0 Criteria <span class="fa fa-ban" style="color:red;"></span>';
-    if(contrastUpdateString >= 3 && contrastUpdateString < 4.5) contrastUpdateString = contrastUpdateString + ', AA large text only <span class="fa fa-check" style="color:green;"></span>';
-    if(contrastUpdateString >= 4.5 && contrastUpdateString < 7) contrastUpdateString = contrastUpdateString + ', AAA large text & AA small <span class="fa fa-check" style="color:green;"></span>';
-    if(contrastUpdateString >= 7) contrastUpdateString = contrastUpdateString + ', Pass: AAA small text <span class="fa fa-check" style="color:green;"></span>';
+  function setMarkerColor( whichMarkers, colorValue ) {
+    if(typeof colorValue === 'string') { colorValue = hexToRgb(colorValue); }
+    colorValue['a'] = 1; 
+    if(whichMarkers == 'font')       $('#cp_font-color-settings .cp_color-settings_marker-color').css('background-color', "rgba("+colorValue.r +','+colorValue.g+','+colorValue.b+','+colorValue.a+')');
+    if(whichMarkers == 'background') $('#cp_background-color-settings .cp_color-settings_marker-color').css('background-color', "rgba("+colorValue.r +','+colorValue.g+','+colorValue.b+','+colorValue.a+')');
+    if(whichMarkers == 'font')       $('#cp_font-color-settings .cp_color-settings_marker-color').css('background-color', "rgb("+colorDataObj.fontColorSansAlpha.r +','+colorDataObj.fontColorSansAlpha.g+','+colorDataObj.fontColorSansAlpha.b+')');
+    // if(whichMarkers == 'background') $('#cp_background-color-settings .cp_color-settings_marker-color').css('background-color', "rgba("+colorValue.r +','+colorValue.g+','+colorValue.b+','+colorValue.a+')');
   }
 
-  $('#cp_a11y-status-update').html(contrastUpdateString);
+  function setSampleArea( fontColorValue, backgroundColorValue ) {
+    if(typeof fontColorValue        === 'string') { fontColorValue        = hexToRgb(fontColorValue); }
+    if(typeof backgroundColorValue  === 'string') { backgroundColorValue  = hexToRgb(backgroundColorValue); }
+    if(!fontColorValue.a && fontColorValue.a != 0){ fontColorValue.a      = 100 ;}
+    var fontColorString = "rgba("+fontColorValue.r +','+fontColorValue.g+','+fontColorValue.b+','+(fontColorValue.a * 0.01)+')';
+    var bgColorString   = "rgb("+backgroundColorValue.r +','+backgroundColorValue.g+','+backgroundColorValue.b+')';
+    $('#cp_sample-content')
+      .css('color',            fontColorString)
+      .css('background-color', bgColorString);
+    $('#cp_font-swatch').css('background-color', fontColorString);
+    $('#cp_background-swatch').css('background-color', bgColorString);
+    // note - by converting the rgba font color to a rgb value set, it makes closestMatch still accurate
+    var fontColorSansAlpha  = convertRGBwithAlphaChannel(fontColorValue, backgroundColorValue);
+    var fontColorName       = findClosestColorRGB(fontColorSansAlpha);
+    var backgroundColorName = findClosestColorRGB(backgroundColorValue);
+    $('#font-color-name').find('.color-name')
+      .attr('data-colorname', fontColorName)
+      .html(convertColorNameToReadable(fontColorName));
+    $('#background-color-name').find('.color-name')
+      .attr('data-colorname', backgroundColorName)
+      .html(convertColorNameToReadable(backgroundColorName));
+    updateConvertRGBSansAlphaButton( '#cp_font-color-settings', colorDataObj.fontColorSansAlpha);
+    updateConvertRGBSansAlphaButton( '#cp_background-color-settings', colorDataObj.bgColors);
+  }
 
-  var fontSliders = $('#cp_font-color-settings .cp_color-settings_slide').not('.cp_colorblind-split');
-  buildCSSgradient(fontSliders.eq(0), 'red', colorDataObj.fontColorInHex);
+
+
+  // function setMarkerPlacement( colorDataObj ) {}
+  moveMarker( $('#cp_font-color-settings .cp_color-settings_slide-marker').eq(0), colorDataObj.fontColors.r );
+  moveMarker( $('#cp_font-color-settings .cp_color-settings_slide-marker').eq(1), colorDataObj.fontColors.g );
+  moveMarker( $('#cp_font-color-settings .cp_color-settings_slide-marker').eq(2), colorDataObj.fontColors.b );
+  moveMarker( $('#cp_font-color-settings .cp_color-settings_slide-marker').eq(3), colorDataObj.fontColors.a, 255 );
+  moveMarker( $('#cp_background-color-settings .cp_color-settings_slide-marker').eq(0), colorDataObj.bgColors.r );
+  moveMarker( $('#cp_background-color-settings .cp_color-settings_slide-marker').eq(1), colorDataObj.bgColors.g );
+  moveMarker( $('#cp_background-color-settings .cp_color-settings_slide-marker').eq(2), colorDataObj.bgColors.b );
+  // }
+
+
+
+
+  var fontSliders = $('#cp_font-color-settings .cp_color-settings_slide');
+  buildCSSgradient(fontSliders.eq(0), 'red',   colorDataObj.fontColorInHex);
   buildCSSgradient(fontSliders.eq(1), 'green', colorDataObj.fontColorInHex);
-  buildCSSgradient(fontSliders.eq(2), 'blue', colorDataObj.fontColorInHex);
-  //updateCheckerboardPattern('#alpha-checkerboard-pattern', '#alpha-subcheckerboard-pattern', colorDataObj.fontColorInRGB, colorDataObj.bgInRGB)
-  updateCheckerboardPattern('#alpha-checkerboard-pattern', '#alpha-subcheckerboard-pattern', colorDataObj.fontColors, colorDataObj.bgColors );
+  buildCSSgradient(fontSliders.eq(2), 'blue',  colorDataObj.fontColorInHex);
 
-  var backgroundSliders = $('#cp_background-color-settings .cp_color-settings_slide').not('.cp_colorblind-split');
-  buildCSSgradient( backgroundSliders.eq(0), 'red',   colorDataObj.bgColorInHex);
-  buildCSSgradient( backgroundSliders.eq(1), 'green', colorDataObj.bgColorInHex);
-  buildCSSgradient( backgroundSliders.eq(2), 'blue',  colorDataObj.bgColorInHex); 
-  
-  $('#font-luminosity-result').text( colorDataObj.fontLuminance   );
-  $('#bg-luminosity-result').text(   colorDataObj.bgLuminance     );
-  $('#current-contrast').text(       colorDataObj.currentContrast );
+  var backgroundSliders = $('#cp_background-color-settings .cp_color-settings_slide');
+  buildCSSgradient(backgroundSliders.eq(0), 'red',   colorDataObj.bgColorInHex);
+  buildCSSgradient(backgroundSliders.eq(1), 'green', colorDataObj.bgColorInHex);
+  buildCSSgradient(backgroundSliders.eq(2), 'blue',  colorDataObj.bgColorInHex); 
+    
+    
+    
+    
+  var textfieldElements = $('.cp_slider-textfield');
+  var slideMarkers = $('.cp_color-settings_slide-marker');
+  applyColorblindnessFilters(colorDataObj.colorblindActiveFilter);
 
-  if(colorDataObj.currentContrast < colorDataObj.contrastTarget) $('.cp_color-settings_container').addClass('range-alert');
-  if(colorDataObj.currentContrast > colorDataObj.contrastTarget) $('.cp_color-settings_container').removeClass('range-alert');
+  enableClickDrag('.cp_color-settings_slider-container');
 
-  if(colorDataObj.currentActiveTool == 'contrast') {
-    setRangesForUI( colorDataObj );
-  }
+  textfieldElements.focus(function() { var self = $(this); setTimeout(function () { self.select(); }, 50); });
 
-  if(colorDataObj.currentActiveTool == 'colorblindness') {
-    colorDataObj.colorblindActiveFilter = $('#cp_colorblindness-filter-button').attr('data-filter-state');
-    updateColorBlindnessGradient(colorDataObj.colorblindActiveFilter);
-  }
+  textfieldElements.change(function() {
 
-  });
-});  
+    colorDataObj = initColorAnalysis( colorDataObj ); 
 
+    setMarkerColor('font', colorDataObj.fontColorInHex);
+    setMarkerColor('background', colorDataObj.bgColorInHex);
+
+    if($('#toggle-btn-colorblindness').hasClass('toggle-off')) { // non-colorblind
+      
+      // setSampleArea( colorDataObj.fontColorInHex, colorDataObj.bgColorInHex );
+      setSampleArea( colorDataObj.fontColors, colorDataObj.bgColors );
+    } else { // [ TASK - update with colorblindness toggle feature ]
+      
+      // setSampleArea( colorDataObj.fontColorInHex, colorDataObj.bgColorInHex );
+      setSampleArea( colorDataObj.fontColors, colorDataObj.bgColors );
+    }
+    
+    var contrastUpdateString = colorDataObj.currentContrast;  
+    contrastUpdateString = parseInt(contrastUpdateString.toFixed(2));
+
+    if(colorDataObj.targetContrast != 0) {
+      if(colorDataObj.targetContrast >= colorDataObj.currentContrast) contrastUpdateString = contrastUpdateString + ':1 Contrast, Fails Filter <span class="fa fa-ban" style="color:red;"></span>'
+      if(colorDataObj.targetContrast <  colorDataObj.currentContrast) contrastUpdateString = contrastUpdateString + ':1 Contrast, Passes Filter <span class="fa fa-check" style="color:green;"></span>'
+    }
+    else if(colorDataObj.targetContrast == 0) {
+      if(contrastUpdateString < 3) contrastUpdateString = contrastUpdateString + ', Fails all WCAG 2.0 Criteria <span class="fa fa-ban" style="color:red;"></span>';
+      if(contrastUpdateString >= 3 && contrastUpdateString < 4.5) contrastUpdateString = contrastUpdateString + ', AA large text only <span class="fa fa-check" style="color:green;"></span>';
+      if(contrastUpdateString >= 4.5 && contrastUpdateString < 7) contrastUpdateString = contrastUpdateString + ', AAA large text & AA small <span class="fa fa-check" style="color:green;"></span>';
+      if(contrastUpdateString >= 7) contrastUpdateString = contrastUpdateString + ', Pass: AAA small text <span class="fa fa-check" style="color:green;"></span>';
+    }
+
+    $('#cp_a11y-status-update').html(contrastUpdateString);
+
+    var fontSliders = $('#cp_font-color-settings .cp_color-settings_slide').not('.cp_colorblind-split');
+    buildCSSgradient(fontSliders.eq(0), 'red',    colorDataObj.fontColorInHex);
+    buildCSSgradient(fontSliders.eq(1), 'green',  colorDataObj.fontColorInHex);
+    buildCSSgradient(fontSliders.eq(2), 'blue',   colorDataObj.fontColorInHex);
+    //updateCheckerboardPattern('#alpha-checkerboard-pattern', '#alpha-subcheckerboard-pattern', colorDataObj.fontColorInRGB, colorDataObj.bgInRGB)
+    updateCheckerboardPattern('#alpha-checkerboard-pattern', '#alpha-subcheckerboard-pattern', colorDataObj.fontColors, colorDataObj.bgColors );
+
+    var backgroundSliders = $('#cp_background-color-settings .cp_color-settings_slide').not('.cp_colorblind-split');
+    buildCSSgradient( backgroundSliders.eq(0), 'red',   colorDataObj.bgColorInHex);
+    buildCSSgradient( backgroundSliders.eq(1), 'green', colorDataObj.bgColorInHex);
+    buildCSSgradient( backgroundSliders.eq(2), 'blue',  colorDataObj.bgColorInHex); 
+    
+    $('#font-luminosity-result').text( colorDataObj.fontLuminance   );
+    $('#bg-luminosity-result').text(   colorDataObj.bgLuminance     );
+    $('#current-contrast').text(       colorDataObj.currentContrast );
+
+    if(colorDataObj.currentContrast < colorDataObj.contrastTarget) { $('.cp_color-settings_container').addClass('range-alert'); }
+    if(colorDataObj.currentContrast > colorDataObj.contrastTarget) { $('.cp_color-settings_container').removeClass('range-alert'); }
+
+    if(colorDataObj.currentActiveTool == 'contrast') { setRangesForUI( colorDataObj ); }
+
+    if(colorDataObj.currentActiveTool == 'colorblindness') {
+      colorDataObj.colorblindActiveFilter = $('#cp_colorblindness-filter-button').attr('data-filter-state');
+      updateColorBlindnessGradient(colorDataObj.colorblindActiveFilter);
+    }
+
+    
+
+
+    // START update analytics, if ready
+    if (typeof updateAnalyticsTableValues == 'function') { 
+      updateAnalyticsTableValues();
+      updateAnalyticsTableState();
+    } else {
+      setTimeout(function() {
+        if (typeof updateAnalyticsTableValues == 'function') { 
+          updateAnalyticsTableValues();
+          updateAnalyticsTableState();
+        } 
+      },1000);
+    }
+    //  END update analytics
+  });  
+
+});
 $('.cp_color-settings_slide-marker, .cp_slider-textfield')
   .keydown(       function( event ) { event.stopImmediatePropagation(); stepNumber($(this),event);})
 
@@ -254,7 +253,7 @@ $('.cp_color-settings_slide-marker')
   .bind('keyup',  function(event) { 
     if(event.keyCode == 13) { // enter == 13
       setTimeout(function() { $('#cp_a11y-status-update').attr('aria-live', 'assertive'); }, 1);
-      setTimeout(function() { $('#cp_a11y-status-update').attr('aria-live', 'off'); }, 1500);
+      setTimeout(function() { $('#cp_a11y-status-update').attr('aria-live', 'off');       }, 1500);
     }
   })
   .each(function() { 
@@ -266,7 +265,7 @@ $('.cp_color-settings_slide-marker')
 function stepNumber( targetElement, passedEvent, newValue) {
   targetElement = $(targetElement);
   if(passedEvent) { var thisKeyCode = passedEvent.keyCode; }
-  if(!passedEvent) {
+  if(!passedEvent) { // for click events only...
     var textfieldElement = targetElement.parent().find('.cp_slider-textfield');
     textfieldElement
       .val(newValue)
@@ -275,12 +274,15 @@ function stepNumber( targetElement, passedEvent, newValue) {
   }
   if(thisKeyCode >= 37 || thisKeyCode <= 40) {
     var targetElement, thisValue;
+    
+    // textfield behaviors...
     if(targetElement.hasClass('cp_slider-textfield')) {
       thisValue = Number(targetElement.val());
       var targetMarker = targetElement.parent().parent().find('.cp_color-settings_slide-marker');
       var maxValue = parseInt(targetMarker.attr('aria-valuemax'));
       var minValue = parseInt(targetMarker.attr('aria-valuemin'));
       newValue = parseInt(targetMarker.attr('aria-valuenow'));
+      
       if(thisKeyCode == 38) {
         thisValue++;
         if(thisValue <= maxValue) {
@@ -317,12 +319,16 @@ function stepNumber( targetElement, passedEvent, newValue) {
          }, 50);
       }
     }
+    // END textfield behaviors
+
+    // START slider behaviors
     if(targetElement.hasClass('cp_color-settings_slide-marker')) {
       var targetMarker = targetElement;
       var maxValue = parseInt(targetMarker.attr('aria-valuemax'));
       var minValue = parseInt(targetMarker.attr('aria-valuemin'));
-      var textfieldElement = targetElement.parent().find('.cp_slider-textfield');
+      var textfieldElement = targetElement.parent().parent().find('.cp_slider-textfield');
 
+      // if left or alt-left (MacOS = fn+shift+up)...
       if(thisKeyCode == 39 || thisKeyCode == 33 && passedEvent.shiftKey == true) {
         thisValue = Number(textfieldElement.val());
 
@@ -337,6 +343,7 @@ function stepNumber( targetElement, passedEvent, newValue) {
           moveMarker( targetElement, thisValue, xPosition );
         }
       } 
+      // if right or alt-right (MacOS = fn+shift+down)
       if(thisKeyCode == 37 || thisKeyCode == 34 && passedEvent.shiftKey == true) {
         thisValue = Number(textfieldElement.val());
         if(thisValue-1 >= minValue) {
@@ -350,6 +357,7 @@ function stepNumber( targetElement, passedEvent, newValue) {
           moveMarker( targetElement, thisValue, xPosition );
         }  
       }
+      // if pageUp
       if(thisKeyCode == 33 && passedEvent.shiftKey == false) { // MacOS > pageUp
         thisValue = Number(textfieldElement.val());
         if(thisValue +10 <= maxValue) { thisValue = thisValue+10; }
@@ -362,6 +370,7 @@ function stepNumber( targetElement, passedEvent, newValue) {
           .trigger('change');
         moveMarker( targetElement, thisValue, xPosition );
       }
+      // if pageDown
       if(thisKeyCode == 34 && passedEvent.shiftKey == false) { // MacOS > pageDown ()
         thisValue = Number(textfieldElement.val());
         if(thisValue -10 >= minValue) { thisValue = thisValue-10; }
@@ -374,6 +383,7 @@ function stepNumber( targetElement, passedEvent, newValue) {
           .trigger('change');
         moveMarker( targetElement, thisValue, xPosition );
       }
+      // if Home
       if(thisKeyCode == 36) { // MacOS > Home (start of slider)
         thisValue = minValue;
         var xPosition = Number.parseInt( (255 * thisValue / (maxValue-minValue)) + minValue );
@@ -384,6 +394,7 @@ function stepNumber( targetElement, passedEvent, newValue) {
           .trigger('change');
         moveMarker( targetElement, thisValue, xPosition );
       }
+      // if End
       if(thisKeyCode == 35) { // MacOS > End (end of slider)
         thisValue = maxValue;
         var xPosition = Number.parseInt( (255 * thisValue / (maxValue-minValue)) + minValue );
@@ -409,7 +420,8 @@ function moveMarker( targetMarker, newValue, xPosition ) { //
     var percentAsPixels = 256 * (newValue/maxValue);
 
     targetMarker
-      .css('transform', 'translate3d(' + xPosition + 'px, 0px, 0px)')
+      // .css('transform', 'translate3d(' + xPosition + 'px, 0px, 0px)')
+      .css('left', xPosition+ 'px') // update testing for draggabilly implementation
       .attr('aria-valuenow', newValue)
       .attr('aria-valuetext', targetMarker.attr('data-slider-text-before') + ' equals ' + newValue + targetMarker.attr('data-slider-text-after'));
   }
@@ -471,28 +483,62 @@ function enableClickDrag( targetGroup ) {
 // });
 
 
-function enableMarkerDrag( targetElement, targetTextField ) {
-  var slideMarker = Draggable.create(targetElement, {
-    type: 'x',
-    throwProps: false,
-    bounds: {minX:0, maxX:255},
-    onDrag: update
+// old version
+
+// function enableMarkerDrag( targetElement, targetTextField ) {
+//   var slideMarker = Draggable.create(targetElement, {
+//     type: 'x',
+//     throwProps: false,
+//     bounds: {minX:0, maxX:255},
+//     onDrag: update
+//   });
+
+//   function update() {
+//     var newValue = slideMarker[0].x;
+//     var valueMin = parseInt(targetElement.attr('aria-valuemin'));
+//     var valueMax = parseInt(targetElement.attr('aria-valuemax'));
+//     var valueDiff = valueMax - valueMin;
+//     var relativeValue = Number.parseInt(newValue/255 * valueDiff ); 
+//     // division by 254 was chosen instead of 255 to insure that 100% of valuemax would translate 
+//     stepNumber( targetTextField, null, relativeValue );
+//   }
+// }
+
+function enableMarkerDrag(targetElement, targetTextfield) { 
+  targetTextfield = $(targetTextfield);
+  targetElement = $(targetElement);
+  targetElement.each(function(index) {
+    var thisSlider = $(this);
+    var thisSlider_container = thisSlider.attr('data-slide-container');
+    // make draggable 
+    thisSlider
+      .draggabilly({
+        axis: 'x',
+        containment: true
+      })
+      .click(function() {
+        $(this).focus();
+      })
+      .on('dragMove', function(event, pointer) {
+        var selfSlider      = $(this),
+            dragData        = selfSlider.data('draggabilly'),
+            posX            = dragData.position.x,
+            targetTextField = selfSlider.parent().parent().find('.cp_slider-textfield');
+
+        update(selfSlider, targetTextField);
+        
+        function update(targetElement, targetTextField) {
+          var newValue = posX;
+          var valueMin = parseInt(targetElement.attr('aria-valuemin'));
+          var valueMax = parseInt(targetElement.attr('aria-valuemax'));
+          var valueDiff = valueMax - valueMin;
+          var relativeValue = Number.parseInt(newValue/255 * valueDiff ); 
+          // division by 254 was chosen instead of 255 to insure that 100% of valuemax would translate 
+          stepNumber( targetTextField, null, relativeValue );
+        }
+      });
   });
-
-  function update() {
-    var newValue = slideMarker[0].x;
-    var valueMin = parseInt(targetElement.attr('aria-valuemin'));
-    var valueMax = parseInt(targetElement.attr('aria-valuemax'));
-    var valueDiff = valueMax - valueMin;
-    var relativeValue = Number.parseInt(newValue/255 * valueDiff ); 
-    // division by 254 was chosen instead of 255 to insure that 100% of valuemax would translate 
-    stepNumber( targetTextField, null, relativeValue );
-  }
 }
-
-
-  
-
 
 
 
@@ -504,67 +550,26 @@ function enableMarkerDrag( targetElement, targetTextField ) {
   
   
 
-  function buildCSSgradient( targetElement, gradientType, colorValues, colorDataObj ) { // initial 
-    if(typeof colorValues === 'string' || colorValues instanceof String) var rgbValues_start = hexToRgb(colorValues), rgbValues_end = hexToRgb(colorValues);
-    else { // assumes rgb as an object
-
-    }
-
-    if(gradientType == 'red') rgbValues_start.r = 0, rgbValues_end.r = 255;
-    if(gradientType == 'green') rgbValues_start.g = 0, rgbValues_end.g = 255;
-    if(gradientType == 'blue') rgbValues_start.b = 0, rgbValues_end.b = 255;
-    if(gradientType == 'red' || gradientType == 'green' || gradientType == 'blue') {
-      targetElement
-        .css('background', '-moz-linear-gradient(left, rgb('                           + rgbValues_start.r + ',' + rgbValues_start.g + ',' + rgbValues_start.b + ') 0%, rgb('                 + rgbValues_end.r + ',' + rgbValues_end.g + ', ' + rgbValues_end.b + ') 100%)')
-        .css('background', '-webkit-gradient(left top, right top, color-stop(0%, rgb(' + rgbValues_start.r + ',' + rgbValues_start.g + ',' + rgbValues_start.b + ')), color-stop(100%, rgb('  + rgbValues_end.r + ',' + rgbValues_end.g + ', ' + rgbValues_end.b + ')))')
-        .css('background', '-webkit-linear-gradient(left, rgb('                        + rgbValues_start.r + ',' + rgbValues_start.g + ',' + rgbValues_start.b + ') 0%, rgb('                 + rgbValues_end.r + ',' + rgbValues_end.g + ', ' + rgbValues_end.b + ') 100%)')
-        .css('background', '-o-linear-gradient(left, rgb('                             + rgbValues_start.r + ',' + rgbValues_start.g + ',' + rgbValues_start.b + ') 0%, rgb('                 + rgbValues_end.r + ',' + rgbValues_end.g + ', ' + rgbValues_end.b + ') 100%)')
-        .css('background', '-ms-linear-gradient(left, rgb('                            + rgbValues_start.r + ',' + rgbValues_start.g + ',' + rgbValues_start.b + ') 0%, rgb('                 + rgbValues_end.r + ',' + rgbValues_end.g + ', ' + rgbValues_end.b + ') 100%)')
-        .css('background', 'linear-gradient(to right, rgb('                            + rgbValues_start.r + ',' + rgbValues_start.g + ',' + rgbValues_start.b + ') 0%, rgb('                 + rgbValues_end.r + ',' + rgbValues_end.g + ', ' + rgbValues_end.b + ') 100%)');
-    }
-
+function buildCSSgradient( targetElement, gradientType, colorValues, colorDataObj ) { // initial 
+  if(typeof colorValues === 'string' || colorValues instanceof String) var rgbValues_start = hexToRgb(colorValues), rgbValues_end = hexToRgb(colorValues);
+  else { // assumes rgb as an object
 
   }
 
-
-  function rgbToHex(redValue, greenValue, blueValue) {
-    function componentToHex(c) {
-      var hex = c.toString(16);
-      return hex.length == 1 ? "0" + hex : hex;
-    }
-    return "" + componentToHex(redValue) + componentToHex(greenValue) + componentToHex(blueValue);
+  if(gradientType == 'red') rgbValues_start.r = 0, rgbValues_end.r = 255;
+  if(gradientType == 'green') rgbValues_start.g = 0, rgbValues_end.g = 255;
+  if(gradientType == 'blue') rgbValues_start.b = 0, rgbValues_end.b = 255;
+  if(gradientType == 'red' || gradientType == 'green' || gradientType == 'blue') {
+    targetElement
+      .css('background', '-moz-linear-gradient(left, rgb('                           + rgbValues_start.r + ',' + rgbValues_start.g + ',' + rgbValues_start.b + ') 0%, rgb('                 + rgbValues_end.r + ',' + rgbValues_end.g + ', ' + rgbValues_end.b + ') 100%)')
+      .css('background', '-webkit-gradient(left top, right top, color-stop(0%, rgb(' + rgbValues_start.r + ',' + rgbValues_start.g + ',' + rgbValues_start.b + ')), color-stop(100%, rgb('  + rgbValues_end.r + ',' + rgbValues_end.g + ', ' + rgbValues_end.b + ')))')
+      .css('background', '-webkit-linear-gradient(left, rgb('                        + rgbValues_start.r + ',' + rgbValues_start.g + ',' + rgbValues_start.b + ') 0%, rgb('                 + rgbValues_end.r + ',' + rgbValues_end.g + ', ' + rgbValues_end.b + ') 100%)')
+      .css('background', '-o-linear-gradient(left, rgb('                             + rgbValues_start.r + ',' + rgbValues_start.g + ',' + rgbValues_start.b + ') 0%, rgb('                 + rgbValues_end.r + ',' + rgbValues_end.g + ', ' + rgbValues_end.b + ') 100%)')
+      .css('background', '-ms-linear-gradient(left, rgb('                            + rgbValues_start.r + ',' + rgbValues_start.g + ',' + rgbValues_start.b + ') 0%, rgb('                 + rgbValues_end.r + ',' + rgbValues_end.g + ', ' + rgbValues_end.b + ') 100%)')
+      .css('background', 'linear-gradient(to right, rgb('                            + rgbValues_start.r + ',' + rgbValues_start.g + ',' + rgbValues_start.b + ') 0%, rgb('                 + rgbValues_end.r + ',' + rgbValues_end.g + ', ' + rgbValues_end.b + ') 100%)');
   }
+}
 
-
-  function hexToRgb(hex) {
-    var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
-    return result ? {
-        r:  parseInt(result[1], 16),  // red
-        g: parseInt(result[2], 16),  // green 
-        b:  parseInt(result[3], 16)   // blue
-    } : null;
-  }
-  function hexToCMYK(hex) {
-    var rgbValues = hexToRGB(hex);
-    var result = {};
-    result.firstValue  = 1 - rgbValues.firstValue;  // C
-    result.secondValue = 1 - rgbValues.secondValue; // M
-    result.thirdValue  = 1 - rgbValues.thirdValue;  // Y
-    result.fourthValue = Math.min(result.firstValue,Math.min(result.secondValue,result.thirdValue)); // K
-    return result;
-  }
-
-  function hexToHSV(hex) {
-    var rgbValues = hexToRGB(hex);
-    var result = {};
-    var minRGB = Math.min(rgbValues.firstValue/255, Math.min(rgbValues.secondValue/255,rgbValues.thirdValue/255));
-    var maxRGB = Math.max(rgbValues.firstValue/255, Math.max(rgbValues.secondValue/255,rgbValues.thirdValue/255));
-    // Black-gray-white
-    if(minRGB==maxRGB) {
-      computedV = minRGB;
-      return [0,0,computedV];
-    }
-  }
 
   
 
@@ -580,271 +585,272 @@ function enableMarkerDrag( targetElement, targetTextField ) {
 
 // START Menu Settings Behaviors 
 
-  function applyBasicMenuButtonBehaviors( targetElement ) {
-    targetElement = $(targetElement);
-    var menuItemsOfTargetElement = targetElement.parent().parent().find('.dropdown-menu a');
-    targetElement
-      .on('keyup', function(e){
-        if(e.keyCode == 27) toggleMenu( targetElement, false ); // esc = close menu
-        // if(e.keyCode == 13) setTimeout(function () { targetElement.trigger('click');  }, 50);       // return = toggle menu open/close  
-      })
-      .on('click', function(){ toggleMenu( targetElement ); }); // open menu / close menu
-    
-    menuItemsOfTargetElement
-      .on('keyup', function(e) {
-        if(e.keyCode == 27) toggleMenu( targetElement, false );
-        // if(e.keyCode == 13) toggleMenu( targetElement, true );
-      })
-      .on('click', function() {
-        toggleMenu( targetElement, false );
-      });
-  }
-
-  function toggleMenu( selfTargetElement, optionState ) {
-    // if option is true/'true' or false/'false', the toggle only performs that action
-    // otherwise, it flips state accordingly
-    var allMenus = $('.btn-group button').not(selfTargetElement);
-    selfTargetElement = $(selfTargetElement);
-    var targetParent = selfTargetElement.parent().parent('.btn-group');
-    if(!optionState) {
-      targetParent.toggleClass('open');
-    }
-    if(optionState == true  || optionState == 'true')  targetParent.addClass('open');
-    if(optionState == false || optionState == 'false') targetParent.removeClass('open');
-  }
+function applyBasicMenuButtonBehaviors( targetElement ) {
+  targetElement = $(targetElement);
+  var menuItemsOfTargetElement = targetElement.parent().parent().find('.dropdown-menu a');
+  targetElement
+    .on('keyup', function(e){
+      if(e.keyCode == 27) toggleMenu( targetElement, false ); // esc = close menu
+      // if(e.keyCode == 13) setTimeout(function () { targetElement.trigger('click');  }, 50);       // return = toggle menu open/close  
+    })
+    .on('click', function(){ toggleMenu( targetElement ); }); // open menu / close menu
   
-  function applyToolsDisplay() {
-    var targetToolsMenuOptions = $('#cp_tool-menu .dropdown-menu a');
-    targetToolsMenuOptions.on('click', function() {
-      resetAllFilters();
-      var selfTarget = $(this);
-      if(selfTarget.hasClass('off')) {
-        $('#cp_settings-active-tool').addClass('hide'); // also deactivate all filters
-        $('.cp_colorblind-split').addClass('hide');
-        $('.cp_color-settings_a11y-fail-range').addClass('hide');
-      }            
-      if(selfTarget.hasClass('contrast')) {
+  menuItemsOfTargetElement
+    .on('keyup', function(e) {
+      if(e.keyCode == 27) toggleMenu( targetElement, false );
+      // if(e.keyCode == 13) toggleMenu( targetElement, true );
+    })
+    .on('click', function() {
+      toggleMenu( targetElement, false );
+    });
+}
+
+function toggleMenu( selfTargetElement, optionState ) {
+  // if option is true/'true' or false/'false', the toggle only performs that action
+  // otherwise, it flips state accordingly
+  var allMenus = $('.btn-group button').not(selfTargetElement);
+  selfTargetElement = $(selfTargetElement);
+  var targetParent = selfTargetElement.parent().parent('.btn-group');
+  if(!optionState) {
+    targetParent.toggleClass('open');
+  }
+  if(optionState == true  || optionState == 'true')  targetParent.addClass('open');
+  if(optionState == false || optionState == 'false') targetParent.removeClass('open');
+}
+
+function applyToolsDisplay() {
+  var targetToolsMenuOptions = $('#cp_tool-menu .dropdown-menu a');
+  targetToolsMenuOptions.on('click', function() {
+    resetAllFilters();
+    var selfTarget = $(this);
+    if(selfTarget.hasClass('off')) {
+      $('#cp_settings-active-tool').addClass('hide'); // also deactivate all filters
+      $('.cp_colorblind-split').addClass('hide');
+      $('.cp_color-settings_a11y-fail-range').addClass('hide');
+    }            
+    if(selfTarget.hasClass('contrast')) {
+      colorDataObj.currentActiveTool = 'contrast';
+      colorDataObj.colorblindActiveFilter = 'normal';
+      
+      $('#cp_settings-active-tool').removeClass('hide'); 
+      $('.cp_colorblind-split').addClass('hide');
+      var searchParam = $('#cp_settings-active-tool').find('.settings-group-container');
+      searchParam.addClass('hide');
+      searchParam.filter('#contrast-settings-container').removeClass('hide');
+    
+    }      
+    if(selfTarget.hasClass('colorblindness')) {
+      colorDataObj.currentActiveTool = 'colorblindness';
+      $('#cp_settings-active-tool').removeClass('hide'); 
+      
+      $('.cp_color-settings_a11y-fail-range').addClass('hide');
+      var searchParam = $('#cp_settings-active-tool').find('.settings-group-container');
+      searchParam.addClass('hide');
+      searchParam.filter('#colorblindness-settings-container').removeClass('hide');
+    } 
+  });
+}
+
+function applyColorblindnessFilters() {
+  var targetFilterButtons = $('#cp_colorblindness-filter-button-group ul a');
+  targetFilterButtons.each(function() {
+    var selfTarget = $(this);
+    
+    selfTarget.on('click', function() {
+      if(selfTarget.hasClass('off'))            {updateColorBlindnessGradient('normal');       $('#cp_colorblindness-filter-button').attr('data-filter-state', 'normal');}
+      if(selfTarget.hasClass('protanopia'))     {updateColorBlindnessGradient('protanopia');   $('#cp_colorblindness-filter-button').attr('data-filter-state', 'protanopia');}
+      if(selfTarget.hasClass('protanomaly'))    {updateColorBlindnessGradient('protanomaly');  $('#cp_colorblindness-filter-button').attr('data-filter-state', 'protanomaly');}
+      if(selfTarget.hasClass('deuteranopia'))   {updateColorBlindnessGradient('deuteranopia'); $('#cp_colorblindness-filter-button').attr('data-filter-state', 'deuteranopia');}
+      if(selfTarget.hasClass('deuteranomaly'))  {updateColorBlindnessGradient('deuteranomaly');$('#cp_colorblindness-filter-button').attr('data-filter-state', 'deuteranomaly');}
+      if(selfTarget.hasClass('tritanopia'))     {updateColorBlindnessGradient('tritanopia');   $('#cp_colorblindness-filter-button').attr('data-filter-state', 'tritanopia');}
+      if(selfTarget.hasClass('tritanomaly'))    {updateColorBlindnessGradient('tritanomaly');  $('#cp_colorblindness-filter-button').attr('data-filter-state', 'tritanomaly');}
+      if(selfTarget.hasClass('achromatopsia'))  {updateColorBlindnessGradient('achromatopsia');$('#cp_colorblindness-filter-button').attr('data-filter-state', 'achromatopsia');}
+      if(selfTarget.hasClass('achromatomaly'))  {updateColorBlindnessGradient('achromatomaly');$('#cp_colorblindness-filter-button').attr('data-filter-state', 'achromatomaly');}
+      colorDataObj.currentActiveTool = 'colorblindness';
+      colorDataObj.colorblindActiveFilter = $('#cp_colorblindness-filter-button').attr('data-filter-state');
+      $('#cp_colorblindness-filter-button-group ul a.selected').removeClass('selected');
+      selfTarget.addClass('selected');
+    });
+  })
+}
+
+function updateColorBlindnessGradient( targetState ) {
+  if(!targetState) {
+    if(colorDataObj.colorblindActiveFilter != 'normal') {
+      targetState = colorDataObj.colorblindActiveFilter;
+    } else {
+      targetState = $('#cp_colorblindness-filter-button').attr('data-filter-state');
+    }
+  }
+  if(targetState == 'normal') {
+    colorDataObj.colorblindActiveFilter = 'normal';
+    $('#cp_colorblindness-filter-button')
+      .attr('data-filter-state', 'normal')
+      .html('<span class="fa fa-adjust"></span> Colorblindness Filter <span class="caret"></span>');
+    $('.cp_colorblind-split').addClass('hide');
+  }
+  else {
+    colorDataObj.colorblindActiveFilter = targetState;
+    $('#cp_colorblindness-filter-button')
+      .attr('data-filter-state', targetState)
+      .html('<span class="fa fa-low-vision"></span> Colorblindness Filter for <span class="cp_attention-text">' + targetState + '</span> <span class="caret"></span>');
+    
+    // var desiredType = Object.byString( fBlind, targetState );
+    var cbTypeAndAmount = cbTypeFilter(targetState);
+    
+    var red_left_forFont    = cbTranslate(                         0, colorDataObj.fontColorSansAlpha.g, colorDataObj.fontColorSansAlpha.b, cbTypeAndAmount.type, cbTypeAndAmount.amount ); 
+    var red_right_forFont   = cbTranslate(                       255, colorDataObj.fontColorSansAlpha.g, colorDataObj.fontColorSansAlpha.b, cbTypeAndAmount.type, cbTypeAndAmount.amount ); 
+    var green_left_forFont  = cbTranslate( colorDataObj.fontColorSansAlpha.r,                         0, colorDataObj.fontColorSansAlpha.b, cbTypeAndAmount.type, cbTypeAndAmount.amount ); 
+    var green_right_forFont = cbTranslate( colorDataObj.fontColorSansAlpha.r,                       255, colorDataObj.fontColorSansAlpha.b, cbTypeAndAmount.type, cbTypeAndAmount.amount ); 
+    var blue_left_forFont   = cbTranslate( colorDataObj.fontColorSansAlpha.r, colorDataObj.fontColorSansAlpha.g,                         0, cbTypeAndAmount.type, cbTypeAndAmount.amount ); 
+    var blue_right_forFont  = cbTranslate( colorDataObj.fontColorSansAlpha.r, colorDataObj.fontColorSansAlpha.g,                       255, cbTypeAndAmount.type, cbTypeAndAmount.amount ); 
+
+    var red_left_forBg      = cbTranslate(                       0, colorDataObj.bgColors.g, colorDataObj.bgColors.b, cbTypeAndAmount.type, cbTypeAndAmount.amount ); 
+    var red_right_forBg     = cbTranslate(                     255, colorDataObj.bgColors.g, colorDataObj.bgColors.b, cbTypeAndAmount.type, cbTypeAndAmount.amount ); 
+    var green_left_forBg    = cbTranslate( colorDataObj.bgColors.r,                       0, colorDataObj.bgColors.b, cbTypeAndAmount.type, cbTypeAndAmount.amount ); 
+    var green_right_forBg   = cbTranslate( colorDataObj.bgColors.r,                     255, colorDataObj.bgColors.b, cbTypeAndAmount.type, cbTypeAndAmount.amount ); 
+    var blue_left_forBg     = cbTranslate( colorDataObj.bgColors.r, colorDataObj.bgColors.g,                       0, cbTypeAndAmount.type, cbTypeAndAmount.amount ); 
+    var blue_right_forBg    = cbTranslate( colorDataObj.bgColors.r, colorDataObj.bgColors.g,                     255, cbTypeAndAmount.type, cbTypeAndAmount.amount ); 
+
+
+    var fontColorblindnessFilterTargets = $('#cp_font-color-settings .cp_colorblind-split');
+    var bgColorblindnessFilterTargets   = $('#cp_background-color-settings .cp_colorblind-split');
+
+    fontColorblindnessFilterTargets.eq(0) // red
+        .css('background', '-moz-linear-gradient(left, rgb('                           + red_left_forFont[0] + ',' + red_left_forFont[1] + ',' + red_left_forFont[2] + ') 0%, rgb('                 + red_right_forFont[0]+ ','  + red_right_forFont[1] + ', ' + red_right_forFont[2] + ') 100%)')
+        .css('background', '-webkit-gradient(left top, right top, color-stop(0%, rgb(' + red_left_forFont[0] + ',' + red_left_forFont[1] + ',' + red_left_forFont[2] + ')), color-stop(100%, rgb('  + red_right_forFont[0] + ',' + red_right_forFont[1] + ', ' + red_right_forFont[2] + ')))')
+        .css('background', '-webkit-linear-gradient(left, rgb('                        + red_left_forFont[0] + ',' + red_left_forFont[1] + ',' + red_left_forFont[2] + ') 0%, rgb('                 + red_right_forFont[0] + ',' + red_right_forFont[1] + ', ' + red_right_forFont[2] + ') 100%)')
+        .css('background', '-o-linear-gradient(left, rgb('                             + red_left_forFont[0] + ',' + red_left_forFont[1] + ',' + red_left_forFont[2] + ') 0%, rgb('                 + red_right_forFont[0] + ',' + red_right_forFont[1] + ', ' + red_right_forFont[2] + ') 100%)')
+        .css('background', '-ms-linear-gradient(left, rgb('                            + red_left_forFont[0] + ',' + red_left_forFont[1] + ',' + red_left_forFont[2] + ') 0%, rgb('                 + red_right_forFont[0] + ',' + red_right_forFont[1] + ', ' + red_right_forFont[2] + ') 100%)')
+        .css('background', 'linear-gradient(to right, rgb('                            + red_left_forFont[0] + ',' + red_left_forFont[1] + ',' + red_left_forFont[2] + ') 0%, rgb('                 + red_right_forFont[0] + ',' + red_right_forFont[1] + ', ' + red_right_forFont[2] + ') 100%)');
+    
+    fontColorblindnessFilterTargets.eq(1) // green
+        .css('background', '-moz-linear-gradient(left, rgb('                           + green_left_forFont[0] + ',' + green_left_forFont[1] + ',' + green_left_forFont[2] + ') 0%, rgb('                 + green_right_forFont[0]+ ','  + green_right_forFont[1] + ', ' + green_right_forFont[2] + ') 100%)')
+        .css('background', '-webkit-gradient(left top, right top, color-stop(0%, rgb(' + green_left_forFont[0] + ',' + green_left_forFont[1] + ',' + green_left_forFont[2] + ')), color-stop(100%, rgb('  + green_right_forFont[0] + ',' + green_right_forFont[1] + ', ' + green_right_forFont[2] + ')))')
+        .css('background', '-webkit-linear-gradient(left, rgb('                        + green_left_forFont[0] + ',' + green_left_forFont[1] + ',' + green_left_forFont[2] + ') 0%, rgb('                 + green_right_forFont[0] + ',' + green_right_forFont[1] + ', ' + green_right_forFont[2] + ') 100%)')
+        .css('background', '-o-linear-gradient(left, rgb('                             + green_left_forFont[0] + ',' + green_left_forFont[1] + ',' + green_left_forFont[2] + ') 0%, rgb('                 + green_right_forFont[0] + ',' + green_right_forFont[1] + ', ' + green_right_forFont[2] + ') 100%)')
+        .css('background', '-ms-linear-gradient(left, rgb('                            + green_left_forFont[0] + ',' + green_left_forFont[1] + ',' + green_left_forFont[2] + ') 0%, rgb('                 + green_right_forFont[0] + ',' + green_right_forFont[1] + ', ' + green_right_forFont[2] + ') 100%)')
+        .css('background', 'linear-gradient(to right, rgb('                            + green_left_forFont[0] + ',' + green_left_forFont[1] + ',' + green_left_forFont[2] + ') 0%, rgb('                 + green_right_forFont[0] + ',' + green_right_forFont[1] + ', ' + green_right_forFont[2] + ') 100%)');
+    
+    fontColorblindnessFilterTargets.eq(2) // blue
+        .css('background', '-moz-linear-gradient(left, rgb('                           + blue_left_forFont[0] + ',' + blue_left_forFont[1] + ',' + blue_left_forFont[2] + ') 0%, rgb('                 + blue_right_forFont[0]+ ','  + blue_right_forFont[1] + ', ' + blue_right_forFont[2] + ') 100%)')
+        .css('background', '-webkit-gradient(left top, right top, color-stop(0%, rgb(' + blue_left_forFont[0] + ',' + blue_left_forFont[1] + ',' + blue_left_forFont[2] + ')), color-stop(100%, rgb('  + blue_right_forFont[0] + ',' + blue_right_forFont[1] + ', ' + blue_right_forFont[2] + ')))')
+        .css('background', '-webkit-linear-gradient(left, rgb('                        + blue_left_forFont[0] + ',' + blue_left_forFont[1] + ',' + blue_left_forFont[2] + ') 0%, rgb('                 + blue_right_forFont[0] + ',' + blue_right_forFont[1] + ', ' + blue_right_forFont[2] + ') 100%)')
+        .css('background', '-o-linear-gradient(left, rgb('                             + blue_left_forFont[0] + ',' + blue_left_forFont[1] + ',' + blue_left_forFont[2] + ') 0%, rgb('                 + blue_right_forFont[0] + ',' + blue_right_forFont[1] + ', ' + blue_right_forFont[2] + ') 100%)')
+        .css('background', '-ms-linear-gradient(left, rgb('                            + blue_left_forFont[0] + ',' + blue_left_forFont[1] + ',' + blue_left_forFont[2] + ') 0%, rgb('                 + blue_right_forFont[0] + ',' + blue_right_forFont[1] + ', ' + blue_right_forFont[2] + ') 100%)')
+        .css('background', 'linear-gradient(to right, rgb('                            + blue_left_forFont[0] + ',' + blue_left_forFont[1] + ',' + blue_left_forFont[2] + ') 0%, rgb('                 + blue_right_forFont[0] + ',' + blue_right_forFont[1] + ', ' + blue_right_forFont[2] + ') 100%)');
+   
+    bgColorblindnessFilterTargets.eq(0) // red
+        .css('background', '-moz-linear-gradient(left, rgb('                           + red_left_forBg[0] + ',' + red_left_forBg[1] + ',' + red_left_forBg[2] + ') 0%, rgb('                 + red_right_forBg[0]+ ','  + red_right_forBg[1] + ', ' + red_right_forBg[2] + ') 100%)')
+        .css('background', '-webkit-gradient(left top, right top, color-stop(0%, rgb(' + red_left_forBg[0] + ',' + red_left_forBg[1] + ',' + red_left_forBg[2] + ')), color-stop(100%, rgb('  + red_right_forBg[0] + ',' + red_right_forBg[1] + ', ' + red_right_forBg[2] + ')))')
+        .css('background', '-webkit-linear-gradient(left, rgb('                        + red_left_forBg[0] + ',' + red_left_forBg[1] + ',' + red_left_forBg[2] + ') 0%, rgb('                 + red_right_forBg[0] + ',' + red_right_forBg[1] + ', ' + red_right_forBg[2] + ') 100%)')
+        .css('background', '-o-linear-gradient(left, rgb('                             + red_left_forBg[0] + ',' + red_left_forBg[1] + ',' + red_left_forBg[2] + ') 0%, rgb('                 + red_right_forBg[0] + ',' + red_right_forBg[1] + ', ' + red_right_forBg[2] + ') 100%)')
+        .css('background', '-ms-linear-gradient(left, rgb('                            + red_left_forBg[0] + ',' + red_left_forBg[1] + ',' + red_left_forBg[2] + ') 0%, rgb('                 + red_right_forBg[0] + ',' + red_right_forBg[1] + ', ' + red_right_forBg[2] + ') 100%)')
+        .css('background', 'linear-gradient(to right, rgb('                            + red_left_forBg[0] + ',' + red_left_forBg[1] + ',' + red_left_forBg[2] + ') 0%, rgb('                 + red_right_forBg[0] + ',' + red_right_forBg[1] + ', ' + red_right_forBg[2] + ') 100%)');
+    
+    bgColorblindnessFilterTargets.eq(1) // green
+        .css('background', '-moz-linear-gradient(left, rgb('                           + green_left_forBg[0] + ',' + green_left_forBg[1] + ',' + green_left_forBg[2] + ') 0%, rgb('                 + green_right_forBg[0]+ ','  + green_right_forBg[1] + ', ' + green_right_forBg[2] + ') 100%)')
+        .css('background', '-webkit-gradient(left top, right top, color-stop(0%, rgb(' + green_left_forBg[0] + ',' + green_left_forBg[1] + ',' + green_left_forBg[2] + ')), color-stop(100%, rgb('  + green_right_forBg[0] + ',' + green_right_forBg[1] + ', ' + green_right_forBg[2] + ')))')
+        .css('background', '-webkit-linear-gradient(left, rgb('                        + green_left_forBg[0] + ',' + green_left_forBg[1] + ',' + green_left_forBg[2] + ') 0%, rgb('                 + green_right_forBg[0] + ',' + green_right_forBg[1] + ', ' + green_right_forBg[2] + ') 100%)')
+        .css('background', '-o-linear-gradient(left, rgb('                             + green_left_forBg[0] + ',' + green_left_forBg[1] + ',' + green_left_forBg[2] + ') 0%, rgb('                 + green_right_forBg[0] + ',' + green_right_forBg[1] + ', ' + green_right_forBg[2] + ') 100%)')
+        .css('background', '-ms-linear-gradient(left, rgb('                            + green_left_forBg[0] + ',' + green_left_forBg[1] + ',' + green_left_forBg[2] + ') 0%, rgb('                 + green_right_forBg[0] + ',' + green_right_forBg[1] + ', ' + green_right_forBg[2] + ') 100%)')
+        .css('background', 'linear-gradient(to right, rgb('                            + green_left_forBg[0] + ',' + green_left_forBg[1] + ',' + green_left_forBg[2] + ') 0%, rgb('                 + green_right_forBg[0] + ',' + green_right_forBg[1] + ', ' + green_right_forBg[2] + ') 100%)');
+    
+    bgColorblindnessFilterTargets.eq(2) // blue
+        .css('background', '-moz-linear-gradient(left, rgb('                           + blue_left_forBg[0] + ',' + blue_left_forBg[1] + ',' + blue_left_forBg[2] + ') 0%, rgb('                 + blue_right_forBg[0]+ ','  + blue_right_forBg[1] + ', ' + blue_right_forBg[2] + ') 100%)')
+        .css('background', '-webkit-gradient(left top, right top, color-stop(0%, rgb(' + blue_left_forBg[0] + ',' + blue_left_forBg[1] + ',' + blue_left_forBg[2] + ')), color-stop(100%, rgb('  + blue_right_forBg[0] + ',' + blue_right_forBg[1] + ', ' + blue_right_forBg[2] + ')))')
+        .css('background', '-webkit-linear-gradient(left, rgb('                        + blue_left_forBg[0] + ',' + blue_left_forBg[1] + ',' + blue_left_forBg[2] + ') 0%, rgb('                 + blue_right_forBg[0] + ',' + blue_right_forBg[1] + ', ' + blue_right_forBg[2] + ') 100%)')
+        .css('background', '-o-linear-gradient(left, rgb('                             + blue_left_forBg[0] + ',' + blue_left_forBg[1] + ',' + blue_left_forBg[2] + ') 0%, rgb('                 + blue_right_forBg[0] + ',' + blue_right_forBg[1] + ', ' + blue_right_forBg[2] + ') 100%)')
+        .css('background', '-ms-linear-gradient(left, rgb('                            + blue_left_forBg[0] + ',' + blue_left_forBg[1] + ',' + blue_left_forBg[2] + ') 0%, rgb('                 + blue_right_forBg[0] + ',' + blue_right_forBg[1] + ', ' + blue_right_forBg[2] + ') 100%)')
+        .css('background', 'linear-gradient(to right, rgb('                            + blue_left_forBg[0] + ',' + blue_left_forBg[1] + ',' + blue_left_forBg[2] + ') 0%, rgb('                 + blue_right_forBg[0] + ',' + blue_right_forBg[1] + ', ' + blue_right_forBg[2] + ') 100%)');
+    
+    fontColorblindnessFilterTargets.removeClass('hide');
+    bgColorblindnessFilterTargets.removeClass('hide');
+  }
+}
+
+function applyContrastFilterRadioButtons() {
+  // 2 functions performed: (1) change text to match selected filter (2) activate/deactivate ranges accordingly
+  targetElements = $('#cp_contrast-range-filter-button-group .dropdown-menu a');
+  targetElements_parentButton = $('#cp_range-filter-button');
+  targetElements.each(function() {
+
+    var selfTargetElement = $(this);
+    
+    selfTargetElement
+      .on('click', function() {
         colorDataObj.currentActiveTool = 'contrast';
         colorDataObj.colorblindActiveFilter = 'normal';
-        
-        $('#cp_settings-active-tool').removeClass('hide'); 
-        $('.cp_colorblind-split').addClass('hide');
-        var searchParam = $('#cp_settings-active-tool').find('.settings-group-container');
-        searchParam.addClass('hide');
-        searchParam.filter('#contrast-settings-container').removeClass('hide');
-      
-      }      
-      if(selfTarget.hasClass('colorblindness')) {
-        colorDataObj.currentActiveTool = 'colorblindness';
-        $('#cp_settings-active-tool').removeClass('hide'); 
-        
-        $('.cp_color-settings_a11y-fail-range').addClass('hide');
-        var searchParam = $('#cp_settings-active-tool').find('.settings-group-container');
-        searchParam.addClass('hide');
-        searchParam.filter('#colorblindness-settings-container').removeClass('hide');
-      } 
-    });
-  }
-
-  function applyColorblindnessFilters() {
-    var targetFilterButtons = $('#cp_colorblindness-filter-button-group ul a');
-    targetFilterButtons.each(function() {
-      var selfTarget = $(this);
-      
-      selfTarget.on('click', function() {
-        if(selfTarget.hasClass('off'))            {updateColorBlindnessGradient('normal');       $('#cp_colorblindness-filter-button').attr('data-filter-state', 'normal');}
-        if(selfTarget.hasClass('protanopia'))     {updateColorBlindnessGradient('protanopia');   $('#cp_colorblindness-filter-button').attr('data-filter-state', 'protanopia');}
-        if(selfTarget.hasClass('protanomaly'))    {updateColorBlindnessGradient('protanomaly');  $('#cp_colorblindness-filter-button').attr('data-filter-state', 'protanomaly');}
-        if(selfTarget.hasClass('deuteranopia'))   {updateColorBlindnessGradient('deuteranopia'); $('#cp_colorblindness-filter-button').attr('data-filter-state', 'deuteranopia');}
-        if(selfTarget.hasClass('deuteranomaly'))  {updateColorBlindnessGradient('deuteranomaly');$('#cp_colorblindness-filter-button').attr('data-filter-state', 'deuteranomaly');}
-        if(selfTarget.hasClass('tritanopia'))     {updateColorBlindnessGradient('tritanopia');   $('#cp_colorblindness-filter-button').attr('data-filter-state', 'tritanopia');}
-        if(selfTarget.hasClass('tritanomaly'))    {updateColorBlindnessGradient('tritanomaly');  $('#cp_colorblindness-filter-button').attr('data-filter-state', 'tritanomaly');}
-        if(selfTarget.hasClass('achromatopsia'))  {updateColorBlindnessGradient('achromatopsia');$('#cp_colorblindness-filter-button').attr('data-filter-state', 'achromatopsia');}
-        if(selfTarget.hasClass('achromatomaly'))  {updateColorBlindnessGradient('achromatomaly');$('#cp_colorblindness-filter-button').attr('data-filter-state', 'achromatomaly');}
-        colorDataObj.currentActiveTool = 'colorblindness';
-        colorDataObj.colorblindActiveFilter = $('#cp_colorblindness-filter-button').attr('data-filter-state');
-        $('#cp_colorblindness-filter-button-group ul a.selected').removeClass('selected');
-        selfTarget.addClass('selected');
-      });
-    })
-
-  }
-
-  function updateColorBlindnessGradient( targetState ) {
-    if(!targetState) {
-      if(colorDataObj.colorblindActiveFilter != 'normal') {
-        targetState = colorDataObj.colorblindActiveFilter;
-      } else {
-        targetState = $('#cp_colorblindness-filter-button').attr('data-filter-state');
-      }
-    }
-    if(targetState == 'normal') {
-      colorDataObj.colorblindActiveFilter = 'normal';
-      $('#cp_colorblindness-filter-button')
-        .attr('data-filter-state', 'normal')
-        .html('<span class="fa fa-adjust"></span> Colorblindness Filter <span class="caret"></span>');
-      $('.cp_colorblind-split').addClass('hide');
-    }
-    else {
-      colorDataObj.colorblindActiveFilter = targetState;
-      $('#cp_colorblindness-filter-button')
-        .attr('data-filter-state', targetState)
-        .html('<span class="fa fa-low-vision"></span> Colorblindness Filter for <span class="cp_attention-text">' + targetState + '</span> <span class="caret"></span>');
-      
-      var desiredType = Object.byString( fBlind, targetState );
-
-      // var fontObject
-      var red_left_forFont    = desiredType([                         0, colorDataObj.fontColors.g, colorDataObj.fontColors.b]); 
-      var red_right_forFont   = desiredType([                       255, colorDataObj.fontColors.g, colorDataObj.fontColors.b]); 
-      var green_left_forFont  = desiredType([ colorDataObj.fontColors.r,                         0, colorDataObj.fontColors.b]); 
-      var green_right_forFont = desiredType([ colorDataObj.fontColors.r,                       255, colorDataObj.fontColors.b]); 
-      var blue_left_forFont   = desiredType([ colorDataObj.fontColors.r, colorDataObj.fontColors.g,                         0]); 
-      var blue_right_forFont  = desiredType([ colorDataObj.fontColors.r, colorDataObj.fontColors.g,                       255]); 
-
-      // var bgObject
-      var red_left_forBg    = desiredType([                       0, colorDataObj.bgColors.g, colorDataObj.bgColors.b]); 
-      var red_right_forBg   = desiredType([                     255, colorDataObj.bgColors.g, colorDataObj.bgColors.b]); 
-      var green_left_forBg  = desiredType([ colorDataObj.bgColors.r,                       0, colorDataObj.bgColors.b]); 
-      var green_right_forBg = desiredType([ colorDataObj.bgColors.r,                     255, colorDataObj.bgColors.b]); 
-      var blue_left_forBg   = desiredType([ colorDataObj.bgColors.r, colorDataObj.bgColors.g,                       0]); 
-      var blue_right_forBg  = desiredType([ colorDataObj.bgColors.r, colorDataObj.bgColors.g,                     255]); 
-
-      var fontColorblindnessFilterTargets = $('#cp_font-color-settings .cp_colorblind-split');
-      var bgColorblindnessFilterTargets   = $('#cp_background-color-settings .cp_colorblind-split');
-
-      fontColorblindnessFilterTargets.eq(0) // red
-          .css('background', '-moz-linear-gradient(left, rgb('                           + red_left_forFont[0] + ',' + red_left_forFont[1] + ',' + red_left_forFont[2] + ') 0%, rgb('                 + red_right_forFont[0]+ ','  + red_right_forFont[1] + ', ' + red_right_forFont[2] + ') 100%)')
-          .css('background', '-webkit-gradient(left top, right top, color-stop(0%, rgb(' + red_left_forFont[0] + ',' + red_left_forFont[1] + ',' + red_left_forFont[2] + ')), color-stop(100%, rgb('  + red_right_forFont[0] + ',' + red_right_forFont[1] + ', ' + red_right_forFont[2] + ')))')
-          .css('background', '-webkit-linear-gradient(left, rgb('                        + red_left_forFont[0] + ',' + red_left_forFont[1] + ',' + red_left_forFont[2] + ') 0%, rgb('                 + red_right_forFont[0] + ',' + red_right_forFont[1] + ', ' + red_right_forFont[2] + ') 100%)')
-          .css('background', '-o-linear-gradient(left, rgb('                             + red_left_forFont[0] + ',' + red_left_forFont[1] + ',' + red_left_forFont[2] + ') 0%, rgb('                 + red_right_forFont[0] + ',' + red_right_forFont[1] + ', ' + red_right_forFont[2] + ') 100%)')
-          .css('background', '-ms-linear-gradient(left, rgb('                            + red_left_forFont[0] + ',' + red_left_forFont[1] + ',' + red_left_forFont[2] + ') 0%, rgb('                 + red_right_forFont[0] + ',' + red_right_forFont[1] + ', ' + red_right_forFont[2] + ') 100%)')
-          .css('background', 'linear-gradient(to right, rgb('                            + red_left_forFont[0] + ',' + red_left_forFont[1] + ',' + red_left_forFont[2] + ') 0%, rgb('                 + red_right_forFont[0] + ',' + red_right_forFont[1] + ', ' + red_right_forFont[2] + ') 100%)');
-      
-      fontColorblindnessFilterTargets.eq(1) // green
-          .css('background', '-moz-linear-gradient(left, rgb('                           + green_left_forFont[0] + ',' + green_left_forFont[1] + ',' + green_left_forFont[2] + ') 0%, rgb('                 + green_right_forFont[0]+ ','  + green_right_forFont[1] + ', ' + green_right_forFont[2] + ') 100%)')
-          .css('background', '-webkit-gradient(left top, right top, color-stop(0%, rgb(' + green_left_forFont[0] + ',' + green_left_forFont[1] + ',' + green_left_forFont[2] + ')), color-stop(100%, rgb('  + green_right_forFont[0] + ',' + green_right_forFont[1] + ', ' + green_right_forFont[2] + ')))')
-          .css('background', '-webkit-linear-gradient(left, rgb('                        + green_left_forFont[0] + ',' + green_left_forFont[1] + ',' + green_left_forFont[2] + ') 0%, rgb('                 + green_right_forFont[0] + ',' + green_right_forFont[1] + ', ' + green_right_forFont[2] + ') 100%)')
-          .css('background', '-o-linear-gradient(left, rgb('                             + green_left_forFont[0] + ',' + green_left_forFont[1] + ',' + green_left_forFont[2] + ') 0%, rgb('                 + green_right_forFont[0] + ',' + green_right_forFont[1] + ', ' + green_right_forFont[2] + ') 100%)')
-          .css('background', '-ms-linear-gradient(left, rgb('                            + green_left_forFont[0] + ',' + green_left_forFont[1] + ',' + green_left_forFont[2] + ') 0%, rgb('                 + green_right_forFont[0] + ',' + green_right_forFont[1] + ', ' + green_right_forFont[2] + ') 100%)')
-          .css('background', 'linear-gradient(to right, rgb('                            + green_left_forFont[0] + ',' + green_left_forFont[1] + ',' + green_left_forFont[2] + ') 0%, rgb('                 + green_right_forFont[0] + ',' + green_right_forFont[1] + ', ' + green_right_forFont[2] + ') 100%)');
-      
-      fontColorblindnessFilterTargets.eq(2) // blue
-          .css('background', '-moz-linear-gradient(left, rgb('                           + blue_left_forFont[0] + ',' + blue_left_forFont[1] + ',' + blue_left_forFont[2] + ') 0%, rgb('                 + blue_right_forFont[0]+ ','  + blue_right_forFont[1] + ', ' + blue_right_forFont[2] + ') 100%)')
-          .css('background', '-webkit-gradient(left top, right top, color-stop(0%, rgb(' + blue_left_forFont[0] + ',' + blue_left_forFont[1] + ',' + blue_left_forFont[2] + ')), color-stop(100%, rgb('  + blue_right_forFont[0] + ',' + blue_right_forFont[1] + ', ' + blue_right_forFont[2] + ')))')
-          .css('background', '-webkit-linear-gradient(left, rgb('                        + blue_left_forFont[0] + ',' + blue_left_forFont[1] + ',' + blue_left_forFont[2] + ') 0%, rgb('                 + blue_right_forFont[0] + ',' + blue_right_forFont[1] + ', ' + blue_right_forFont[2] + ') 100%)')
-          .css('background', '-o-linear-gradient(left, rgb('                             + blue_left_forFont[0] + ',' + blue_left_forFont[1] + ',' + blue_left_forFont[2] + ') 0%, rgb('                 + blue_right_forFont[0] + ',' + blue_right_forFont[1] + ', ' + blue_right_forFont[2] + ') 100%)')
-          .css('background', '-ms-linear-gradient(left, rgb('                            + blue_left_forFont[0] + ',' + blue_left_forFont[1] + ',' + blue_left_forFont[2] + ') 0%, rgb('                 + blue_right_forFont[0] + ',' + blue_right_forFont[1] + ', ' + blue_right_forFont[2] + ') 100%)')
-          .css('background', 'linear-gradient(to right, rgb('                            + blue_left_forFont[0] + ',' + blue_left_forFont[1] + ',' + blue_left_forFont[2] + ') 0%, rgb('                 + blue_right_forFont[0] + ',' + blue_right_forFont[1] + ', ' + blue_right_forFont[2] + ') 100%)');
-     
-      bgColorblindnessFilterTargets.eq(0) // red
-          .css('background', '-moz-linear-gradient(left, rgb('                           + red_left_forBg[0] + ',' + red_left_forBg[1] + ',' + red_left_forBg[2] + ') 0%, rgb('                 + red_right_forBg[0]+ ','  + red_right_forBg[1] + ', ' + red_right_forBg[2] + ') 100%)')
-          .css('background', '-webkit-gradient(left top, right top, color-stop(0%, rgb(' + red_left_forBg[0] + ',' + red_left_forBg[1] + ',' + red_left_forBg[2] + ')), color-stop(100%, rgb('  + red_right_forBg[0] + ',' + red_right_forBg[1] + ', ' + red_right_forBg[2] + ')))')
-          .css('background', '-webkit-linear-gradient(left, rgb('                        + red_left_forBg[0] + ',' + red_left_forBg[1] + ',' + red_left_forBg[2] + ') 0%, rgb('                 + red_right_forBg[0] + ',' + red_right_forBg[1] + ', ' + red_right_forBg[2] + ') 100%)')
-          .css('background', '-o-linear-gradient(left, rgb('                             + red_left_forBg[0] + ',' + red_left_forBg[1] + ',' + red_left_forBg[2] + ') 0%, rgb('                 + red_right_forBg[0] + ',' + red_right_forBg[1] + ', ' + red_right_forBg[2] + ') 100%)')
-          .css('background', '-ms-linear-gradient(left, rgb('                            + red_left_forBg[0] + ',' + red_left_forBg[1] + ',' + red_left_forBg[2] + ') 0%, rgb('                 + red_right_forBg[0] + ',' + red_right_forBg[1] + ', ' + red_right_forBg[2] + ') 100%)')
-          .css('background', 'linear-gradient(to right, rgb('                            + red_left_forBg[0] + ',' + red_left_forBg[1] + ',' + red_left_forBg[2] + ') 0%, rgb('                 + red_right_forBg[0] + ',' + red_right_forBg[1] + ', ' + red_right_forBg[2] + ') 100%)');
-      
-      bgColorblindnessFilterTargets.eq(1) // green
-          .css('background', '-moz-linear-gradient(left, rgb('                           + green_left_forBg[0] + ',' + green_left_forBg[1] + ',' + green_left_forBg[2] + ') 0%, rgb('                 + green_right_forBg[0]+ ','  + green_right_forBg[1] + ', ' + green_right_forBg[2] + ') 100%)')
-          .css('background', '-webkit-gradient(left top, right top, color-stop(0%, rgb(' + green_left_forBg[0] + ',' + green_left_forBg[1] + ',' + green_left_forBg[2] + ')), color-stop(100%, rgb('  + green_right_forBg[0] + ',' + green_right_forBg[1] + ', ' + green_right_forBg[2] + ')))')
-          .css('background', '-webkit-linear-gradient(left, rgb('                        + green_left_forBg[0] + ',' + green_left_forBg[1] + ',' + green_left_forBg[2] + ') 0%, rgb('                 + green_right_forBg[0] + ',' + green_right_forBg[1] + ', ' + green_right_forBg[2] + ') 100%)')
-          .css('background', '-o-linear-gradient(left, rgb('                             + green_left_forBg[0] + ',' + green_left_forBg[1] + ',' + green_left_forBg[2] + ') 0%, rgb('                 + green_right_forBg[0] + ',' + green_right_forBg[1] + ', ' + green_right_forBg[2] + ') 100%)')
-          .css('background', '-ms-linear-gradient(left, rgb('                            + green_left_forBg[0] + ',' + green_left_forBg[1] + ',' + green_left_forBg[2] + ') 0%, rgb('                 + green_right_forBg[0] + ',' + green_right_forBg[1] + ', ' + green_right_forBg[2] + ') 100%)')
-          .css('background', 'linear-gradient(to right, rgb('                            + green_left_forBg[0] + ',' + green_left_forBg[1] + ',' + green_left_forBg[2] + ') 0%, rgb('                 + green_right_forBg[0] + ',' + green_right_forBg[1] + ', ' + green_right_forBg[2] + ') 100%)');
-      
-      bgColorblindnessFilterTargets.eq(2) // blue
-          .css('background', '-moz-linear-gradient(left, rgb('                           + blue_left_forBg[0] + ',' + blue_left_forBg[1] + ',' + blue_left_forBg[2] + ') 0%, rgb('                 + blue_right_forBg[0]+ ','  + blue_right_forBg[1] + ', ' + blue_right_forBg[2] + ') 100%)')
-          .css('background', '-webkit-gradient(left top, right top, color-stop(0%, rgb(' + blue_left_forBg[0] + ',' + blue_left_forBg[1] + ',' + blue_left_forBg[2] + ')), color-stop(100%, rgb('  + blue_right_forBg[0] + ',' + blue_right_forBg[1] + ', ' + blue_right_forBg[2] + ')))')
-          .css('background', '-webkit-linear-gradient(left, rgb('                        + blue_left_forBg[0] + ',' + blue_left_forBg[1] + ',' + blue_left_forBg[2] + ') 0%, rgb('                 + blue_right_forBg[0] + ',' + blue_right_forBg[1] + ', ' + blue_right_forBg[2] + ') 100%)')
-          .css('background', '-o-linear-gradient(left, rgb('                             + blue_left_forBg[0] + ',' + blue_left_forBg[1] + ',' + blue_left_forBg[2] + ') 0%, rgb('                 + blue_right_forBg[0] + ',' + blue_right_forBg[1] + ', ' + blue_right_forBg[2] + ') 100%)')
-          .css('background', '-ms-linear-gradient(left, rgb('                            + blue_left_forBg[0] + ',' + blue_left_forBg[1] + ',' + blue_left_forBg[2] + ') 0%, rgb('                 + blue_right_forBg[0] + ',' + blue_right_forBg[1] + ', ' + blue_right_forBg[2] + ') 100%)')
-          .css('background', 'linear-gradient(to right, rgb('                            + blue_left_forBg[0] + ',' + blue_left_forBg[1] + ',' + blue_left_forBg[2] + ') 0%, rgb('                 + blue_right_forBg[0] + ',' + blue_right_forBg[1] + ', ' + blue_right_forBg[2] + ') 100%)');
-      
-      fontColorblindnessFilterTargets.removeClass('hide');
-      bgColorblindnessFilterTargets.removeClass('hide');
-    }
-
-  }
-
-  function applyContrastFilterRadioButtons() {
-    // 2 functions performed: (1) change text to match selected filter (2) activate/deactivate ranges accordingly
-    targetElements = $('#cp_contrast-range-filter-button-group .dropdown-menu a');
-    targetElements_parentButton = $('#cp_range-filter-button');
-    targetElements.each(function() {
-
-      var selfTargetElement = $(this);
-      
-      selfTargetElement
-        .on('click', function() {
-          colorDataObj.currentActiveTool = 'contrast';
-          colorDataObj.colorblindActiveFilter = 'normal';
-          $('#cp_contrast-range-filter-button-group .dropdown-menu .selected').removeClass('selected');
-          selfTargetElement.addClass('selected');
-          if(selfTargetElement.hasClass('off')) {
-            targetElements_parentButton.html('<span class="fa fa-adjust"></span> Contrast Range Filter <span class="caret"></span>');
-            targetElements_parentButton.attr('data-filter-state', 'off');
-            colorDataObj.targetContrast = 0;
-            $('#target-contrast').text('OFF');
-          }
-          if(selfTargetElement.hasClass('aa_large')) {
-            targetElements_parentButton.html('<span class="fa fa-adjust"></span> Contrast Filter: AA/Large <span class="caret"></span> ');
-            targetElements_parentButton.attr('data-filter-state', 'aa-large' );
-            colorDataObj.targetContrast = 3;
-            $('#target-contrast').text('3');
-          }
-          if(selfTargetElement.hasClass('aa_small')) {
-            targetElements_parentButton.html('<span class="fa fa-adjust"></span> Contrast Filter: AA/Small <span class="caret"></span> ');
-            targetElements_parentButton.attr('data-filter-state', 'aa-small' );
-            colorDataObj.targetContrast = 4.5;
-            $('#target-contrast').text('4.5');
-          }
-          if(selfTargetElement.hasClass('aaa_large')) {
-            targetElements_parentButton.html('<span class="fa fa-adjust"></span> Contrast Filter: AAA/Large <span class="caret"></span> ');
-            targetElements_parentButton.attr('data-filter-state', 'aaa-large' );
-            colorDataObj.targetContrast = 4.5;
-            $('#target-contrast').text('4.5');
-          }
-          if(selfTargetElement.hasClass('aaa_small')) { 
-            targetElements_parentButton.html('<span class="fa fa-adjust"></span> Contrast Filter: AAA/Small <span class="caret"></span> ');
-            targetElements_parentButton.attr('data-filter-state', 'aaa-small' );
-            colorDataObj.targetContrast = 7;
-            $('#target-contrast').text('7');
-          }
-          $('#cp_slider_font_first-value').trigger('change');
-      });
-    });
-  }
-
-
-  function applyCustomContrastTextfieldBehaviors( targetTextfield ) {
-    targetTextfield = $(targetTextfield);
-    // autoselects all content when focused
-    targetTextfield
-      .focus(function() { var self = $(this); setTimeout(function () { self.select(); }, 50); })
-      .keydown(function(e) {
-        var self = $(this);
-        var thisValue;
-        var thisKeyCode = e.keyCode;
-
-        
-        if(thisKeyCode == 39) {
-          thisValue = Number(textfieldElement.val());
-          thisValue = thisValue + 0.1;
-          textfieldElement
-            .val(thisValue)
-            .attr('value', thisValue)
-            .trigger('change'); // a global update behavior needs to be created for this
-        } 
-        if(thisKeyCode == 37) {
-          thisValue = Number(textfieldElement.val());
-          thisValue = thisValue - 0.1;
-          textfieldElement
-            .val(thisValue)
-            .attr('value', thisValue)
-            .trigger('change'); // a global update behavior needs to be created for this
+        $('#cp_contrast-range-filter-button-group .dropdown-menu .selected').removeClass('selected');
+        selfTargetElement.addClass('selected');
+        if(selfTargetElement.hasClass('off')) {
+          targetElements_parentButton.html('<span class="fa fa-adjust"></span> Contrast Range Filter <span class="caret"></span>');
+          targetElements_parentButton.attr('data-filter-state', 'off');
+          colorDataObj.targetContrast = 0;
+          $('#target-contrast').text('OFF');
         }
-      });
-  } 
+        if(selfTargetElement.hasClass('aa_large')) {
+          targetElements_parentButton.html('<span class="fa fa-adjust"></span> Contrast Filter: AA/Large <span class="caret"></span> ');
+          targetElements_parentButton.attr('data-filter-state', 'aa-large' );
+          colorDataObj.targetContrast = 3;
+          $('#target-contrast').text('3');
+        }
+        if(selfTargetElement.hasClass('aa_small')) {
+          targetElements_parentButton.html('<span class="fa fa-adjust"></span> Contrast Filter: AA/Small <span class="caret"></span> ');
+          targetElements_parentButton.attr('data-filter-state', 'aa-small' );
+          colorDataObj.targetContrast = 4.5;
+          $('#target-contrast').text('4.5');
+        }
+        if(selfTargetElement.hasClass('aaa_large')) {
+          targetElements_parentButton.html('<span class="fa fa-adjust"></span> Contrast Filter: AAA/Large <span class="caret"></span> ');
+          targetElements_parentButton.attr('data-filter-state', 'aaa-large' );
+          colorDataObj.targetContrast = 4.5;
+          $('#target-contrast').text('4.5');
+        }
+        if(selfTargetElement.hasClass('aaa_small')) { 
+          targetElements_parentButton.html('<span class="fa fa-adjust"></span> Contrast Filter: AAA/Small <span class="caret"></span> ');
+          targetElements_parentButton.attr('data-filter-state', 'aaa-small' );
+          colorDataObj.targetContrast = 7;
+          $('#target-contrast').text('7');
+        }
+        $('#cp_slider_font_first-value').trigger('change');
+    });
+  });
+
+
+  // new UI for contrast elements...
+}
+
+
+function applyCustomContrastTextfieldBehaviors( targetTextfield ) {
+  targetTextfield = $(targetTextfield);
+  // autoselects all content when focused
+  targetTextfield
+    .focus(function() { var self = $(this); setTimeout(function () { self.select(); }, 50); })
+    .keydown(function(e) {
+      var self = $(this);
+      var thisValue;
+      var thisKeyCode = e.keyCode;
+
+      
+      if(thisKeyCode == 39) {
+        thisValue = Number(textfieldElement.val());
+        thisValue = thisValue + 0.1;
+        textfieldElement
+          .val(thisValue)
+          .attr('value', thisValue)
+          .trigger('change'); // a global update behavior needs to be created for this
+      } 
+      if(thisKeyCode == 37) {
+        thisValue = Number(textfieldElement.val());
+        thisValue = thisValue - 0.1;
+        textfieldElement
+          .val(thisValue)
+          .attr('value', thisValue)
+          .trigger('change'); // a global update behavior needs to be created for this
+      }
+    });
+} 
 
 // END Menu Settings Behaviors
 
@@ -904,8 +910,9 @@ function initColorAnalysis( colorDataObj ) {
   var bgColorInHex        = rgbToHex( bgRed, bgGreen, bgBlue );
   
   colorDataObj = buildColorDataObject( fontInRGBA, bgInRGB, fontColorInHex, bgColorInHex, colorDataObj );
-  colorDataObj.currentContrast = calcContrast( colorDataObj );
-  
+  // colorDataObj.currentContrast = calcContrast( colorDataObj );
+  colorDataObj.currentContrast = calcContrast( colorDataObj.brighterColorIs, colorDataObj.fontLuminance, colorDataObj.bgLuminance );
+
   if(colorDataObj.targetContrast != 0) {
 
     $('#target-contrast').text(colorDataObj.targetContrast);
@@ -914,13 +921,24 @@ function initColorAnalysis( colorDataObj ) {
     if(colorDataObj.brighterColorIs == 'bg'  ) colorDataObj = calcRequiredLuminance( colorDataObj.bgLuminance, colorDataObj.fontLuminance, colorDataObj.targetContrast, colorDataObj );
     
     if(colorDataObj.currentActiveTool == 'contrast') {
-      colorDataObj = getContrastRangeValues_NEW( colorDataObj );
+      colorDataObj = getContrastRangeValues( colorDataObj );
       setRangesForUI( colorDataObj );
     }
   }
 
-  return colorDataObj;
-  
+  colorDataObj.currentContrast_noRed    = calcContrast( colorDataObj.noRed_brighterColorIs,     colorDataObj.noRedRGB_fontLuminance,    colorDataObj.noRedRGB_bgLuminance     );
+  colorDataObj.currentContrast_lowRed   = calcContrast( colorDataObj.lowRed_brighterColorIs,    colorDataObj.lowRedRGB_fontLuminance,   colorDataObj.lowRedRGB_bgLuminance    );
+  colorDataObj.currentContrast_noGreen  = calcContrast( colorDataObj.noGreen_brighterColorIs,   colorDataObj.noGreenRGB_fontLuminance,  colorDataObj.noGreenRGB_bgLuminance   );
+  colorDataObj.currentContrast_lowGreen = calcContrast( colorDataObj.lowGreen_brighterColorIs,  colorDataObj.lowGreenRGB_fontLuminance, colorDataObj.lowGreenRGB_bgLuminance  );
+  colorDataObj.currentContrast_noBlue   = calcContrast( colorDataObj.noBlue_brighterColorIs,    colorDataObj.noBlueRGB_fontLuminance,   colorDataObj.noBlueRGB_bgLuminance    );
+  colorDataObj.currentContrast_lowBlue  = calcContrast( colorDataObj.lowBlue_brighterColorIs,   colorDataObj.lowBlueRGB_fontLuminance,  colorDataObj.lowBlueRGB_bgLuminance   );
+  colorDataObj.currentContrast_noColor  = calcContrast( colorDataObj.noColor_brighterColorIs,   colorDataObj.noColorRGB_fontLuminance,  colorDataObj.noColorRGB_bgLuminance   );
+  colorDataObj.currentContrast_lowColor = calcContrast( colorDataObj.lowColor_brighterColorIs,  colorDataObj.lowColorRGB_fontLuminance, colorDataObj.lowColorRGB_bgLuminance  );
+
+
+
+
+  return colorDataObj; 
 }
 
 
@@ -929,37 +947,94 @@ function buildColorDataObject( fontInRGBA, bgInRGB, fontColorInHex, bgColorInHex
   
   var returnDataObject = colorDataObj;
 
-  returnDataObject.fontColorInHex = fontColorInHex;
-  returnDataObject.bgColorInHex   = bgColorInHex;
-  returnDataObject.fontColors     = fontInRGBA;
-  returnDataObject.bgColors       = bgInRGB;
+  colorDataObj.fontColorInHex = fontColorInHex;
+  colorDataObj.bgColorInHex   = bgColorInHex;
+  colorDataObj.fontColors     = fontInRGBA;
+  colorDataObj.bgColors       = bgInRGB;
   
   var fontColorSansAlpha = convertRGBwithAlphaChannel(fontInRGBA, bgInRGB);
-  returnDataObject.fontColorSansAlpha = fontColorSansAlpha;
+  colorDataObj.fontColorSansAlpha = fontColorSansAlpha;
 
   var fontLuminance = calcLuminance( fontColorSansAlpha.r, fontColorSansAlpha.g, fontColorSansAlpha.b );
-  returnDataObject.fontLuminance = fontLuminance;
+  colorDataObj.fontLuminance = fontLuminance;
   
   var bgLuminance = calcLuminance( bgInRGB.r, bgInRGB.g, bgInRGB.b );
-  returnDataObject.bgLuminance = bgLuminance;
+  colorDataObj.bgLuminance = bgLuminance;
   
-  if( fontLuminance > bgLuminance ) returnDataObject.brighterColorIs = 'font';
-  if( fontLuminance < bgLuminance ) returnDataObject.brighterColorIs = 'bg';
-  if( fontLuminance == bgLuminance ) returnDataObject.brighterColorIs = 'equal';
+  colorDataObj.brighterColorIs          = defineBrighterLuminance(fontLuminance, bgLuminance);
+  colorDataObj.noRedRGB_font            = cbTranslate(colorDataObj.fontColorSansAlpha.r,colorDataObj.fontColorSansAlpha.g,colorDataObj.fontColorSansAlpha.b, 'red', 'no');
+  colorDataObj.noRedRGB_bg              = cbTranslate(colorDataObj.bgColors.r,colorDataObj.bgColors.g,colorDataObj.bgColors.b, 'red', 'no');
+  colorDataObj.noRedRGB_fontLuminance   = calcLuminance(colorDataObj.noRedRGB_font[0], colorDataObj.noRedRGB_font[1], colorDataObj.noRedRGB_font[2]);
+  colorDataObj.noRedRGB_bgLuminance     = calcLuminance(colorDataObj.noRedRGB_bg[0], colorDataObj.noRedRGB_bg[1], colorDataObj.noRedRGB_bg[2]);
+  colorDataObj.noRed_brighterColorIs    = defineBrighterLuminance(colorDataObj.noRedRGB_fontLuminance, colorDataObj.noRedRGB_bgLuminance);
 
-  return returnDataObject;
+  colorDataObj.lowRedRGB_font           = cbTranslate(colorDataObj.fontColorSansAlpha.r,colorDataObj.fontColorSansAlpha.g,colorDataObj.fontColorSansAlpha.b, 'red', 'low');
+  colorDataObj.lowRedRGB_bg             = cbTranslate(colorDataObj.bgColors.r,colorDataObj.bgColors.g,colorDataObj.bgColors.b, 'red', 'low');
+  colorDataObj.lowRedRGB_fontLuminance  = calcLuminance(colorDataObj.lowRedRGB_font[0], colorDataObj.lowRedRGB_font[1], colorDataObj.lowRedRGB_font[2]);
+  colorDataObj.lowRedRGB_bgLuminance    = calcLuminance(colorDataObj.lowRedRGB_bg[0], colorDataObj.lowRedRGB_bg[1], colorDataObj.lowRedRGB_bg[2]);
+  colorDataObj.lowRed_brighterColorIs   = defineBrighterLuminance(colorDataObj.lowRedRGB_fontLuminance, colorDataObj.lowRedRGB_bgLuminance);
+
+  colorDataObj.noGreenRGB_font          = cbTranslate(colorDataObj.fontColorSansAlpha.r,colorDataObj.fontColorSansAlpha.g,colorDataObj.fontColorSansAlpha.b, 'green', 'no');
+  colorDataObj.noGreenRGB_bg            = cbTranslate(colorDataObj.bgColors.r,colorDataObj.bgColors.g,colorDataObj.bgColors.b, 'green', 'no');
+  colorDataObj.noGreenRGB_fontLuminance = calcLuminance(colorDataObj.noGreenRGB_font[0], colorDataObj.noGreenRGB_font[1], colorDataObj.noGreenRGB_font[2]);
+  colorDataObj.noGreenRGB_bgLuminance   = calcLuminance(colorDataObj.noGreenRGB_bg[0], colorDataObj.noGreenRGB_bg[1], colorDataObj.noGreenRGB_bg[2]);
+  colorDataObj.noGreen_brighterColorIs  = defineBrighterLuminance(colorDataObj.noGreenRGB_fontLuminance, colorDataObj.noGreenRGB_bgLuminance);
+
+  colorDataObj.lowGreenRGB_font         = cbTranslate(colorDataObj.fontColorSansAlpha.r,colorDataObj.fontColorSansAlpha.g,colorDataObj.fontColorSansAlpha.b, 'green', 'low');
+  colorDataObj.lowGreenRGB_bg           = cbTranslate(colorDataObj.bgColors.r,colorDataObj.bgColors.g,colorDataObj.bgColors.b, 'green', 'low');
+  colorDataObj.lowGreenRGB_fontLuminance= calcLuminance(colorDataObj.lowGreenRGB_font[0], colorDataObj.lowGreenRGB_font[1], colorDataObj.lowGreenRGB_font[2]);
+  colorDataObj.lowGreenRGB_bgLuminance  = calcLuminance(colorDataObj.lowGreenRGB_bg[0], colorDataObj.lowGreenRGB_bg[1], colorDataObj.lowGreenRGB_bg[2]);
+  colorDataObj.lowGreen_brighterColorIs = defineBrighterLuminance(colorDataObj.lowGreenRGB_fontLuminance, colorDataObj.lowGreenRGB_bgLuminance);
+
+  colorDataObj.noBlueRGB_font           = cbTranslate(colorDataObj.fontColorSansAlpha.r,colorDataObj.fontColorSansAlpha.g,colorDataObj.fontColorSansAlpha.b, 'blue', 'no');
+  colorDataObj.noBlueRGB_bg             = cbTranslate(colorDataObj.bgColors.r,colorDataObj.bgColors.g,colorDataObj.bgColors.b, 'blue', 'no');
+  colorDataObj.noBlueRGB_fontLuminance  = calcLuminance(colorDataObj.noBlueRGB_font[0], colorDataObj.noBlueRGB_font[1], colorDataObj.noBlueRGB_font[2]);
+  colorDataObj.noBlueRGB_bgLuminance    = calcLuminance(colorDataObj.noBlueRGB_bg[0], colorDataObj.noBlueRGB_bg[1], colorDataObj.noBlueRGB_bg[2]);
+  colorDataObj.noBlue_brighterColorIs   = defineBrighterLuminance(colorDataObj.noBlueRGB_fontLuminance, colorDataObj.noBlueRGB_bgLuminance);
+
+  colorDataObj.lowBlueRGB_font          = cbTranslate(colorDataObj.fontColorSansAlpha.r,colorDataObj.fontColorSansAlpha.g,colorDataObj.fontColorSansAlpha.b, 'blue', 'low');
+  colorDataObj.lowBlueRGB_bg            = cbTranslate(colorDataObj.bgColors.r,colorDataObj.bgColors.g,colorDataObj.bgColors.b, 'blue', 'low');
+  colorDataObj.lowBlueRGB_fontLuminance = calcLuminance(colorDataObj.lowBlueRGB_font[0], colorDataObj.lowBlueRGB_font[1], colorDataObj.lowBlueRGB_font[2]);
+  colorDataObj.lowBlueRGB_bgLuminance   = calcLuminance(colorDataObj.lowBlueRGB_bg[0], colorDataObj.lowBlueRGB_bg[1], colorDataObj.lowBlueRGB_bg[2]);
+  colorDataObj.lowBlue_brighterColorIs  = defineBrighterLuminance(colorDataObj.lowBlueRGB_fontLuminance, colorDataObj.lowBlueRGB_bgLuminance);
+
+  colorDataObj.noColorRGB_font          = cbTranslate(colorDataObj.fontColorSansAlpha.r,colorDataObj.fontColorSansAlpha.g,colorDataObj.fontColorSansAlpha.b, 'gray', 'no');
+  colorDataObj.noColorRGB_bg            = cbTranslate(colorDataObj.bgColors.r,colorDataObj.bgColors.g,colorDataObj.bgColors.b, 'gray', 'no');
+  colorDataObj.noColorRGB_fontLuminance = calcLuminance(colorDataObj.noColorRGB_font[0], colorDataObj.noColorRGB_font[1], colorDataObj.noColorRGB_font[2]);
+  colorDataObj.noColorRGB_bgLuminance   = calcLuminance(colorDataObj.noColorRGB_bg[0], colorDataObj.noColorRGB_bg[1], colorDataObj.noColorRGB_bg[2]);
+  colorDataObj.noColor_brighterColorIs  = defineBrighterLuminance(colorDataObj.noColorRGB_fontLuminance, colorDataObj.noColorRGB_bgLuminance);
+
+  colorDataObj.lowColorRGB_font         = cbTranslate(colorDataObj.fontColorSansAlpha.r,colorDataObj.fontColorSansAlpha.g,colorDataObj.fontColorSansAlpha.b, 'gray', 'low');
+  colorDataObj.lowColorRGB_bg           = cbTranslate(colorDataObj.bgColors.r,colorDataObj.bgColors.g,colorDataObj.bgColors.b, 'gray', 'low');
+  colorDataObj.lowColorRGB_fontLuminance= calcLuminance(colorDataObj.lowColorRGB_font[0], colorDataObj.lowColorRGB_font[1], colorDataObj.lowColorRGB_font[2]);
+  colorDataObj.lowColorRGB_bgLuminance  = calcLuminance(colorDataObj.lowColorRGB_bg[0], colorDataObj.lowColorRGB_bg[1], colorDataObj.lowColorRGB_bg[2]);
+  colorDataObj.lowColor_brighterColorIs = defineBrighterLuminance(colorDataObj.lowColorRGB_fontLuminance, colorDataObj.lowColorRGB_bgLuminance);
+// END set values for different forms of colorblindness
+
+  return colorDataObj;
+
+  function defineBrighterLuminance(fontLum, bgLum) {
+    if( fontLum > bgLum )   { return 'font'   };
+    if( fontLum < bgLum )   { return 'bg'     };
+    if( fontLum == bgLum )  { return 'equal'  };
+    return null;
+  }
 
 }
 
+function constructColorData( fontColorInRGBA, bgColorInRGB, fontLuminance_TARGET, brighterColorIs_TARGET ) {
+
+}
 
 function calcLuminance( redValue, greenValue, blueValue ) {
   return 0.2126*useLuminanceMultiplier(redValue) + 0.7152*useLuminanceMultiplier(greenValue) + 0.0722*useLuminanceMultiplier(blueValue);
 }
 
-function calcContrast( colorDataObj ) {
-  if(colorDataObj.brighterColorIs == 'font') return ( (colorDataObj.fontLuminance + 0.05) / (colorDataObj.bgLuminance + 0.05) ); 
-  else if(colorDataObj.brighterColorIs == 'bg') return ( (colorDataObj.bgLuminance + 0.05) / (colorDataObj.fontLuminance + 0.05) ); 
-  else if(colorDataObj.brighterColorIs == 'equal') return 1;
+function calcContrast( brighterColorIs, fontLum, bgLum ) {
+// function calcContrast( colorDataObj ) {
+  if(brighterColorIs == 'font') return ( (fontLum + 0.05) / (bgLum + 0.05) ); 
+  else if(brighterColorIs == 'bg') return ( (bgLum + 0.05) / (fontLum + 0.05) ); 
+  else if(brighterColorIs == 'equal') return 1;
 }
 
 function useLuminanceMultiplier( sourceValue ) {
@@ -967,6 +1042,7 @@ function useLuminanceMultiplier( sourceValue ) {
   else return Math.pow((sourceValue/255 + 0.055)/1.055, 2.4);
 }
 
+///####################### !important
 function removeLuminanceMultiplier( targetAdjustedValue ) { // same as getOriginalValue()
   var resultValue;
   if( targetAdjustedValue <= 0.0031 ) resultValue = targetAdjustedValue * 255 * 12.92;
@@ -987,7 +1063,7 @@ function calcRequiredLuminance( greaterLuminance, lesserLuminance, targetContras
 
 
 
-function getContrastRangeValues_NEW( colorDataObj ) {
+function getContrastRangeValues( colorDataObj ) {
 
   if( colorDataObj.brighterColorIs == 'font' && colorDataObj.targetContrast != 0 ) {
     // get font range values first
@@ -1074,17 +1150,18 @@ function setRangesForUI( colorDataObj ) {
     $('#cp_background-color-settings .cp_color-settings_a11y-fail-range').eq(0)
       .attr('data-fail-value', 260 - normalizeRange(colorDataObj.bgRangeRed))
       .css('width', (260 - normalizeRange(colorDataObj.bgRangeRed)) + 'px')
-      .css('right', '105px');
+      .css('right', '101px');
     $('#cp_background-color-settings .cp_color-settings_a11y-fail-range').eq(1)
       .attr('data-fail-value', 260 - normalizeRange(colorDataObj.bgRangeGreen))
       .css('width', (260 - normalizeRange(colorDataObj.bgRangeGreen)) + 'px')
-      .css('right', '105px');
+      .css('right', '101px');
     $('#cp_background-color-settings .cp_color-settings_a11y-fail-range').eq(2)
       .attr('data-fail-value', 260 - normalizeRange(colorDataObj.bgRangeBlue))
       .css('width', (260 - normalizeRange(colorDataObj.bgRangeBlue)) + 'px')
-      .css('right', '105px');
+      .css('right', '101px');
     $('.cp_color-settings_a11y-fail-range')
       .removeClass('hide')
+      .attr('aria-hidden', 'false')
       .each(function() {
         var self = $(this);
         if(self.css('width') == '26px') self.addClass('hide'); // needed for all cases where no value applies.
@@ -1108,17 +1185,18 @@ function setRangesForUI( colorDataObj ) {
     $('#cp_font-color-settings .cp_color-settings_a11y-fail-range').eq(0)
       .attr('data-fail-value', 260 - normalizeRange(colorDataObj.fontRangeRed))
       .css('width', (260 - normalizeRange(colorDataObj.fontRangeRed)) + 'px')
-      .css('right', '105px');
+      .css('right', '101px');
     $('#cp_font-color-settings .cp_color-settings_a11y-fail-range').eq(1)
       .attr('data-fail-value', 260 - normalizeRange(colorDataObj.fontRangeGreen))
       .css('width', (260 - normalizeRange(colorDataObj.fontRangeGreen)) + 'px')
-      .css('right', '105px');
+      .css('right', '101px');
     $('#cp_font-color-settings .cp_color-settings_a11y-fail-range').eq(2)
       .attr('data-fail-value', 260 - normalizeRange(colorDataObj.fontRangeBlue))
       .css('width', (260 - normalizeRange(colorDataObj.fontRangeBlue)) + 'px')
-      .css('right', '105px');
+      .css('right', '101px');
     $('.cp_color-settings_a11y-fail-range')
       .removeClass('hide')
+      .attr('aria-hidden', 'false')
       .each(function() {
         var self = $(this);
         if(self.css('width') == '26px') self.addClass('hide'); // needed for all cases where no value applies.
@@ -1149,9 +1227,15 @@ function setupCBtoggle() {
       var swatchBg = $('#cp_background-swatch'), swatchFont = $('#cp_font-swatch');
       var currentColorblindness = $('#cp_colorblindness-filter-button').attr('data-filter-state');
       if(currentColorblindness && currentColorblindness != 'normal') {
-        var cbFunc = Object.byString(fBlind, currentColorblindness);
-        var cbColor = cbFunc([ $('#cp_slider_font_first-value').val(), $('#cp_slider_font_second-value').val(), $('#cp_slider_font_third-value').val() ])
-        var cbBgColor = cbFunc([ $('#cp_slider_bg_first-value').val(), $('#cp_slider_bg_second-value').val(), $('#cp_slider_bg_third-value').val() ])
+        // var cbFunc = Object.byString(fBlind, currentColorblindness);
+        // &&&&&&&&
+        // var cbColor = cbFunc([ colorDataObj.fontColorSansAlpha.r, colorDataObj.fontColorSansAlpha.g, colorDataObj.fontColorSansAlpha.b]);
+        // var cbBgColor = cbFunc([ colorDataObj.bgColors.r, colorDataObj.bgColors.g, colorDataObj.bgColors.b]);
+        var cbTypeAndAmount = cbTypeFilter(currentColorblindness);
+        var cbColor = cbTranslate(colorDataObj.fontColorSansAlpha.r, colorDataObj.fontColorSansAlpha.g, colorDataObj.fontColorSansAlpha.b, cbTypeAndAmount.type, cbTypeAndAmount.amount );
+        var cbBgColor = cbTranslate(colorDataObj.bgColors.r, colorDataObj.bgColors.g, colorDataObj.bgColors.b, cbTypeAndAmount.type, cbTypeAndAmount.amount);
+        // var cbColor = cbFunc([ $('#cp_slider_font_first-value').val(), $('#cp_slider_font_second-value').val(), $('#cp_slider_font_third-value').val() ])
+        // var cbBgColor = cbFunc([ $('#cp_slider_bg_first-value').val(), $('#cp_slider_bg_second-value').val(), $('#cp_slider_bg_third-value').val() ])
         self
           .attr('data-css-color', self.css('color'))
           .attr('data-css-bgcolor', self.css('background-color'));
@@ -1193,9 +1277,12 @@ function setupCBtoggle() {
         fontColorInHex  = rgbToHex(redValue_font,greenValue_font,blueValue_font); 
         bgColorInHex    = rgbToHex(redValue_bg,greenValue_bg,blueValue_bg); 
       } else {
-        var cbFunc = Object.byString(fBlind,currentColorblindness);
-        fontColorInHex  = cbFunc([redValue_font, greenValue_font,  blueValue_font]); 
-        bgColorInHex    = cbFunc([redValue_bg,   greenValue_bg,    blueValue_bg]); 
+        // var cbFunc = Object.byString(fBlind,currentColorblindness);
+        //fontColorInHex  = cbFunc([redValue_font, greenValue_font,  blueValue_font]); 
+        //bgColorInHex    = cbFunc([redValue_bg,   greenValue_bg,    blueValue_bg]);
+        var cbTypeAndAmount = cbTypeFilter(currentColorblindness);
+        fontColorInHex  = cbTranslate(redValue_font, greenValue_font,  blueValue_font, ); 
+        bgColorInHex    = cbTranslate(redValue_bg,   greenValue_bg,    blueValue_bg, ); 
       }
 
       console.log('currentColorblindness : ' + currentColorblindness);
@@ -1215,6 +1302,43 @@ function setupCBtoggle() {
 
       }
     });
+}
+
+function colorBlindnessFilter( colorInRGB, colorblindType ) {
+  colorblindType = colorblindType.toLowerCase();
+  var colorblindName, returnObject = {};;
+  switch (colorblindType) {
+    case 'red'      : 
+    case 'no-red'   : 
+    case 'nored'    : colorblindName = "protanopia";    break;
+    case 'low-red'  :
+    case 'lowred'   : colorblindName = "protanomaly";   break;
+    case 'green'    :
+    case 'no-green' :
+    case 'nogreen'  : colorblindName = "deuteranopia";  break;
+    case 'low-green':
+    case 'lowgreen' : colorblindName = "deuteranomaly"; break;
+    case 'blue'     :
+    case 'no-blue'  :
+    case 'noblue'   : colorblindName = "tritanopia";    break;
+    case 'low-blue' :
+    case 'lowblue'  : colorblindName = "tritanomaly";   break;
+    case 'gray'  :
+    case 'no-color' :
+    case 'nocolor'  : colorblindName = "achromatopsia"; break;
+    case 'low-color':
+    case 'lowcolor' : colorblindName = "achromatomaly"; break;
+  }
+  returnObject.colorblindType   = colorblindType;
+  returnObject.colorblindName   = colorblindName;
+  // var cbFunc = Object.byString(fBlind,currentColorblindness);
+  // returnObject.fontColor        = cbFunc([redValue_font, greenValue_font,  blueValue_font]); 
+  // returnObject.bgColor          = cbFunc([redValue_bg,   greenValue_bg,    blueValue_bg]);
+  var cbTypeAndAmount     = cbTypeFilter(currentColorblindness);
+  returnObject.fontColor  = cbTranslate(redValue_font, greenValue_font,  blueValue_font, cbTypeAndAmount.type, cbTypeAndAmount.amount, 'object'); 
+  returnObject.bgColor    = cbTranslate(redValue_bg,   greenValue_bg,    blueValue_bg, cbTypeAndAmount.type, cbTypeAndAmount.amount, 'object');
+  
+  return returnObject;  
 }
 
 
@@ -1245,119 +1369,9 @@ function resetAllFilters() {
 }
 
 
-// function update
-
-
-
-
-//  *******  START Colorblindness Conversions ********* //
-
-/*
-
-    The Color Blind Simulation function is
-    copyright (c) 2000-2001 by Matthew Wickline and the
-    Human-Computer Interaction Resource Network ( http://hcirn.com/ ).
-    
-    It is used with the permission of Matthew Wickline and HCIRN,
-    and is freely available for non-commercial use. For commercial use, please
-    contact the Human-Computer Interaction Resource Network ( http://hcirn.com/ ).
-
-*/
-
-
-            
-
-// example : blindMK({ 50, 100, 150 }, 'protan')
-
-var rBlind={'protan':{'cpu':0.735,'cpv':0.265,'am':1.273463,'ayi':-0.073894},
-            'deutan':{'cpu':1.14,'cpv':-0.14,'am':0.968437,'ayi':0.003331},
-            'tritan':{'cpu':0.171,'cpv':-0.003,'am':0.062921,'ayi':0.292119}};
-
-var fBlind={'normal'        :function(v) { return(v); },
-            'protanopia'    :function(v) { return(blindMK(v,'protan')); },
-            'protanomaly'   :function(v) { return(anomylize(v,blindMK(v,'protan'))); },
-            'deuteranopia'  :function(v) { return(blindMK(v,'deutan')); },
-            'deuteranomaly' :function(v) { return(anomylize(v,blindMK(v,'deutan'))); },
-            'tritanopia'    :function(v) { return(blindMK(v,'tritan')); },
-            'tritanomaly'   :function(v) { return(anomylize(v,blindMK(v,'tritan'))); },
-            'achromatopsia' :function(v) { return(monochrome(v)); },
-            'achromatomaly' :function(v) { return(anomylize(v,monochrome(v))); }};
-
-function blindMK(r,t) { var gamma=2.2, wx=0.312713, wy=0.329016, wz=0.358271;
-
-    function Color() { this.rgb_from_xyz=xyz2rgb; this.xyz_from_rgb=rgb2xyz; }
-
-    var b=r[2], g=r[1], r=r[0], c=new Color;
-    
-    c.r=Math.pow(r/255,gamma); c.g=Math.pow(g/255,gamma); c.b=Math.pow(b/255,gamma); c.xyz_from_rgb();
-
-    var sum_xyz=c.x+c.y+c.z; c.u=0; c.v=0;
-    
-    if(sum_xyz!=0) { c.u=c.x/sum_xyz; c.v=c.y/sum_xyz; }
-
-    var nx=wx*c.y/wy, nz=wz*c.y/wy, clm, s=new Color(), d=new Color(); d.y=0;
-    
-    if(c.u<rBlind[t].cpu) { clm=(rBlind[t].cpv-c.v)/(rBlind[t].cpu-c.u); } else { clm=(c.v-rBlind[t].cpv)/(c.u-rBlind[t].cpu); }
-
-    var clyi=c.v-c.u*clm; d.u=(rBlind[t].ayi-clyi)/(clm-rBlind[t].am); d.v=(clm*d.u)+clyi;
-
-    s.x=d.u*c.y/d.v; s.y=c.y; s.z=(1-(d.u+d.v))*c.y/d.v; s.rgb_from_xyz();
-
-    d.x=nx-s.x; d.z=nz-s.z; d.rgb_from_xyz();
-
-    var adjr=d.r?((s.r<0?0:1)-s.r)/d.r:0, adjg=d.g?((s.g<0?0:1)-s.g)/d.g:0, adjb=d.b?((s.b<0?0:1)-s.b)/d.b:0;
-
-    var adjust=Math.max(((adjr>1||adjr<0)?0:adjr), ((adjg>1||adjg<0)?0:adjg), ((adjb>1||adjb<0)?0:adjb));
-
-    s.r=s.r+(adjust*d.r); s.g=s.g+(adjust*d.g); s.b=s.b+(adjust*d.b);
-    
-    function z(v) { return(255*(v<=0?0:v>=1?1:Math.pow(v,1/gamma))); }
-
-    var returnObject = {};
-    returnObject.r = Math.round(z(s.r));
-    returnObject.g = Math.round(z(s.g));
-    returnObject.b = Math.round(z(s.b));
-
-    return([ Math.round(z(s.r)), Math.round(z(s.g)), Math.round(z(s.b)) ]);
-    // return returnObject;
-}
-
-function rgb2xyz() {
-
-    this.x=(0.430574*this.r+0.341550*this.g+0.178325*this.b);
-    this.y=(0.222015*this.r+0.706655*this.g+0.071330*this.b);
-    this.z=(0.020183*this.r+0.129553*this.g+0.939180*this.b);
-
-    return this;
-
-}
-
-function xyz2rgb() {
-
-    this.r=( 3.063218*this.x-1.393325*this.y-0.475802*this.z);
-    this.g=(-0.969243*this.x+1.875966*this.y+0.041555*this.z);
-    this.b=( 0.067871*this.x-0.228834*this.y+1.069251*this.z);
-
-    return this;
-
-}
-
-function anomylize(a,b) { var v=1.75, d=v*1+1;
-
-    return([Math.round((v*b[0]+a[0]*1)/d), Math.round((v*b[1]+a[1]*1)/d), Math.round((v*b[2]+a[2]*1)/d)]);
-
-}
-
-function monochrome(r) { var z=Math.round(r[0]*.299+r[1]*.587+r[2]*.114); return([z,z,z]); }
-
-// ********* END Colorblindness Conversions *********** //
-
-
-
-
 // closest color matching solution
 
-function convertColorNameToReadable(stringArg) {
+function convertColorNameToReadable(stringArg) { // used for screen readers
   var returnResult = stringArg.replace(/((?!\b)[A-Z])/g, '<span class="sr-hide"> </span>$&');
   return returnResult;
 }
@@ -1374,8 +1388,7 @@ function searchColorHexByName(colorNameArg) {
   return false; // color name not found
 }
 
-// applyColorNameToRGB('#cp_background-color-settings', 'Maroon')
-
+// sample: applyColorNameToRGB('#cp_background-color-settings', 'Maroon')
 $('#background-color-name').bind('click', function() {
   var self = $(this),
       targetContainer = $(this).parents('.cp_color-settings_container'),
@@ -1434,167 +1447,157 @@ function applyColorToRGB(targetContainer, colorArg) {
 }
 
 var ColorTable = [
-  { name: 'Black', hex: '000000' }, 
-  { name: 'Navy', hex: '000080' }, 
-  { name: 'DarkBlue', hex: '00008B' }, 
-  { name: 'MediumBlue', hex: '0000CD' }, 
-  { name: 'Blue', hex: '0000FF' }, 
-  { name: 'DarkGreen', hex: '006400' }, 
-  { name: 'Green', hex: '008000' }, 
-  { name: 'Teal', hex: '008080' }, 
-  { name: 'DarkCyan', hex: '008B8B' }, 
-  { name: 'DeepSkyBlue', hex: '00BFFF' }, 
-  { name: 'DarkTurquoise', hex: '00CED1' }, 
-  { name: 'MediumSpringGreen', hex: '00FA9A' }, 
-  { name: 'Lime', hex: '00FF00' }, 
-  { name: 'SpringGreen', hex: '00FF7F' }, 
-  { name: 'Aqua', hex: '00FFFF' }, 
-  { name: 'Cyan', hex: '00FFFF' }, 
-  { name: 'MidnightBlue', hex: '191970' }, 
-  { name: 'DodgerBlue', hex: '1E90FF' }, 
-  { name: 'LightSeaGreen', hex: '20B2AA' }, 
-  { name: 'ForestGreen', hex: '228B22' }, 
-  { name: 'SeaGreen', hex: '2E8B57' }, 
-  { name: 'DarkSlateGray', hex: '2F4F4F' }, 
-  { name: 'DarkSlateGrey', hex: '2F4F4F' }, 
-  { name: 'LimeGreen', hex: '32CD32' }, 
-  { name: 'MediumSeaGreen', hex: '3CB371' }, 
-  { name: 'Turquoise', hex: '40E0D0' }, 
-  { name: 'RoyalBlue', hex: '4169E1' }, 
-  { name: 'SteelBlue', hex: '4682B4' }, 
-  { name: 'DarkSlateBlue', hex: '483D8B' }, 
-  { name: 'MediumTurquoise', hex: '48D1CC' }, 
-  { name: 'Indigo', hex: '4B0082' }, 
-  { name: 'DarkOliveGreen', hex: '556B2F' }, 
-  { name: 'CadetBlue', hex: '5F9EA0' }, 
-  { name: 'CornflowerBlue', hex: '6495ED' }, 
-  { name: 'RebeccaPurple', hex: '663399' }, 
-  { name: 'MediumAquaMarine', hex: '66CDAA' }, 
-  { name: 'DimGray', hex: '696969' }, 
-  { name: 'DimGrey', hex: '696969' }, 
-  { name: 'SlateBlue', hex: '6A5ACD' }, 
-  { name: 'OliveDrab', hex: '6B8E23' }, 
-  { name: 'SlateGray', hex: '708090' }, 
-  { name: 'SlateGrey', hex: '708090' }, 
-  { name: 'LightSlateGray', hex: '778899' }, 
-  { name: 'LightSlateGrey', hex: '778899' }, 
-  { name: 'MediumSlateBlue', hex: '7B68EE' }, 
-  { name: 'LawnGreen', hex: '7CFC00' }, 
-  { name: 'Chartreuse', hex: '7FFF00' }, 
-  { name: 'Aquamarine', hex: '7FFFD4' }, 
-  { name: 'Maroon', hex: '800000' }, 
-  { name: 'Purple', hex: '800080' }, 
-  { name: 'Olive', hex: '808000' }, 
-  { name: 'Gray', hex: '808080' }, 
-  { name: 'Grey', hex: '808080' }, 
-  { name: 'SkyBlue', hex: '87CEEB' }, 
-  { name: 'LightSkyBlue', hex: '87CEFA' }, 
-  { name: 'BlueViolet', hex: '8A2BE2' }, 
-  { name: 'DarkRed', hex: '8B0000' }, 
-  { name: 'DarkMagenta', hex: '8B008B' }, 
-  { name: 'SaddleBrown', hex: '8B4513' }, 
-  { name: 'DarkSeaGreen', hex: '8FBC8F' }, 
-  { name: 'LightGreen', hex: '90EE90' }, 
-  { name: 'MediumPurple', hex: '9370DB' }, 
-  { name: 'DarkViolet', hex: '9400D3' }, 
-  { name: 'PaleGreen', hex: '98FB98' }, 
-  { name: 'DarkOrchid', hex: '9932CC' }, 
-  { name: 'YellowGreen', hex: '9ACD32' }, 
-  { name: 'Sienna', hex:  'A0522D' }, 
-  { name: 'Brown', hex: 'A52A2A' }, 
-  { name: 'DarkGray', hex:  'A9A9A9' }, 
-  { name: 'DarkGrey', hex:  'A9A9A9' }, 
-  { name: 'LightBlue', hex: 'ADD8E6' }, 
-  { name: 'GreenYellow', hex: 'ADFF2F' }, 
-  { name: 'PaleTurquoise', hex: 'AFEEEE' }, 
-  { name: 'LightSteelBlue', hex: 'B0C4DE' }, 
-  { name: 'PowderBlue', hex: 'B0E0E6' }, 
-  { name: 'FireBrick', hex: 'B22222' }, 
-  { name: 'DarkGoldenRod', hex: 'B8860B' }, 
-  { name: 'MediumOrchid', hex: 'BA55D3' }, 
-  { name: 'RosyBrown', hex: 'BC8F8F' }, 
-  { name: 'DarkKhaki', hex: 'BDB76B' }, 
-  { name: 'Silver', hex: 'C0C0C0' }, 
-  { name: 'MediumVioletRed', hex: 'C71585' }, 
-  { name: 'IndianRed', hex: 'CD5C5C' }, 
-  { name: 'Peru', hex: 'CD853F' }, 
-  { name: 'Chocolate', hex: 'D2691E' }, 
-  { name: 'Tan', hex: 'D2B48C' }, 
-  { name: 'LightGray', hex: 'D3D3D3' }, 
-  { name: 'LightGrey', hex: 'D3D3D3' }, 
-  { name: 'Thistle', hex: 'D8BFD8' }, 
-  { name: 'Orchid', hex: 'DA70D6' }, 
-  { name: 'GoldenRod', hex: 'DAA520' }, 
-  { name: 'PaleVioletRed', hex: 'DB7093' }, 
-  { name: 'Crimson', hex: 'DC143C' }, 
-  { name: 'Gainsboro', hex: 'DCDCDC' }, 
-  { name: 'Plum', hex: 'DDA0DD' }, 
-  { name: 'BurlyWood', hex: 'DEB887' }, 
-  { name: 'LightCyan', hex: 'E0FFFF' }, 
-  { name: 'Lavender', hex:  'E6E6FA' }, 
-  { name: 'DarkSalmon', hex:  'E9967A' }, 
-  { name: 'Violet', hex:  'EE82EE' }, 
-  { name: 'PaleGoldenRod', hex: 'EEE8AA' }, 
-  { name: 'LightCoral', hex: 'F08080' }, 
-  { name: 'Khaki', hex: 'F0E68C' }, 
-  { name: 'AliceBlue', hex: 'F0F8FF' }, 
-  { name: 'HoneyDew', hex: 'F0FFF0' }, 
-  { name: 'Azure', hex: 'F0FFFF' }, 
-  { name: 'SandyBrown', hex: 'F4A460' }, 
-  { name: 'Wheat', hex: 'F5DEB3' }, 
-  { name: 'Beige', hex: 'F5F5DC' }, 
-  { name: 'WhiteSmoke', hex: 'F5F5F5' }, 
-  { name: 'MintCream', hex: 'F5FFFA' }, 
-  { name: 'GhostWhite', hex: 'F8F8FF' }, 
-  { name: 'Salmon', hex: 'FA8072' }, 
-  { name: 'AntiqueWhite', hex: 'FAEBD7' }, 
-  { name: 'Linen', hex: 'FAF0E6' }, 
-  { name: 'LightGoldenRodYellow', hex: 'FAFAD2' }, 
-  { name: 'OldLace', hex: 'FDF5E6' }, 
-  { name: 'Red', hex: 'FF0000' }, 
-  { name: 'Fuchsia', hex: 'FF00FF' }, 
-  { name: 'Magenta', hex: 'FF00FF' }, 
-  { name: 'DeepPink', hex: 'FF1493' }, 
-  { name: 'OrangeRed', hex: 'FF4500' }, 
-  { name: 'Tomato', hex: 'FF6347' }, 
-  { name: 'HotPink', hex: 'FF69B4' }, 
-  { name: 'Coral', hex: 'FF7F50' }, 
-  { name: 'DarkOrange', hex: 'FF8C00' }, 
-  { name: 'LightSalmon', hex: 'FFA07A' }, 
-  { name: 'Orange', hex: 'FFA500' }, 
-  { name: 'LightPink', hex: 'FFB6C1' }, 
-  { name: 'Pink', hex: 'FFC0CB' }, 
-  { name: 'Gold', hex: 'FFD700' }, 
-  { name: 'PeachPuff', hex: 'FFDAB9' }, 
-  { name: 'NavajoWhite', hex: 'FFDEAD' }, 
-  { name: 'Moccasin', hex: 'FFE4B5' }, 
-  { name: 'Bisque', hex: 'FFE4C4' }, 
-  { name: 'MistyRose', hex: 'FFE4E1' }, 
-  { name: 'BlanchedAlmond', hex: 'FFEBCD' }, 
-  { name: 'PapayaWhip', hex: 'FFEFD5' }, 
-  { name: 'LavenderBlush', hex: 'FFF0F5' }, 
-  { name: 'SeaShell', hex: 'FFF5EE' }, 
-  { name: 'Cornsilk', hex: 'FFF8DC' }, 
-  { name: 'LemonChiffon', hex: 'FFFACD' }, 
-  { name: 'FloralWhite', hex: 'FFFAF0' }, 
-  { name: 'Snow', hex: 'FFFAFA' }, 
-  { name: 'Yellow', hex: 'FFFF00' }, 
-  { name: 'LightYellow', hex: 'FFFFE0' }, 
-  { name: 'Ivory', hex: 'FFFFF0' }, 
-  { name: 'White', hex: 'FFFFFF' }
+  { name: 'Black',              hex: '000000' }, 
+  { name: 'Navy',               hex: '000080' }, 
+  { name: 'DarkBlue',           hex: '00008B' }, 
+  { name: 'MediumBlue',         hex: '0000CD' }, 
+  { name: 'Blue',               hex: '0000FF' }, 
+  { name: 'DarkGreen',          hex: '006400' }, 
+  { name: 'Green',              hex: '008000' }, 
+  { name: 'Teal',               hex: '008080' }, 
+  { name: 'DarkCyan',           hex: '008B8B' }, 
+  { name: 'DeepSkyBlue',        hex: '00BFFF' }, 
+  { name: 'DarkTurquoise',      hex: '00CED1' }, 
+  { name: 'MediumSpringGreen',  hex: '00FA9A' }, 
+  { name: 'Lime',               hex: '00FF00' }, 
+  { name: 'SpringGreen',        hex: '00FF7F' }, 
+  { name: 'Aqua',               hex: '00FFFF' }, 
+  { name: 'Cyan',               hex: '00FFFF' }, 
+  { name: 'MidnightBlue',       hex: '191970' }, 
+  { name: 'DodgerBlue',         hex: '1E90FF' }, 
+  { name: 'LightSeaGreen',      hex: '20B2AA' }, 
+  { name: 'ForestGreen',        hex: '228B22' }, 
+  { name: 'SeaGreen',           hex: '2E8B57' }, 
+  { name: 'DarkSlateGray',      hex: '2F4F4F' }, 
+  { name: 'DarkSlateGrey',      hex: '2F4F4F' }, 
+  { name: 'LimeGreen',          hex: '32CD32' }, 
+  { name: 'MediumSeaGreen',     hex: '3CB371' }, 
+  { name: 'Turquoise',          hex: '40E0D0' }, 
+  { name: 'RoyalBlue',          hex: '4169E1' }, 
+  { name: 'SteelBlue',          hex: '4682B4' }, 
+  { name: 'DarkSlateBlue',      hex: '483D8B' }, 
+  { name: 'MediumTurquoise',    hex: '48D1CC' }, 
+  { name: 'Indigo',             hex: '4B0082' }, 
+  { name: 'DarkOliveGreen',     hex: '556B2F' }, 
+  { name: 'CadetBlue',          hex: '5F9EA0' }, 
+  { name: 'CornflowerBlue',     hex: '6495ED' }, 
+  { name: 'RebeccaPurple',      hex: '663399' }, 
+  { name: 'MediumAquaMarine',   hex: '66CDAA' }, 
+  { name: 'DimGray',            hex: '696969' }, 
+  { name: 'DimGrey',            hex: '696969' }, 
+  { name: 'SlateBlue',          hex: '6A5ACD' }, 
+  { name: 'OliveDrab',          hex: '6B8E23' }, 
+  { name: 'SlateGray',          hex: '708090' }, 
+  { name: 'SlateGrey',          hex: '708090' }, 
+  { name: 'LightSlateGray',     hex: '778899' }, 
+  { name: 'LightSlateGrey',     hex: '778899' }, 
+  { name: 'MediumSlateBlue',    hex: '7B68EE' }, 
+  { name: 'LawnGreen',          hex: '7CFC00' }, 
+  { name: 'Chartreuse',         hex: '7FFF00' }, 
+  { name: 'Aquamarine',         hex: '7FFFD4' }, 
+  { name: 'Maroon',             hex: '800000' }, 
+  { name: 'Purple',             hex: '800080' }, 
+  { name: 'Olive',              hex: '808000' }, 
+  { name: 'Gray',               hex: '808080' }, 
+  { name: 'Grey',               hex: '808080' }, 
+  { name: 'SkyBlue',            hex: '87CEEB' }, 
+  { name: 'LightSkyBlue',       hex: '87CEFA' }, 
+  { name: 'BlueViolet',         hex: '8A2BE2' }, 
+  { name: 'DarkRed',            hex: '8B0000' }, 
+  { name: 'DarkMagenta',        hex: '8B008B' }, 
+  { name: 'SaddleBrown',        hex: '8B4513' }, 
+  { name: 'DarkSeaGreen',       hex: '8FBC8F' }, 
+  { name: 'LightGreen',         hex: '90EE90' }, 
+  { name: 'MediumPurple',       hex: '9370DB' }, 
+  { name: 'DarkViolet',         hex: '9400D3' }, 
+  { name: 'PaleGreen',          hex: '98FB98' }, 
+  { name: 'DarkOrchid',         hex: '9932CC' }, 
+  { name: 'YellowGreen',        hex: '9ACD32' }, 
+  { name: 'Sienna',             hex: 'A0522D' }, 
+  { name: 'Brown',              hex: 'A52A2A' }, 
+  { name: 'DarkGray',           hex: 'A9A9A9' }, 
+  { name: 'DarkGrey',           hex: 'A9A9A9' }, 
+  { name: 'LightBlue',          hex: 'ADD8E6' }, 
+  { name: 'GreenYellow',        hex: 'ADFF2F' }, 
+  { name: 'PaleTurquoise',      hex: 'AFEEEE' }, 
+  { name: 'LightSteelBlue',     hex: 'B0C4DE' }, 
+  { name: 'PowderBlue',         hex: 'B0E0E6' }, 
+  { name: 'FireBrick',          hex: 'B22222' }, 
+  { name: 'DarkGoldenRod',      hex: 'B8860B' }, 
+  { name: 'MediumOrchid',       hex: 'BA55D3' }, 
+  { name: 'RosyBrown',          hex: 'BC8F8F' }, 
+  { name: 'DarkKhaki',          hex: 'BDB76B' }, 
+  { name: 'Silver',             hex: 'C0C0C0' }, 
+  { name: 'MediumVioletRed',    hex: 'C71585' }, 
+  { name: 'IndianRed',          hex: 'CD5C5C' }, 
+  { name: 'Peru',               hex: 'CD853F' }, 
+  { name: 'Chocolate',          hex: 'D2691E' }, 
+  { name: 'Tan',                hex: 'D2B48C' }, 
+  { name: 'LightGray',          hex: 'D3D3D3' }, 
+  { name: 'LightGrey',          hex: 'D3D3D3' }, 
+  { name: 'Thistle',            hex: 'D8BFD8' }, 
+  { name: 'Orchid',             hex: 'DA70D6' }, 
+  { name: 'GoldenRod',          hex: 'DAA520' }, 
+  { name: 'PaleVioletRed',      hex: 'DB7093' }, 
+  { name: 'Crimson',            hex: 'DC143C' }, 
+  { name: 'Gainsboro',          hex: 'DCDCDC' }, 
+  { name: 'Plum',               hex: 'DDA0DD' }, 
+  { name: 'BurlyWood',          hex: 'DEB887' }, 
+  { name: 'LightCyan',          hex: 'E0FFFF' }, 
+  { name: 'Lavender',           hex: 'E6E6FA' }, 
+  { name: 'DarkSalmon',         hex: 'E9967A' }, 
+  { name: 'Violet',             hex: 'EE82EE' }, 
+  { name: 'PaleGoldenRod',      hex: 'EEE8AA' }, 
+  { name: 'LightCoral',         hex: 'F08080' }, 
+  { name: 'Khaki',              hex: 'F0E68C' }, 
+  { name: 'AliceBlue',          hex: 'F0F8FF' }, 
+  { name: 'HoneyDew',           hex: 'F0FFF0' }, 
+  { name: 'Azure',              hex: 'F0FFFF' }, 
+  { name: 'SandyBrown',         hex: 'F4A460' }, 
+  { name: 'Wheat',              hex: 'F5DEB3' }, 
+  { name: 'Beige',              hex: 'F5F5DC' }, 
+  { name: 'WhiteSmoke',         hex: 'F5F5F5' }, 
+  { name: 'MintCream',          hex: 'F5FFFA' }, 
+  { name: 'GhostWhite',         hex: 'F8F8FF' }, 
+  { name: 'Salmon',             hex: 'FA8072' }, 
+  { name: 'AntiqueWhite',       hex: 'FAEBD7' }, 
+  { name: 'Linen',              hex: 'FAF0E6' }, 
+  { name: 'LightGoldenRodYellow',hex: 'FAFAD2' }, 
+  { name: 'OldLace',            hex: 'FDF5E6' }, 
+  { name: 'Red',                hex: 'FF0000' }, 
+  { name: 'Fuchsia',            hex: 'FF00FF' }, 
+  { name: 'Magenta',            hex: 'FF00FF' }, 
+  { name: 'DeepPink',           hex: 'FF1493' }, 
+  { name: 'OrangeRed',          hex: 'FF4500' }, 
+  { name: 'Tomato',             hex: 'FF6347' }, 
+  { name: 'HotPink',            hex: 'FF69B4' }, 
+  { name: 'Coral',              hex: 'FF7F50' }, 
+  { name: 'DarkOrange',         hex: 'FF8C00' }, 
+  { name: 'LightSalmon',        hex: 'FFA07A' }, 
+  { name: 'Orange',             hex: 'FFA500' }, 
+  { name: 'LightPink',          hex: 'FFB6C1' }, 
+  { name: 'Pink',               hex: 'FFC0CB' }, 
+  { name: 'Gold',               hex: 'FFD700' }, 
+  { name: 'PeachPuff',          hex: 'FFDAB9' }, 
+  { name: 'NavajoWhite',        hex: 'FFDEAD' }, 
+  { name: 'Moccasin',           hex: 'FFE4B5' }, 
+  { name: 'Bisque',             hex: 'FFE4C4' }, 
+  { name: 'MistyRose',          hex: 'FFE4E1' }, 
+  { name: 'BlanchedAlmond',     hex: 'FFEBCD' }, 
+  { name: 'PapayaWhip',         hex: 'FFEFD5' }, 
+  { name: 'LavenderBlush',      hex: 'FFF0F5' }, 
+  { name: 'SeaShell',           hex: 'FFF5EE' }, 
+  { name: 'Cornsilk',           hex: 'FFF8DC' }, 
+  { name: 'LemonChiffon',       hex: 'FFFACD' }, 
+  { name: 'FloralWhite',        hex: 'FFFAF0' }, 
+  { name: 'Snow',               hex: 'FFFAFA' }, 
+  { name: 'Yellow',             hex: 'FFFF00' }, 
+  { name: 'LightYellow',        hex: 'FFFFE0' }, 
+  { name: 'Ivory',              hex: 'FFFFF0' }, 
+  { name: 'White',              hex: 'FFFFFF' }
 ];
 
-var Hex2RGB = function(hex) {
-    if (hex.lastIndexOf('#') > -1) {
-        hex = hex.replace(/#/, '0x');
-    } else {
-        hex = '0x' + hex;
-    }
-    var r = hex >> 16;
-    var g = (hex & 0x00FF00) >> 8;
-    var b = hex & 0x0000FF;
-    return {r:r, g:g, b:b};
-};
+
 
 function findClosestColorHex(hex) {
   var rgb = Hex2RGB(hex);
@@ -1616,7 +1619,6 @@ function findClosestColorHex(hex) {
 }
 
 function findClosestColorRGB(colorSet) {
-  //var rgb = {r:r, g:g, b:b};
   var rgb = colorSet;
   var delta = 3 * 256*256;
   var temp = {r:0, g:0, b:0};
@@ -1686,3 +1688,74 @@ function updateCheckerboardPattern(targetSlideCheckerboard, targetSlideBackgroun
     .css('background',         'linear-gradient(to right, rgb('+fontRed+','+fontGreen+','+fontBlue+') 0%, rgb('+bgRed+','+bgGreen+','+bgBlue+') 95%)');
 }
 
+
+
+
+// START Tools
+
+var Hex2RGB = function(hex) {
+  if (hex.lastIndexOf('#') > -1) { hex = hex.replace(/#/, '0x'); } 
+  else { hex = '0x' + hex; }
+  var r = hex >> 16;
+  var g = (hex & 0x00FF00) >> 8;
+  var b = hex & 0x0000FF;
+  return {r:r, g:g, b:b};
+};
+
+function rgbToHex(redValue, greenValue, blueValue) {
+  function componentToHex(c) {
+    var hex = c.toString(16);
+    return hex.length == 1 ? "0" + hex : hex;
+  }
+  return "" + componentToHex(redValue) + componentToHex(greenValue) + componentToHex(blueValue);
+}
+
+
+function hexToRgb(hex) {
+  var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+  return result ? {
+      r:  parseInt(result[1], 16),  // red
+      g: parseInt(result[2], 16),  // green 
+      b:  parseInt(result[3], 16)   // blue
+  } : null;
+}
+function hexToCMYK(hex) {
+  var rgbValues = hexToRGB(hex);
+  var result = {};
+  result.firstValue  = 1 - rgbValues.firstValue;  // C
+  result.secondValue = 1 - rgbValues.secondValue; // M
+  result.thirdValue  = 1 - rgbValues.thirdValue;  // Y
+  result.fourthValue = Math.min(result.firstValue,Math.min(result.secondValue,result.thirdValue)); // K
+  return result;
+}
+
+function hexToHSV(hex) {
+  var rgbValues = hexToRGB(hex);
+  var result = {};
+  var minRGB = Math.min(rgbValues.firstValue/255, Math.min(rgbValues.secondValue/255,rgbValues.thirdValue/255));
+  var maxRGB = Math.max(rgbValues.firstValue/255, Math.max(rgbValues.secondValue/255,rgbValues.thirdValue/255));
+  // Black-gray-white
+  if(minRGB==maxRGB) {
+    computedV = minRGB;
+    return [0,0,computedV];
+  }
+}
+
+Object.byString = function(o, s) {
+  s = String(s);
+  s = s.replace(/\[(\w+)\]/g, '.$1'); // convert indexes to properties
+  s = s.replace(/^\./, '');           // strip a leading dot
+  var a = s.split('.');
+  for (var i = 0, n = a.length; i < n; ++i) {
+      var k = a[i];
+      if (k in o) {
+          o = o[k];
+      } else {
+          return;
+      }
+  }
+  return o;
+}
+
+
+// END Tools
