@@ -1,6 +1,9 @@
-colorpicker.css*/
+/*colorpicker.css*/
 /* ColorPicker.CSS provides the UI instructions for the colorpicker and its modal window */
 
+body {
+  font-family: 'Avenir';
+}
 
 
 @font-face {
@@ -12,6 +15,23 @@ colorpicker.css*/
   font-style:   normal;
   font-weight:  400;
 }
+
+
+/* START Accessibility CSS settings */
+
+.sr-hide {
+  position: absolute; 
+  overflow: hidden; 
+  clip: rect(0 0 0 0); 
+  height: 1px; width: 1px; 
+  margin: -1px; padding: 0; border: 0;
+}
+
+[aria-hidden="true"] {
+  display: none !important;
+}
+
+/* END Accessibility CSS Settings */
 
 .cp_modal-window-title {
   display: block;
@@ -221,6 +241,14 @@ colorpicker.css*/
   z-index: 1;
 }
 
+.slider-container {
+  display: inline-block;
+  position: absolute;
+  width: 278px;
+  min-height: 30px;
+  margin-left: 5px;
+}
+
 .cp_slider-marker {
   display: inline-block;
   position: absolute;
@@ -303,6 +331,7 @@ colorpicker.css*/
 }
 
 .cp_dropshadow-main-area {
+  transition: 1s;
   display: inline-block;
   position: absolute;
   border-radius: 25px;
@@ -325,6 +354,7 @@ colorpicker.css*/
   background-color: #CCCCCC;
 }
 .cp_foreground-main-area {
+  transition: 0.8s;
   display: inline-block;
   position: absolute;
   border: #EDEDED solid 2px;
@@ -348,6 +378,7 @@ colorpicker.css*/
 
 
 #cas_colorpicker-contents.cp_foreground-container {
+  transition: 1s;
   display: inline-block;
   position: relative;
   width: 550px;
@@ -392,6 +423,12 @@ colorpicker.css*/
   transform: rotate(-90deg) translate(-340px, 10px);
   font-size: 18px;
   z-index: 1;
+}
+
+.cp_ui-title h2 {
+  font-size: 18px;
+  z-index: 1;
+  margin-left: 75px;
 }
 
 .cp_sample {
@@ -563,8 +600,9 @@ colorpicker.css*/
   -moz-box-shadow: 1px 1px 1px 0px rgba(0,0,0,0.75);
   box-shadow: 1px 1px 1px 0px rgba(0,0,0,0.75);
   margin-top: 3.1px;
-  margin-left: 3.2px;
+  /*margin-left: 3.2px;*/
   z-index: 1000;
+  top: 1px;
 }
 .cp_color-settings_slide-marker::before { /* increases clickable area */
   content: '';
@@ -618,7 +656,7 @@ colorpicker.css*/
   z-index: 1;
   width: 280px;
   min-width: 26px !important;
-  height: 26px;
+  height: 27px;
   margin-left: 2px;
   margin-top: 2px;
   pointer-events: none;
@@ -635,7 +673,8 @@ colorpicker.css*/
   display: inline-block;
   position: absolute;
   color: black;
-  content: "\f071";
+  content: "\f071"; /* triangle-exclamation */
+  content: "\f05e"; /* fa-ban (circle-slash visual) */
   font-size: 15px;
   font-weight: 900;
   text-align: center;
@@ -643,7 +682,7 @@ colorpicker.css*/
   min-width: inherit;
   height: inherit;
   z-index: 1;
-  top: 2px;
+  top: 1px;
   margin-left: -2px;
 }
 
@@ -653,8 +692,9 @@ colorpicker.css*/
   border: 1px solid #CCCCCC;
   border-radius: 36px;
   height: 30px;
-  width: 284px;
-  /*z-index: -1;*/
+  height: 31px; /* better fit? */
+  /*width: 284px;*/
+  width: 288px; 
   background: -moz-linear-gradient(left, #FFFFFF 0%, #000000 100%);
   background: -webkit-linear-gradient(left, #FFFFFF 0%,#000000 100%);
   background: linear-gradient(to right, #FFFFFF 0%,#000000 100%);
@@ -1021,6 +1061,219 @@ ul.dropdown-menu .selected span::before {
   padding-top: 10px;
 }
 
+.cp_settings-menu-container {
+
+}
+
+.cp_settings-menu-container [role="menu"] {
+  border: rgba(0,0,0,0.5) 2px solid;
+  border-radius: 100px;
+  display: inline-block;
+  padding: 0;  
+  font-size: 14px;
+}
+
+.cp_settings-menu-container ul li  {
+  display: inline-block;
+  /*border: 1px solid rgba(0,0,0,0.7);*/
+}
+.cp_settings-menu-container li a {
+  padding-left: 15px;
+  padding-right: 15px;
+
+}
+
+.cp_settings-menu-container ul:not([aria-hidden]) > li:first-child,
+.cp_settings-menu-container ul:not([aria-hidden]) > li:first-child > a {
+  border-radius: 100px 0px 0px 100px;
+}
+.cp_settings-menu-container ul:not([aria-hidden]) > li:first-child > a {
+  /*padding-left: 30px;*/
+}
+.cp_settings-menu-container ul:not([aria-hidden]) > li:last-child
+.cp_settings-menu-container ul:not([aria-hidden]) > li:last-child > a {
+  border-radius: 0px 100px 100px 0px;
+}
+.cp_settings-menu-container ul:not([aria-hidden]) > li:last-child > a {
+  padding-right: 30px;
+}
+
+
+
+#contrast-settings-filter-button {
+  margin-left: 1px;
+  border-radius: 100px 0px 0px 100px;
+}
+#colorblind-settings-filter-button {
+  margin-right: 1px;
+  border-radius: 0px 100px 100px 0px;
+}
+#contrast-settings-filter-button.active,
+#colorblind-settings-filter-button.active {
+  color: white;
+  background-color: rgba(0,0,0,0.7);
+}
+#contrast-settings-filter-button.active,
+#contrast-settings-filter-button:focus,
+#colorblind-settings-filter-button.active,
+#colorblind-settings-filter-button:focus {
+  color: white;
+  background-color: rgba(0,0,0,0.7);
+  text-decoration: underline;
+  outline: none;
+  box-shadow: DodgerBlue 0px 0px 3px, DodgerBlue 0px 0px 4px;
+}
+
+.cp_settings-menu-container ul[aria-hidden] {
+  margin-top: 5px;
+  display: block;
+  position: absolute;
+  background-color: whitesmoke;
+  border: 1px solid black; 
+  padding: 0;
+  z-index: 100000;
+}
+.cp_settings-menu-container ul[aria-hidden] li {
+  border-color: transparent; 
+  border-radius: 0;
+  padding: 0px !important;
+  width: 100%;
+}
+.cp_settings-menu-container ul[aria-hidden] li a {
+  display:block;
+  position: relative;
+  background-color: whitesmoke;
+  width: 100%;
+  padding: 2px 15px;
+  white-space: nowrap;
+}
+
+.cp_settings-menu-container ul[aria-hidden] li a[aria-selected="true"] {
+  background-color: rgba(0,0,0,0.5);
+  color: white;
+}
+
+.cp_settings-menu-container ul[aria-hidden] li a:focus.active,
+.cp_settings-menu-container ul[aria-hidden] li a:focus {
+  background-color: rgba(0,0,0,0.7);
+  color: white;
+  text-decoration: underline;
+}
+
+.cp_settings-menu-container ul[aria-hidden].cb-menu li a {
+  padding-left: 10px;
+}
+
+.cp_settings-menu-container a.icon-marker::before,
+.cp_settings-menu-container ul[aria-hidden] li a::before {
+  display: inline-block;
+  position: relative;
+  content: '';
+  text-align: center;
+  padding-top: 3px;
+  font-size: 9px;
+  color: rgba(0,0,0,0.75);
+  height: 20px;
+  width: 20px;
+  vertical-align: text-bottom;
+  margin-left: 10px;
+  margin-right: 10px;
+  background-size: contain;
+}
+.icon-marker::before {
+  padding-top: 2.5px !important;
+  font-size: 8px !important;
+  height: 18px !important;
+  width: 18px !important;
+}
+
+a#contrast-settings-filter-button.icon-marker::before {
+  border-radius: 100px;
+}
+a#contrast-settings-filter-button.icon-marker:not(.filter-off)::before,
+.cp_settings-menu-container ul[aria-hidden].contrast-menu li a::before {
+  border-radius: 100px;
+  background-color: black;
+}
+
+a#contrast-settings-filter-button.icon-marker.filter-off.active::before,
+a#contrast-settings-filter-button.icon-marker.filter-off:focus::before,
+a#colorblind-settings-filter-button.icon-marker.filter-off.active::before,
+a#colorblind-settings-filter-button.icon-marker.filter-off:focus::before,
+.cp_settings-menu-container ul[aria-hidden] li a.filter-off::before {
+  content: 'off' !important;
+  color: rgba(0,0,0,0.5);
+  background-color: whitesmoke !important;
+  border: 1px solid rgba(0,0,0,0.2) !important;
+}
+
+.icon-marker.aa-large:focus::before,
+.cp_settings-menu-container a.aa-large::before,
+.cp_settings-menu-container ul[aria-hidden].contrast-menu li a.aa-large::before {
+  background-image: url(../media/trans-single-check.png);
+}
+.icon-marker.aa-small:focus::before,
+.cp_settings-menu-container a.aa-small::before,
+.cp_settings-menu-container ul[aria-hidden].contrast-menu li a.aa-small::before {
+  background-image: url(../media/trans-double-check.png);
+}
+.icon-marker.aaa-large:focus::before,
+.cp_settings-menu-container a.aaa-large::before, 
+.cp_settings-menu-container ul[aria-hidden].contrast-menu li a.aaa-large::before {
+  background-image: url(../media/trans-double-check.png);
+}
+.icon-marker.aaa-small:focus::before,
+.cp_settings-menu-container a.aaa-small::before,
+.cp_settings-menu-container ul[aria-hidden].contrast-menu li a.aaa-small::before {
+  background-image: url(../media/trans-triple-check.png);
+}
+
+a#colorblind-settings-filter-button.icon-marker::before,
+.cp_settings-menu-container ul[aria-hidden].cb-menu li a::before {
+  border: 1px solid rgba(0,0,0,0.5);
+}
+
+a#colorblind-settings-filter-button.icon-marker.no-red::before,
+.cp_settings-menu-container ul[aria-hidden].cb-menu li a.no-red::before {
+  background-color: rgb(255,100,100);
+  content: 'RED';
+}
+a#colorblind-settings-filter-button.icon-marker.low-red::before,
+.cp_settings-menu-container ul[aria-hidden].cb-menu li a.low-red::before {
+  background-color: rgb(255,190,190);
+  content: 'red';
+}
+a#colorblind-settings-filter-button.icon-marker.no-green::before,
+.cp_settings-menu-container ul[aria-hidden].cb-menu li a.no-green::before {
+  background-color: rgb(124,200,0);
+  content: 'GRN';
+}
+a#colorblind-settings-filter-button.icon-marker.low-green::before,
+.cp_settings-menu-container ul[aria-hidden].cb-menu li a.low-green::before {
+  background-color: rgb(152,251,152);
+  content: 'grn';
+}
+a#colorblind-settings-filter-button.icon-marker.no-blue::before,
+.cp_settings-menu-container ul[aria-hidden].cb-menu li a.no-blue::before {
+  background-color: rgb(80,160,215);
+  content: 'BLU';
+}
+a#colorblind-settings-filter-button.icon-marker.low-blue::before,
+.cp_settings-menu-container ul[aria-hidden].cb-menu li a.low-blue::before {
+  background-color: rgb(200,220,245);
+  content: 'blu';
+}
+a#colorblind-settings-filter-button.icon-marker.no-color::before,
+.cp_settings-menu-container ul[aria-hidden].cb-menu li a.no-color::before {
+  background-color: rgb(200,200,200);
+  content: 'NO';
+}
+a#colorblind-settings-filter-button.icon-marker.low-color::before,
+.cp_settings-menu-container ul[aria-hidden].cb-menu li a.low-color::before {
+  background-color: rgb(225,225,225);
+  content: 'no';
+}
+
 .cp_settings_border-top_NEW, .cp_settings_border-bottom_NEW {
   height: 10px;
   width: inherit;
@@ -1203,12 +1456,6 @@ ul.dropdown-menu .selected span::before {
 }
 
 
-.sr-hide {
-  position: absolute; 
-  overflow: hidden; 
-  clip: rect(0 0 0 0); 
-  height: 1px; width: 1px; 
-  margin: -1px; padding: 0; border: 0;
-}
+
 
 /* END Slider Version */
