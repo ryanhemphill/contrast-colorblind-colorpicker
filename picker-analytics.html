@@ -1,0 +1,551 @@
+
+<html>
+<head>
+  <meta name="name" content="Contrast/Colorblind Color Picker">
+  <meta name="description" content="A visual filter to help pick accessible colors - show WCAG and colorblind perception.">
+  <meta itemprop="image" content="">
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>Contrast/Colorblind Color Picker</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link href=css/bootstrap.min.css rel=stylesheet>  
+  <link href=css/font-awesome.css rel=stylesheet>  
+  <link href="data:text/css;charset=utf-8," data-href=css/bootstrap-theme.min.css rel=stylesheet id=bs-theme-stylesheet>  
+  <link href=css/colorpicker.css rel=stylesheet>
+  <link href=css/analytics.css rel=stylesheet>
+</head>
+<body>
+ 
+<!-- <a href="index.html">Back to Index.html</a> -->
+<div id="chromatic-ally" class="cp_parent-container analytics-mode">
+  <div class="cp_background-container">
+    <div class="cp_dropshadow-main-area"></div>
+    <div class="cp_dropshadow-circle"></div>
+    <div class="cp_foreground-circle"></div>
+    <div class="cp_foreground-main-area"></div>
+  </div>
+  <div id="chromatic-ally-contents" class="cp_foreground-container">
+  <div class="cp_circle-swatch-container">
+    <div id="cp_background-swatch"></div>
+    <div id="cp_font-swatch"></div>
+  </div>
+  
+  <h2 class="sr-hide">Text Sample Area</h2>      
+  <div class="cp_sample">
+      <div><input aria-label="text sample area" id="cp_sample-content" type="text" value="The quick fox jumped over the lazy brown dog"></div>
+  </div>
+  <div class="cp_ui-title">
+    <h2>Contrast/Colorblind Color Picker</h2>
+  </div>
+  <!-- START Color-Picker -->
+
+  <div class="cp_settings-menu-container">
+    <h2 class="sr-hide">Color Picker Settings Menu</h2>
+    <ul role="menu">
+      <li><a role="menuitem" href="javascript:void(0);" id="contrast-settings-filter-button" class="icon-marker filter-off active">Contrast Failure-Range Filters<span class="sr-hide"></span></a>
+        <ul aria-hidden="true" class="contrast-menu">
+          <li><a role="menuitem" href="javascript:void(0);" aria-selected="true" class="filter-off active">No Contrast Filter<span class="sr-hide"> </span></a></li><br>
+          <li><a role="menuitem" href="javascript:void(0);" aria-selected="false" class="aa-large">Apply AA-Large Text (3 to 1) Filter<span class="sr-hide"> </span></a></li><br>
+          <li><a role="menuitem" href="javascript:void(0);" aria-selected="false" class="aa-small">Apply AA-Small Text (4.5 to 1) Filter<span class="sr-hide"> </span></a></li><br>
+          <li><a role="menuitem" href="javascript:void(0);" aria-selected="false" class="aaa-large">Apply AAA-Large Text (4.5 to 1) Filter<span class="sr-hide"> </span></a></li><br>
+          <li><a role="menuitem" href="javascript:void(0);" aria-selected="false" class="aaa-small">Apply AAA/Small Text (7 to 1) Filter<span class="sr-hide"> </span></a></li>
+        </ul>
+      </li>
+      <li><a role="menuitem" href="javascript:void(0);" id="colorblind-settings-filter-button" class="icon-marker low-red active">Colorblindness Comparison Filters<span class="sr-hide"> Button</span></a>
+        <ul aria-hidden="true" class="cb-menu">
+          <li><a role="menuitem" href="javascript:void(0);" aria-selected="true" class="filter-off active">No Colorblindness Filter<span class="sr-hide"></span></a></li>
+          <li><a role="menuitem" href="javascript:void(0);" aria-selected="false" class="no-red">No Red Vision (Protonopia)<span class="sr-hide"></span></a></li>
+          <li><a role="menuitem" href="javascript:void(0);" aria-selected="false" class="low-red">Reduced Red Vision (Protonomaly)<span class="sr-hide"> </span></a></li>
+          <li><a role="menuitem" href="javascript:void(0);" aria-selected="false" class="no-green">No Green Vision (Deuternopia)<span class="sr-hide"> </span></a></li>
+          <li><a role="menuitem" href="javascript:void(0);" aria-selected="false" class="low-green">Reduced Green Vision (Deuternomaly)<span class="sr-hide"> </span></a></li>
+          <li><a role="menuitem" href="javascript:void(0);" aria-selected="false" class="no-blue">No Blue Vision (Tritanopia)<span class="sr-hide"> </span></a></li>
+          <li><a role="menuitem" href="javascript:void(0);" aria-selected="false" class="low-blue">Reduced Blue Vision (Tritanopia)<span class="sr-hide"> </span></a></li>
+          <li><a role="menuitem" href="javascript:void(0);" aria-selected="false" class="no-color">No Color Vision (Achromatopia)<span class="sr-hide"> </span></a></li>
+          <li><a role="menuitem" href="javascript:void(0);" aria-selected="false" class="low-color">Reduced Color Vision (Achromatomaly)<span class="sr-hide"> </span></a></li>
+        </ul>
+      </li>
+    </ul>
+  </div>
+  <div class="cp_settings-menu_NEW">
+    <div class="cp_settings_border-top_NEW"></div>
+    <div class="cp_settings-menu_active-tool-title_NEW">
+      <span id="cp_tool-menu" class="btn-group" tabindex="0">
+        <button type="button" class="btn btn-default dropdown-toggle btn-hide-styles" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          <a id="cp_settings-button" href="javascript:void(0);">
+            <span class="fa fa-universal-access fa-lg"></span>
+            Accessibility Tools...
+            <span class="cp_caret-right hide"></span>
+          </a>
+        </button>
+        <ul class="dropdown-menu">
+          <li><a href="javascript:void(0);" class="off"><span class="fa fa-close"> </span> No Tools (Off)</a></li>
+          <li><a href="javascript:void(0);" class="contrast"><span class="fa fa-adjust"> </span> Use Contrast Analysis Tools (WCAG 2.0)</a></li>
+          <li><a href="javascript:void(0);" class="colorblindness"><span class="fa fa-low-vision"> </span> Use Colorblindness Tools</a></li>
+        </ul>
+      </span>
+      <span class="cp_active-tool_title-box">
+        <h4></h4>
+      </span>
+    </div>
+    
+    <div id="cp_settings-active-tool" class="cp_settings-menu_active-tool-container_NEW hide">
+      <div id="contrast-settings-container" class="settings-group-container hide">
+        <div id="cp_contrast-range-filter-button-group" class="btn-group">
+          <button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            <a id="cp_range-filter-button" data-filter-state="off" href="javascript:void(0);"><span class="fa fa-adjust"></span> Contrast Range Filter <span class="caret"></span></a>
+          </button>
+          <ul class="dropdown-menu">
+            <li><a href="javascript:void(0);" class="selected off"><span class="fa fa-circle-o"></span> None (Off)</a></li>
+            <li><a href="javascript:void(0);" class="aa_large"><span class="fa fa-circle-o"></span> Apply AA/Large Text (3 to 1) Filter</a></li>
+            <li><a href="javascript:void(0);" class="aa_small"><span class="fa fa-circle-o"></span> Apply AA/Small Text (4.5 to 1) Filter</a></li>
+            <li><a href="javascript:void(0);" class="aaa_large"><span class="fa fa-circle-o"></span> Apply AAA/Large Text (4.5 to 1) Filter</a></li>
+            <li><a href="javascript:void(0);" class="aaa_small"><span class="fa fa-circle-o"></span> Apply AAA/Small Text (7 to 1) Filter</a></li>
+          </ul>
+        </div>
+
+        <div class="cp_contrast-settings_results-region">
+          <span>Results: </span>
+          <span id="cp_a11y-status-update" role="status" aria-live="polite"></span>
+        </div>
+
+
+        <div class="cp_clear-soln"></div>
+      </div>
+
+      <div id="colorblindness-settings-container" class="settings-group-container hide">
+        <div id="cp_colorblindness-filter-button-group" class="btn-group">
+          <button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            <a id="cp_colorblindness-filter-button" data-filter-state="normal" href="javascript:void(0);"><span class="fa fa-low-vision"></span> Colorblindness Filters <span class="caret"></span></a>
+          </button>
+          <ul class="dropdown-menu">
+            <li><a href="javascript:void(0);" class="selected off"><span class="fa fa-circle-o"></span> Normal (Off)</a></li>
+            <li><a href="javascript:void(0);" class="protanopia"><span class="fa fa-circle-o"></span> Protanopia (No Red)</a></li>
+            <li><a href="javascript:void(0);" class="protanomaly"><span class="fa fa-circle-o"></span> Protanomaly (Reduced Red)</a></li>
+            <li><a href="javascript:void(0);" class="deuteranopia"><span class="fa fa-circle-o"></span> Deuteranopia (No Green)</a></li>
+            <li><a href="javascript:void(0);" class="deuteranomaly"><span class="fa fa-circle-o"></span> Deuteranomaly (Reduced Green)</a></li>
+            <li><a href="javascript:void(0);" class="tritanopia"><span class="fa fa-circle-o"></span> Tritanopia (No Blue)</a></li>
+            <li><a href="javascript:void(0);" class="tritanomaly"><span class="fa fa-circle-o"></span> Tritanomaly (Reduced Blue)</a></li>
+            <li><a href="javascript:void(0);" class="achromatopsia"><span class="fa fa-circle-o"></span> Achromatopsia (No Color)</a></li>
+            <li><a href="javascript:void(0);" class="achromatomaly"><span class="fa fa-circle-o"></span> Achromatomaly (Reduced Color)</a></li>
+
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="cp_settings_border-bottom_NEW"></div>
+  </div>
+
+  <div id="cp_font-color-settings" class="cp_color-settings_container">
+    <div class="cp_color-settings_title">
+      <span class="cp_color-settings_title_bottom-bracket"></span>
+      <h3>Font</h3>
+      <span class="cp_color-settings_title_top-bracket"></span>
+    </div>
+    <div class="cp_color-settings_slider-container">
+      <span class="cp_color-settings_slide-title">
+        <h4>Red<span class="sr-only"> for font color</span></h4> 
+      </span>
+
+      <span class="slider-container">
+        <span class="cp_color-settings_slide-marker" tabindex="0" role="slider" aria-valuemin="0" aria-valuemax="255" aria-valuenow="0"  data-slider-text-before="red" data-slider-text-after=" ">
+          <span class="cp_color-settings_marker-color"></span>
+        </span>
+      </span>
+      <span class="cp_color-settings_a11y-fail-range" aria-hidden="true"></span>
+      <span class="cp_color-settings_slide cp_colorblind-split"></span>
+      <span id="fg-red-slide" class="cp_color-settings_slide"></span> 
+
+      <span class="cp_color-settings_value">
+        <input type="text" aria-label="red value" id="cp_slider_font_first-value" class="cp_slider-textfield" value="0">
+      </span>
+    </div> 
+    <div class="cp_color-settings_slider-container">
+      <span class="cp_color-settings_slide-title">
+        <h4>Green<span class="sr-only"> for font color</span></h4> 
+      </span>
+
+      <span class="slider-container">
+        <span class="cp_color-settings_slide-marker" tabindex="0" role="slider" aria-valuemin="0" aria-valuemax="255" aria-valuenow="0"  data-slider-text-before="green" data-slider-text-after=" ">
+          <span class="cp_color-settings_marker-color"></span>
+        </span>
+      </span>
+      <span class="cp_color-settings_a11y-fail-range" aria-hidden="true"></span>
+      <span class="cp_color-settings_slide cp_colorblind-split"></span>
+      <span id="fg-green-slide" class="cp_color-settings_slide"></span> 
+
+      <span class="cp_color-settings_value">
+        <input type="text" aria-label="green value" id="cp_slider_font_second-value" class="cp_slider-textfield" value="0">
+      </span>
+    </div> 
+
+    <!-- Slide #3 -->
+    <div class="cp_color-settings_slider-container">
+      <span class="cp_color-settings_slide-title">
+          <h4>Blue<span class="sr-only"> for font color</span></h4> 
+      </span>
+
+      <span class="slider-container">
+        <span class="cp_color-settings_slide-marker" tabindex="0" role="slider" aria-valuemin="0" aria-valuemax="255" aria-valuenow="0"  data-slider-text-before="blue" data-slider-text-after=" " data-slide-container="fg-green-slide">
+          <span class="cp_color-settings_marker-color"></span>
+        </span>
+      </span>
+
+      <span class="cp_color-settings_a11y-fail-range" aria-hidden="true"></span>
+      <span class="cp_color-settings_slide cp_colorblind-split"></span>
+      <span id="fg-blue-slide" class="cp_color-settings_slide"></span> <!-- INSERT Gradient -->
+      <span class="cp_color-settings_value">
+          <input type="text" aria-label="blue value" id="cp_slider_font_third-value" class="cp_slider-textfield" value="0">
+      </span>
+    </div> 
+
+    <!-- Slider #4  -->
+    <div class="cp_color-settings_slider-container">
+      <span class="cp_color-settings_slide-title">
+          <h4>Alpha<span class="sr-only">Channel for font color (only)</span></h4> 
+      </span>
+
+      <span class="slider-container">
+        <span class="cp_color-settings_slide-marker" tabindex="0" role="slider" aria-valuemin="0" aria-valuemax="100" aria-valuenow="100" data-slider-text-before="alpha" data-slider-text-after=" percent" data-slide-container="fg-blue-slide">
+          <span class="cp_color-settings_marker-color"></span>
+        </span>
+      </span>
+      <!-- <span class="cp_color-settings_a11y-fail-range" aria-hidden="true"></span> -->
+      
+      <span id="alpha-checkerboard-pattern" class="cp_color-settings_slide checkerboard-pattern"></span>
+      <span id="alpha-subcheckerboard-pattern" class="cp_color-settings_slide events-disabled"></span>
+       <!-- INSERT Gradient -->
+      <span class="cp_color-settings_value">
+        <input type="text" aria-label="alpha channel" id="cp_slider_font_fourth-value" class="cp_slider-textfield" value="100">
+      </span>
+    </div> 
+
+    <div id="font-details-container">
+      <h4>Font Color Conversion Options:</h4>
+      <button id="font-color-name" tabindex="0" class="">
+        <span class="name-status"></span>
+        Set to nearest color-name > 
+        <span class="color-name">Black</span>
+        <span class="sr-hide">Click button to apply this color</span>
+      </button>
+      <button class="convert-sans-alpha-button">
+        Set to non-Alpha color > <span class="convert-value"></span>
+        <span class="sr-hide">Click button to apply this color</span>
+      </button>
+    </div>
+  </div>
+
+  <div id="cp_background-color-settings" class="cp_color-settings_container">
+    <div class="cp_color-settings_title">
+      <span class="cp_color-settings_title_bottom-bracket"></span>
+      <h3>Background</h3>
+      <span class="cp_color-settings_title_top-bracket"></span>
+    </div>
+    <!-- Slide #1 -->
+    <div class="cp_color-settings_slider-container">
+      <span class="cp_color-settings_slide-title">
+          <h4>Red<span class="sr-only"> for background color</span></h4> 
+      </span>
+      
+      <span class="slider-container">
+        <span class="cp_color-settings_slide-marker" tabindex="0" role="slider" aria-valuemin="0" aria-valuemax="255" aria-valuenow="255"  data-slider-text-before="red" data-slider-text-after=" " data-slide-container="bg-red-slide">
+          <span class="cp_color-settings_marker-color"></span>
+        </span>
+      </span>
+
+      <span class="cp_color-settings_a11y-fail-range" aria-hidden="true"></span>
+      <span class="cp_color-settings_slide cp_colorblind-split"></span>
+      <span id="bg-red-slide" class="cp_color-settings_slide"></span>
+
+
+      <span class="cp_color-settings_value">
+          <input type="text" aria-label="red value" id="cp_slider_bg_first-value" class="cp_slider-textfield" value="255">
+      </span>
+    </div> 
+    <div class="cp_color-settings_slider-container">
+      <span class="cp_color-settings_slide-title">
+          <h4>Green<span class="sr-only"> for background color</span></h4> 
+      </span>
+
+      <span class="slider-container">
+        <span class="cp_color-settings_slide-marker" tabindex="0" role="slider" aria-valuemin="0" aria-valuemax="255" aria-valuenow="255"  data-slider-text-before="green" data-slider-text-after=" " data-slide-container="bg-green-slide">
+          <span class="cp_color-settings_marker-color"></span>
+        </span>
+      </span>
+
+
+      <span class="cp_color-settings_a11y-fail-range" aria-hidden="true"></span>
+      <span class="cp_color-settings_slide cp_colorblind-split"></span>
+      <span id="bg-green-slide" class="cp_color-settings_slide"></span> 
+      <span class="cp_color-settings_value">
+          <input type="text" aria-label="green value" id="cp_slider_bg_second-value" class="cp_slider-textfield" value="255">
+      </span>
+    </div> 
+    <div class="cp_color-settings_slider-container">
+      <span class="cp_color-settings_slide-title">
+          <h4>Blue<span class="sr-only"> for background color</span></h4> 
+      </span>
+
+      <span class="slider-container">
+        <span class="cp_color-settings_slide-marker" tabindex="0" role="slider" aria-valuemin="0" aria-valuemax="255" aria-valuenow="255" data-slider-text-before="blue" data-slider-text-after=" " data-slide-container="bg-blue-slide">
+          <span class="cp_color-settings_marker-color"></span>
+        </span>
+      </span>
+
+      <span class="cp_color-settings_a11y-fail-range" aria-hidden="true"></span>
+      <span class="cp_color-settings_slide cp_colorblind-split"></span>
+      <span id="bg-blue-slide" class="cp_color-settings_slide"></span> 
+      <span class="cp_color-settings_value">
+          <input type="text" aria-label="blue value" id="cp_slider_bg_third-value" class="cp_slider-textfield" value="255">
+      </span>
+    </div> 
+
+    <div id="background-details-container">
+      <h4>Background Color Conversion Options:</h4>
+      <!-- <h4>Background Color Analysis:</h4> -->
+      <button id="background-color-name" tabindex="0" class=""><span class="name-status"></span>
+        Set to nearest color-name > 
+        <span class="color-name">White</span>
+        <span class="sr-hide">Click button to apply this color</span>
+      </button>
+      <!-- <span class="">Color is
+        <span class="name-status"> closest to </span> 
+        <button id="background-color-name" tabindex="0">White</button><span class="sr-hide">Click button to apply this color</span>
+      </span> -->
+    </div>
+  </div>
+
+  <!-- END Color-Picker -->
+
+  <div class="cp_ui-title">
+    <h2>Contrast Data Analytics</h2>
+  </div>
+  <div class="con-cb-analytics-dashboard-container">
+    <!-- <h3>Contrast/Colorblind Analytics</h3> -->
+    <div class="data-table-container">
+      <div class="data-table">
+        <div class="data-row">
+          <div class="data-cell">
+            <div class="data-tilt-45-heading column-heading-generic" tabindex="0">
+              <div class="data-heading-subtitle">Contrast-Ratio</div>
+            </div>
+          </div>
+          <div class="data-cell">
+            <div class="data-tilt-45-heading cb-default-bg" tabindex="0">Normal Vision
+              </>
+            </div>
+          </div>
+          <div class="data-cell">
+            <div class="data-tilt-45-heading cb-no-red-bg" tabindex="0">No Red <span class="data-heading-subtitle">(Protonopia)</span>
+              </>
+            </div>
+          </div>
+          <div class="data-cell">
+            <div class="data-tilt-45-heading cb-low-red-bg" tabindex="0">Low Red <span class="data-heading-subtitle">(Protonomaly)</span></div>
+          </div>
+          <div class="data-cell">
+            <div class="data-tilt-45-heading cb-no-green-bg" tabindex="0">No Green <span class="data-heading-subtitle">(Deuteranopia)</span></div>
+          </div>
+          <div class="data-cell">
+            <div class="data-tilt-45-heading cb-low-green-bg" tabindex="0">Low Green <span class="data-heading-subtitle">(Deuteranomaly)</span></div>
+          </div>
+          <div class="data-cell">
+            <div class="data-tilt-45-heading cb-no-blue-bg" tabindex="0">No Blue <span class="data-heading-subtitle">(Tritanopia)</span></div>
+          </div>
+          <div class="data-cell">
+            <div class="data-tilt-45-heading cb-low-blue-bg" tabindex="0">Low Blue <span class="data-heading-subtitle">(Tritanomaly)</span></div>
+          </div>
+          <div class="data-cell">
+            <div class="data-tilt-45-heading cb-no-color-bg" tabindex="0">No Color <span class="data-heading-subtitle">(Achromatopsia)</span></div>
+          </div>
+          <div class="data-cell">
+            <div class="data-tilt-45-heading cb-low-color-bg" tabindex="0">Low Color <span class="data-heading-subtitle">(Achromatomaly)</span></div>
+          </div>
+          <div class="data-cell">
+            <!--    empty-cell      -->
+          </div>
+        </div>
+        <div class="data-row">
+          <div class="data-cell" role="presentation">
+            <div class="contrast-value-mark contrast-value-21">21</div>
+            <div class="contrast-value-mark contrast-value-7">7</div>
+            <div class="contrast-value-mark contrast-value-4_5">4.5</div>
+            <div class="contrast-value-mark contrast-value-3">3</div>
+            <div class="contrast-value-mark contrast-value-0">0</div>
+          </div>
+          <div id="normal-vision-column" class="data-cell white-right-border" tabindex="0">
+            <div class="data-tag" tabindex="0" aria-label="Normal Vision Data" data-contrast-value="21"></div>
+            <div class="filter aa-large-filter"></div>
+            <div class="filter aa-small-aaa-large-filter"></div>
+            <div class="filter aaa-small-filter"></div>
+            <div class="filter no-pass-filter"></div>
+            <div class="swatch-container tooltip-above cb-default-bg">
+              <div class="font-swatch" data-id="font-swatch-default-color" role="button" tabindex="0"><input id="font-swatch-default-color" value="rgb(140,225,100)" class="sr-hide" aria-hidden="true" tabindex="-1"></div>
+              <div class="bg-swatch" data-id="bg-swatch-default-color" role="button" tabindex="0"><input id="bg-swatch-default-color" value="rgb(140,225,100)" class="sr-hide" aria-hidden="true" tabindex="-1"></div>
+              <span class="tooltip-content" role="presentation">Click Swatch to Copy Color </span>
+            </div>
+          </div>
+          <div id="no-red-column" class="data-cell white-right-border" aria-label="No Red Vision Data." tabindex="0">
+            <div class="data-tag" tabindex="0" aria-label="Ratio Value" data-contrast-value="0"></div>
+            <div class="filter aa-large-filter"></div>
+            <div class="filter aa-small-aaa-large-filter"></div>
+            <div class="filter aaa-small-filter"></div>
+            <div class="filter no-pass-filter"></div>
+            <div class="swatch-container cb-no-red-bg tooltip-above">
+              <div class="font-swatch" data-id="font-swatch-no-red" role="button" tabindex="0"><input id="font-swatch-no-red" value="rgb(140,225,100)" class="sr-hide" aria-hidden="true" tabindex="-1"><span></span></div>
+              <div class="bg-swatch" data-id="bg-swatch-no-red" role="button" tabindex="0"><input id="bg-swatch-no-red" value="rgb(140,225,100)" class="sr-hide" aria-hidden="true" tabindex="-1"></div>
+              <span class="tooltip-content" role="presentation">Click Swatch to Copy Color </span>
+            </div>
+          </div>
+          <div id="low-red-column" class="data-cell white-right-border" aria-label="Low Red Vision Data." tabindex="0">
+            <div class="data-tag" tabindex="0" aria-label="Ratio Value" data-contrast-value="9.6"></div>
+            <div class="filter aa-large-filter"></div>
+            <div class="filter aa-small-aaa-large-filter"></div>
+            <div class="filter aaa-small-filter"></div>
+            <div class="filter no-pass-filter"></div>
+            <div class="swatch-container cb-low-red-bg tooltip-above">
+              <div class="font-swatch" data-id="font-swatch-low-red" role="button" tabindex="0"><input id="font-swatch-low-red" value="rgb(140,225,100)" class="sr-hide" aria-hidden="true" tabindex="-1"></div>
+              <div class="bg-swatch" data-id="bg-swatch-low-red" role="button" tabindex="0"><input id="bg-swatch-low-red" value="rgb(140,225,100)" class="sr-hide" aria-hidden="true" tabindex="-1"></div>
+              <span class="tooltip-content" role="presentation">Click Swatch to Copy Color </span>
+            </div>
+          </div>
+          <div id="no-green-column" class="data-cell white-right-border" aria-label="No Green Vision Data" tabindex="0">
+            <div class="data-tag" tabindex="0" aria-label="Ratio Value" data-contrast-value="2.9"></div>
+            <div class="filter aa-large-filter"></div>
+            <div class="filter aa-small-aaa-large-filter"></div>
+            <div class="filter aaa-small-filter"></div>
+            <div class="filter no-pass-filter"></div>
+            <div class="swatch-container cb-no-green-bg tooltip-above">
+              <div class="font-swatch" data-id="font-swatch-no-green" role="button" tabindex="0"><input id="font-swatch-no-green" value="rgb(140,225,100)" class="sr-hide" aria-hidden="true" tabindex="-1"></div>
+              <div class="bg-swatch" data-id="bg-swatch-no-green" role="button" tabindex="0"><input id="bg-swatch-no-green" value="rgb(140,225,100)" class="sr-hide" aria-hidden="true" tabindex="-1"></div>
+              <span class="tooltip-content" role="presentation">Click Swatch to Copy Color </span>
+            </div>
+          </div>
+          <div id="low-green-column" class="data-cell white-right-border" aria-label="Low Green Vision Data" tabindex="0">
+            <div class="data-tag" tabindex="0" aria-label="Ratio Value" data-contrast-value="5.6"></div>
+            <div class="filter aa-large-filter"></div>
+            <div class="filter aa-small-aaa-large-filter"></div>
+            <div class="filter aaa-small-filter"></div>
+            <div class="filter no-pass-filter"></div>
+            <div class="swatch-container cb-low-green-bg tooltip-above">
+              <div class="font-swatch" data-id="font-swatch-low-green" role="button" tabindex="0"><input id="font-swatch-low-green" value="rgb(140,225,100)" class="sr-hide" aria-hidden="true" tabindex="-1"></div>
+              <div class="bg-swatch" data-id="bg-swatch-low-green" role="button" tabindex="0"><input id="bg-swatch-low-green" value="rgb(140,225,100)" class="sr-hide" aria-hidden="true" tabindex="-1"></div>
+              <span class="tooltip-content" role="presentation">Click Swatch to Copy Color </span>
+            </div>
+          </div>
+          <div id="no-blue-column" class="data-cell white-right-border" aria-label="No Blue Vision Data." tabindex="0">
+            <div class="data-tag" tabindex="0" aria-label="Ratio Value" data-contrast-value="20.8"></div>
+            <div class="filter aa-large-filter"></div>
+            <div class="filter aa-small-aaa-large-filter"></div>
+            <div class="filter aaa-small-filter"></div>
+            <div class="filter no-pass-filter"></div>
+            <div class="swatch-container cb-no-blue-bg tooltip-above">
+              <div class="font-swatch" data-id="font-swatch-no-blue" role="button" tabindex="0"><input id="font-swatch-no-blue" value="rgb(140,225,100)" class="sr-hide" aria-hidden="true" tabindex="-1"></div>
+              <div class="bg-swatch" data-id="bg-swatch-no-blue" role="button" tabindex="0"><input id="bg-swatch-no-blue" value="rgb(140,225,100)" class="sr-hide" aria-hidden="true" tabindex="-1"></div>
+              <span class="tooltip-content" role="presentation">Click Swatch to Copy Color </span>
+            </div>
+          </div>
+          <div id="low-blue-column" class="data-cell white-right-border" aria-label="Low Blue Vision Data" tabindex="0">
+            <div class="data-tag" tabindex="0" aria-label="Ratio Value" data-contrast-value="5.6"></div>
+            <div class="filter aa-large-filter"></div>
+            <div class="filter aa-small-aaa-large-filter"></div>
+            <div class="filter aaa-small-filter"></div>
+            <div class="filter no-pass-filter"></div>
+            <div class="swatch-container cb-low-blue-bg tooltip-above">
+              <div class="font-swatch" data-id="font-swatch-low-blue" role="button" tabindex="0"><input id="font-swatch-low-blue" value="rgb(140,225,100)" class="sr-hide" aria-hidden="true" tabindex="-1"></div>
+              <div class="bg-swatch" data-id="bg-swatch-low-blue" role="button" tabindex="0"><input id="bg-swatch-low-blue" value="rgb(140,225,100)" class="sr-hide" aria-hidden="true" tabindex="-1"></div>
+              <span class="tooltip-content" role="presentation">Click Swatch to Copy Color </span>
+            </div>
+          </div>
+          <div id="no-color-column" class="data-cell white-right-border" aria-label="No Color Vision Data" tabindex="0">
+            <div class="data-tag" tabindex="0" aria-label="Ratio Value" data-contrast-value="6.1"></div>
+            <div class="filter aa-large-filter"></div>
+            <div class="filter aa-small-aaa-large-filter"></div>
+            <div class="filter aaa-small-filter"></div>
+            <div class="filter no-pass-filter"></div>
+            <div class="swatch-container cb-no-color-bg tooltip-above">
+              <div class="font-swatch" data-id="font-swatch-no-color" role="button" tabindex="0"><input id="font-swatch-no-color" value="rgb(140,225,100)" class="sr-hide" aria-hidden="true" tabindex="-1"></div>
+              <div class="bg-swatch" data-id="bg-swatch-no-color" role="button" tabindex="0"><input id="bg-swatch-no-color" value="rgb(60,60,60)" class="sr-hide" aria-hidden="true" tabindex="-1"></div>
+              <span class="tooltip-content" role="presentation">Click Swatch to Copy Color </span>
+            </div>
+          </div>
+          <div id="low-color-column" class="data-cell white-right-border" aria-label="Low Color Vision Data" tabindex="0">
+            <div class="data-tag" tabindex="0" aria-label="Ratio Value" data-contrast-value="3.3"></div>
+            <div class="filter aa-large-filter"></div>
+            <div class="filter aa-small-aaa-large-filter"></div>
+            <div class="filter aaa-small-filter"></div>
+            <div class="filter no-pass-filter"></div>
+            <div class="swatch-container cb-low-color-bg tooltip-above">
+              <div class="font-swatch" data-id="font-swatch-low-color" role="button" tabindex="0" role="button"><input id="font-swatch-low-color" value="rgb(140,225,100)" class="sr-hide" aria-hidden="true" tabindex="-1"></div>
+              <div class="bg-swatch" data-id="bg-swatch-low-color" role="button" tabindex="0" role="button"><input id="bg-swatch-low-color" value="rgb(140,225,100)" class="sr-hide" aria-hidden="true" tabindex="-1"></div>
+              <span class="tooltip-content" role="presentation">Click Swatch to Copy Color </span>
+            </div>
+          </div>
+          <div class="data-cell" style="width:auto;">
+            <div class="svg-container">
+              <svg class="trap-green ui-display" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" preserveAspectRatio="none">
+                <polygon fill="rgb(215,235,175)" points="0,0 0,100 100,70 100,50"></polygon>
+              </svg>
+              <svg class="trap-blue ui-display" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" preserveAspectRatio="none">
+                <polygon fill="rgb(160,235,235)" points="0,50 0,100 100,65 100,0"></polygon>
+              </svg>
+              <svg class="trap-yellow ui-display" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" preserveAspectRatio="none">
+                <polygon fill="rgb(255,240,140)" points="0,20 0,60 100,100 100,10"></polygon>
+              </svg>
+              <svg class="trap-gray ui-display" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" preserveAspectRatio="none">
+              <polygon fill="rgb(209,209,209)" points="0,0 0,50 100,100 100,45"></polygon>
+              </svg>
+            </div>
+            <div class="wcag-key-container">
+              <div id="aaa-small-filter-btn" aria-label="announce triple-a small cases" role="button" class="wcag-key aaa-small" tabindex="0" data-filter-set=".data-tag[data-wcag-value='aaa-small']">
+                <div class="sub-container">
+                  <div class="pos-top">AAA</div>
+                  <div class="pos-bottom">small</div>
+                </div>
+              </div><br>
+              <div id="aa-small-aaa-large-filter-btn" aria-label="announce double-a small, triple-a large cases" role="button" class="wcag-key wcag-key-2xwidth aa-small-aaa-large" tabindex="0" data-filter-set=".data-tag[data-wcag-value='aa-small-aaa-large']">
+                <div class="sub-container sub-inline">
+                  <div class="pos-top">AA</div>
+                  <div class="pos-bottom">small</div>
+                </div>
+                <div class="sub-container sub-inline sub-middle">
+                  +
+                </div>
+                <div class="sub-container sub-inline">
+                  <div class="pos-top">AAA</div>
+                  <div class="pos-bottom">large</div>
+                </div>
+              </div><br>
+              <div id="aa-large-filter-btn" aria-label="announce double-a small cases" class="wcag-key aa-large" role="button" tabindex="0" data-filter-set=".data-tag[data-wcag-value='aa-large']">
+                <div class="sub-container">
+                  <div class="pos-top">AA</div>
+                  <div class="pos-bottom">large</div>
+                </div>
+              </div><br>
+              <div id="fail-filter-btn" aria-label="announce fail cases" role="button" class="wcag-key no-pass" tabindex="0" data-filter-set=".data-tag[data-wcag-value='fail']">
+                <div class="sub-container">
+                  <div class="pos-top">AA/AAA</div>
+                  <div class="pos-bottom">FAIL </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>        
+
+    </div>
+</div>
+<br><br><br><br><br><br><br>
+<div id="test-key" tabindex="0">Test Key</div>
+
+<script src=js/support/jquery.js></script>
+
+<script src="js/support/draggabilly.pkgd.js"></script>
+
+<script src=js/colorpicker.js></script>
+<script src=js/analytics.js></script>
+<script src=js/alt_colorblind.js></script>
+<script src=js/colorpicker_new.js></script>
+</body>
+</html>

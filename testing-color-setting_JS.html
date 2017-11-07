@@ -1,0 +1,92 @@
+<html>
+<head>
+  <meta name="name" content="Contrast/Colorblind Color Picker">
+  <meta name="description" content="A visual filter to help pick accessible colors - show WCAG and colorblind perception.">
+  <meta itemprop="image" content="">
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>Testing for color-setting.js</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <!-- <link href=css/colorpicker.css rel=stylesheet> -->
+  <!-- <link href=css/analytics.css rel=stylesheet> -->
+</head>
+<style>
+  .test-case {
+    border: 1px solid rgba(0,0,0,0.5);
+    padding: 10px;
+  }
+  .test-case > span.title {
+    font-style: italic;
+  }
+  .test-case > span.
+  input {
+    width:  10vw;
+    height: 20px;
+  }
+  input.data-type {
+    width: 30px;
+  }
+  .color-swatch {
+    display:  inline-block;
+    position: relative;
+    width:    15px;
+    height:   15px;
+    border:   1.5px solid black;
+    outline:  2.5px solid white;
+    vertical-align: bottom;
+  }
+</style>
+<body>
+ 
+<h1>Testing for color-setting.js</h1>
+
+<div class="test-case">
+  <span class="title input">Input</span>
+  <input class="input" value="rgb(255,0,0)">
+  <input class="data-type" value="rgb">
+  <span class="color-swatch input"></span>
+  <span class="title output"> >>> Output</span>
+  <input class="output">
+  <span class="color-swatch output"></span>
+</div>
+
+
+<script src="js/support/jquery.js"></script>
+<script src="js/set-color.js"></script>
+<!-- <script src="js/colorDataObj.js"></script> -->
+
+<script type="text/javascript">
+  $('.test-case input:first')
+    .on('change', function() { // will only fired upon hitting the enter key
+      var thisInput             = $(this);
+      var thisCase              = thisInput.parents('.test-case');
+      var thisDataType          = $('.data-type').val();
+      var thisInput_swatch      = thisCase.find('.color-swatch.input');
+      var thisOutput            = thisCase.find('input.output');
+      var thisOutput_swatch     = thisCase.find('.color-swatch.output');
+      var thisOutput_cssString  = convertColorFormat(thisInput.val(), thisDataType, 'css');
+
+      setSwatch(thisInput_swatch, thisInput.val());
+      setSwatch(thisOutput_swatch, thisOutput_cssString);
+
+      thisOutput.val(thisOutput_cssString);
+    })
+    .on('keyup', function(event) {
+      if(event.keyCode == 13) { $(this).trigger('change'); }
+    });
+
+  function setSwatch(target, cssColor) {
+    target = $(target);
+    if(cssColor !== false) {
+      target.attr('style', 'border-color: black; background-color: ' + cssColor);
+    }
+    else {
+      target.attr('style', 'border-color: red');
+    }
+    
+  }
+
+
+</script>
+</body>
+</html>

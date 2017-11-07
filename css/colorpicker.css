@@ -312,7 +312,7 @@ body {
 /* START new modal design */
 
 
-#cas_colorpicker.cp_parent-container {
+#chromatic-ally.cp_parent-container {
   display: inline-block;
   position: absolute;
   left: 100px;
@@ -377,7 +377,7 @@ body {
 }
 
 
-#cas_colorpicker-contents.cp_foreground-container {
+#chromatic-ally-contents.cp_foreground-container {
   transition: 1s;
   display: inline-block;
   position: relative;
@@ -1455,6 +1455,15 @@ a#colorblind-settings-filter-button.icon-marker.low-color::before,
   /*pointer-events: none;*/
 }
 
+
+
+
+
+/* HSL Gradient Model  */
+
+.hsl_gradient {
+  background: linear-gradient(to right, hsl(0,100%,50%) 4.2%, hsl(15,100%,50%) 4.2%, hsl(30,100%,50%) 8.3%,  hsl(45,100%,50%) 12.5%,  hsl(60,100%,50%) 16.6%,  hsl(75,100%,50%) 20.8%,  hsl(90,100%,50%) 25%,  hsl(105,100%,50%) 29.2%,  hsl(120,100%,50%) 33.3%,  hsl(135,100%,50%) 37.5%,  hsl(150,100%,50%) 41.7%, hsl(165,100%,50%) 45.8%, hsl(180,100%,50%) 50%, hsl(195,100%,50%) 54.2%, hsl(210,100%,50%) 58.3%, hsl(225,100%,50%) 62.5%, hsl(240,100%,50%) 66.7%, hsl(255,100%,50%) 70.8%, hsl(270,100%,50%) 75%, hsl(285,100%,50%) 79.2%, hsl(300,100%,50%) 83.3%, hsl(315,100%,50%) 87.5%, hsl(330,100%,50%) 91.7%,  hsl(345,100%,50%) 95.8%, hsl(0,100%,50%) 100%);
+}
 
 
 

@@ -717,52 +717,52 @@ function updateColorBlindnessGradient( targetState ) {
     var bgColorblindnessFilterTargets   = $('#cp_background-color-settings .cp_colorblind-split');
 
     fontColorblindnessFilterTargets.eq(0) // red
-        .css('background', '-moz-linear-gradient(left, rgb('                           + red_left_forFont[0] + ',' + red_left_forFont[1] + ',' + red_left_forFont[2] + ') 0%, rgb('                 + red_right_forFont[0]+ ','  + red_right_forFont[1] + ', ' + red_right_forFont[2] + ') 100%)')
-        .css('background', '-webkit-gradient(left top, right top, color-stop(0%, rgb(' + red_left_forFont[0] + ',' + red_left_forFont[1] + ',' + red_left_forFont[2] + ')), color-stop(100%, rgb('  + red_right_forFont[0] + ',' + red_right_forFont[1] + ', ' + red_right_forFont[2] + ')))')
-        .css('background', '-webkit-linear-gradient(left, rgb('                        + red_left_forFont[0] + ',' + red_left_forFont[1] + ',' + red_left_forFont[2] + ') 0%, rgb('                 + red_right_forFont[0] + ',' + red_right_forFont[1] + ', ' + red_right_forFont[2] + ') 100%)')
-        .css('background', '-o-linear-gradient(left, rgb('                             + red_left_forFont[0] + ',' + red_left_forFont[1] + ',' + red_left_forFont[2] + ') 0%, rgb('                 + red_right_forFont[0] + ',' + red_right_forFont[1] + ', ' + red_right_forFont[2] + ') 100%)')
-        .css('background', '-ms-linear-gradient(left, rgb('                            + red_left_forFont[0] + ',' + red_left_forFont[1] + ',' + red_left_forFont[2] + ') 0%, rgb('                 + red_right_forFont[0] + ',' + red_right_forFont[1] + ', ' + red_right_forFont[2] + ') 100%)')
-        .css('background', 'linear-gradient(to right, rgb('                            + red_left_forFont[0] + ',' + red_left_forFont[1] + ',' + red_left_forFont[2] + ') 0%, rgb('                 + red_right_forFont[0] + ',' + red_right_forFont[1] + ', ' + red_right_forFont[2] + ') 100%)');
+        .css('background', '-moz-linear-gradient(left, rgb('                           + red_left_forFont.r + ',' + red_left_forFont.g + ',' + red_left_forFont.b + ') 0%, rgb('                 + red_right_forFont.r+ ','  + red_right_forFont.g + ', ' + red_right_forFont.b + ') 100%)')
+        .css('background', '-webkit-gradient(left top, right top, color-stop(0%, rgb(' + red_left_forFont.r + ',' + red_left_forFont.g + ',' + red_left_forFont.b + ')), color-stop(100%, rgb('  + red_right_forFont.r + ',' + red_right_forFont.g + ', ' + red_right_forFont.b + ')))')
+        .css('background', '-webkit-linear-gradient(left, rgb('                        + red_left_forFont.r + ',' + red_left_forFont.g + ',' + red_left_forFont.b + ') 0%, rgb('                 + red_right_forFont.r + ',' + red_right_forFont.g + ', ' + red_right_forFont.b + ') 100%)')
+        .css('background', '-o-linear-gradient(left, rgb('                             + red_left_forFont.r + ',' + red_left_forFont.g + ',' + red_left_forFont.b + ') 0%, rgb('                 + red_right_forFont.r + ',' + red_right_forFont.g + ', ' + red_right_forFont.b + ') 100%)')
+        .css('background', '-ms-linear-gradient(left, rgb('                            + red_left_forFont.r + ',' + red_left_forFont.g + ',' + red_left_forFont.b + ') 0%, rgb('                 + red_right_forFont.r + ',' + red_right_forFont.g + ', ' + red_right_forFont.b + ') 100%)')
+        .css('background', 'linear-gradient(to right, rgb('                            + red_left_forFont.r + ',' + red_left_forFont.g + ',' + red_left_forFont.b + ') 0%, rgb('                 + red_right_forFont.r + ',' + red_right_forFont.g + ', ' + red_right_forFont.b + ') 100%)');
     
     fontColorblindnessFilterTargets.eq(1) // green
-        .css('background', '-moz-linear-gradient(left, rgb('                           + green_left_forFont[0] + ',' + green_left_forFont[1] + ',' + green_left_forFont[2] + ') 0%, rgb('                 + green_right_forFont[0]+ ','  + green_right_forFont[1] + ', ' + green_right_forFont[2] + ') 100%)')
-        .css('background', '-webkit-gradient(left top, right top, color-stop(0%, rgb(' + green_left_forFont[0] + ',' + green_left_forFont[1] + ',' + green_left_forFont[2] + ')), color-stop(100%, rgb('  + green_right_forFont[0] + ',' + green_right_forFont[1] + ', ' + green_right_forFont[2] + ')))')
-        .css('background', '-webkit-linear-gradient(left, rgb('                        + green_left_forFont[0] + ',' + green_left_forFont[1] + ',' + green_left_forFont[2] + ') 0%, rgb('                 + green_right_forFont[0] + ',' + green_right_forFont[1] + ', ' + green_right_forFont[2] + ') 100%)')
-        .css('background', '-o-linear-gradient(left, rgb('                             + green_left_forFont[0] + ',' + green_left_forFont[1] + ',' + green_left_forFont[2] + ') 0%, rgb('                 + green_right_forFont[0] + ',' + green_right_forFont[1] + ', ' + green_right_forFont[2] + ') 100%)')
-        .css('background', '-ms-linear-gradient(left, rgb('                            + green_left_forFont[0] + ',' + green_left_forFont[1] + ',' + green_left_forFont[2] + ') 0%, rgb('                 + green_right_forFont[0] + ',' + green_right_forFont[1] + ', ' + green_right_forFont[2] + ') 100%)')
-        .css('background', 'linear-gradient(to right, rgb('                            + green_left_forFont[0] + ',' + green_left_forFont[1] + ',' + green_left_forFont[2] + ') 0%, rgb('                 + green_right_forFont[0] + ',' + green_right_forFont[1] + ', ' + green_right_forFont[2] + ') 100%)');
+        .css('background', '-moz-linear-gradient(left, rgb('                           + green_left_forFont.r + ',' + green_left_forFont.g + ',' + green_left_forFont.b + ') 0%, rgb('                 + green_right_forFont.r+ ','  + green_right_forFont.g + ', ' + green_right_forFont.b + ') 100%)')
+        .css('background', '-webkit-gradient(left top, right top, color-stop(0%, rgb(' + green_left_forFont.r + ',' + green_left_forFont.g + ',' + green_left_forFont.b + ')), color-stop(100%, rgb('  + green_right_forFont.r + ',' + green_right_forFont.g + ', ' + green_right_forFont.b + ')))')
+        .css('background', '-webkit-linear-gradient(left, rgb('                        + green_left_forFont.r + ',' + green_left_forFont.g + ',' + green_left_forFont.b + ') 0%, rgb('                 + green_right_forFont.r + ',' + green_right_forFont.g + ', ' + green_right_forFont.b + ') 100%)')
+        .css('background', '-o-linear-gradient(left, rgb('                             + green_left_forFont.r + ',' + green_left_forFont.g + ',' + green_left_forFont.b + ') 0%, rgb('                 + green_right_forFont.r + ',' + green_right_forFont.g + ', ' + green_right_forFont.b + ') 100%)')
+        .css('background', '-ms-linear-gradient(left, rgb('                            + green_left_forFont.r + ',' + green_left_forFont.g + ',' + green_left_forFont.b + ') 0%, rgb('                 + green_right_forFont.r + ',' + green_right_forFont.g + ', ' + green_right_forFont.b + ') 100%)')
+        .css('background', 'linear-gradient(to right, rgb('                            + green_left_forFont.r + ',' + green_left_forFont.g + ',' + green_left_forFont.b + ') 0%, rgb('                 + green_right_forFont.r + ',' + green_right_forFont.g + ', ' + green_right_forFont.b + ') 100%)');
     
     fontColorblindnessFilterTargets.eq(2) // blue
-        .css('background', '-moz-linear-gradient(left, rgb('                           + blue_left_forFont[0] + ',' + blue_left_forFont[1] + ',' + blue_left_forFont[2] + ') 0%, rgb('                 + blue_right_forFont[0]+ ','  + blue_right_forFont[1] + ', ' + blue_right_forFont[2] + ') 100%)')
-        .css('background', '-webkit-gradient(left top, right top, color-stop(0%, rgb(' + blue_left_forFont[0] + ',' + blue_left_forFont[1] + ',' + blue_left_forFont[2] + ')), color-stop(100%, rgb('  + blue_right_forFont[0] + ',' + blue_right_forFont[1] + ', ' + blue_right_forFont[2] + ')))')
-        .css('background', '-webkit-linear-gradient(left, rgb('                        + blue_left_forFont[0] + ',' + blue_left_forFont[1] + ',' + blue_left_forFont[2] + ') 0%, rgb('                 + blue_right_forFont[0] + ',' + blue_right_forFont[1] + ', ' + blue_right_forFont[2] + ') 100%)')
-        .css('background', '-o-linear-gradient(left, rgb('                             + blue_left_forFont[0] + ',' + blue_left_forFont[1] + ',' + blue_left_forFont[2] + ') 0%, rgb('                 + blue_right_forFont[0] + ',' + blue_right_forFont[1] + ', ' + blue_right_forFont[2] + ') 100%)')
-        .css('background', '-ms-linear-gradient(left, rgb('                            + blue_left_forFont[0] + ',' + blue_left_forFont[1] + ',' + blue_left_forFont[2] + ') 0%, rgb('                 + blue_right_forFont[0] + ',' + blue_right_forFont[1] + ', ' + blue_right_forFont[2] + ') 100%)')
-        .css('background', 'linear-gradient(to right, rgb('                            + blue_left_forFont[0] + ',' + blue_left_forFont[1] + ',' + blue_left_forFont[2] + ') 0%, rgb('                 + blue_right_forFont[0] + ',' + blue_right_forFont[1] + ', ' + blue_right_forFont[2] + ') 100%)');
+        .css('background', '-moz-linear-gradient(left, rgb('                           + blue_left_forFont.r + ',' + blue_left_forFont.g + ',' + blue_left_forFont.b + ') 0%, rgb('                 + blue_right_forFont.r+ ','  + blue_right_forFont.g + ', ' + blue_right_forFont.b + ') 100%)')
+        .css('background', '-webkit-gradient(left top, right top, color-stop(0%, rgb(' + blue_left_forFont.r + ',' + blue_left_forFont.g + ',' + blue_left_forFont.b + ')), color-stop(100%, rgb('  + blue_right_forFont.r + ',' + blue_right_forFont.g + ', ' + blue_right_forFont.b + ')))')
+        .css('background', '-webkit-linear-gradient(left, rgb('                        + blue_left_forFont.r + ',' + blue_left_forFont.g + ',' + blue_left_forFont.b + ') 0%, rgb('                 + blue_right_forFont.r + ',' + blue_right_forFont.g + ', ' + blue_right_forFont.b + ') 100%)')
+        .css('background', '-o-linear-gradient(left, rgb('                             + blue_left_forFont.r + ',' + blue_left_forFont.g + ',' + blue_left_forFont.b + ') 0%, rgb('                 + blue_right_forFont.r + ',' + blue_right_forFont.g + ', ' + blue_right_forFont.b + ') 100%)')
+        .css('background', '-ms-linear-gradient(left, rgb('                            + blue_left_forFont.r + ',' + blue_left_forFont.g + ',' + blue_left_forFont.b + ') 0%, rgb('                 + blue_right_forFont.r + ',' + blue_right_forFont.g + ', ' + blue_right_forFont.b + ') 100%)')
+        .css('background', 'linear-gradient(to right, rgb('                            + blue_left_forFont.r + ',' + blue_left_forFont.g + ',' + blue_left_forFont.b + ') 0%, rgb('                 + blue_right_forFont.r + ',' + blue_right_forFont.g + ', ' + blue_right_forFont.b + ') 100%)');
    
     bgColorblindnessFilterTargets.eq(0) // red
-        .css('background', '-moz-linear-gradient(left, rgb('                           + red_left_forBg[0] + ',' + red_left_forBg[1] + ',' + red_left_forBg[2] + ') 0%, rgb('                 + red_right_forBg[0]+ ','  + red_right_forBg[1] + ', ' + red_right_forBg[2] + ') 100%)')
-        .css('background', '-webkit-gradient(left top, right top, color-stop(0%, rgb(' + red_left_forBg[0] + ',' + red_left_forBg[1] + ',' + red_left_forBg[2] + ')), color-stop(100%, rgb('  + red_right_forBg[0] + ',' + red_right_forBg[1] + ', ' + red_right_forBg[2] + ')))')
-        .css('background', '-webkit-linear-gradient(left, rgb('                        + red_left_forBg[0] + ',' + red_left_forBg[1] + ',' + red_left_forBg[2] + ') 0%, rgb('                 + red_right_forBg[0] + ',' + red_right_forBg[1] + ', ' + red_right_forBg[2] + ') 100%)')
-        .css('background', '-o-linear-gradient(left, rgb('                             + red_left_forBg[0] + ',' + red_left_forBg[1] + ',' + red_left_forBg[2] + ') 0%, rgb('                 + red_right_forBg[0] + ',' + red_right_forBg[1] + ', ' + red_right_forBg[2] + ') 100%)')
-        .css('background', '-ms-linear-gradient(left, rgb('                            + red_left_forBg[0] + ',' + red_left_forBg[1] + ',' + red_left_forBg[2] + ') 0%, rgb('                 + red_right_forBg[0] + ',' + red_right_forBg[1] + ', ' + red_right_forBg[2] + ') 100%)')
-        .css('background', 'linear-gradient(to right, rgb('                            + red_left_forBg[0] + ',' + red_left_forBg[1] + ',' + red_left_forBg[2] + ') 0%, rgb('                 + red_right_forBg[0] + ',' + red_right_forBg[1] + ', ' + red_right_forBg[2] + ') 100%)');
+        .css('background', '-moz-linear-gradient(left, rgb('                           + red_left_forBg.r + ',' + red_left_forBg.g + ',' + red_left_forBg.b + ') 0%, rgb('                 + red_right_forBg.r+ ','  + red_right_forBg.g + ', ' + red_right_forBg.b + ') 100%)')
+        .css('background', '-webkit-gradient(left top, right top, color-stop(0%, rgb(' + red_left_forBg.r + ',' + red_left_forBg.g + ',' + red_left_forBg.b + ')), color-stop(100%, rgb('  + red_right_forBg.r + ',' + red_right_forBg.g + ', ' + red_right_forBg.b + ')))')
+        .css('background', '-webkit-linear-gradient(left, rgb('                        + red_left_forBg.r + ',' + red_left_forBg.g + ',' + red_left_forBg.b + ') 0%, rgb('                 + red_right_forBg.r + ',' + red_right_forBg.g + ', ' + red_right_forBg.b + ') 100%)')
+        .css('background', '-o-linear-gradient(left, rgb('                             + red_left_forBg.r + ',' + red_left_forBg.g + ',' + red_left_forBg.b + ') 0%, rgb('                 + red_right_forBg.r + ',' + red_right_forBg.g + ', ' + red_right_forBg.b + ') 100%)')
+        .css('background', '-ms-linear-gradient(left, rgb('                            + red_left_forBg.r + ',' + red_left_forBg.g + ',' + red_left_forBg.b + ') 0%, rgb('                 + red_right_forBg.r + ',' + red_right_forBg.g + ', ' + red_right_forBg.b + ') 100%)')
+        .css('background', 'linear-gradient(to right, rgb('                            + red_left_forBg.r + ',' + red_left_forBg.g + ',' + red_left_forBg.b + ') 0%, rgb('                 + red_right_forBg.r + ',' + red_right_forBg.g + ', ' + red_right_forBg.b + ') 100%)');
     
     bgColorblindnessFilterTargets.eq(1) // green
-        .css('background', '-moz-linear-gradient(left, rgb('                           + green_left_forBg[0] + ',' + green_left_forBg[1] + ',' + green_left_forBg[2] + ') 0%, rgb('                 + green_right_forBg[0]+ ','  + green_right_forBg[1] + ', ' + green_right_forBg[2] + ') 100%)')
-        .css('background', '-webkit-gradient(left top, right top, color-stop(0%, rgb(' + green_left_forBg[0] + ',' + green_left_forBg[1] + ',' + green_left_forBg[2] + ')), color-stop(100%, rgb('  + green_right_forBg[0] + ',' + green_right_forBg[1] + ', ' + green_right_forBg[2] + ')))')
-        .css('background', '-webkit-linear-gradient(left, rgb('                        + green_left_forBg[0] + ',' + green_left_forBg[1] + ',' + green_left_forBg[2] + ') 0%, rgb('                 + green_right_forBg[0] + ',' + green_right_forBg[1] + ', ' + green_right_forBg[2] + ') 100%)')
-        .css('background', '-o-linear-gradient(left, rgb('                             + green_left_forBg[0] + ',' + green_left_forBg[1] + ',' + green_left_forBg[2] + ') 0%, rgb('                 + green_right_forBg[0] + ',' + green_right_forBg[1] + ', ' + green_right_forBg[2] + ') 100%)')
-        .css('background', '-ms-linear-gradient(left, rgb('                            + green_left_forBg[0] + ',' + green_left_forBg[1] + ',' + green_left_forBg[2] + ') 0%, rgb('                 + green_right_forBg[0] + ',' + green_right_forBg[1] + ', ' + green_right_forBg[2] + ') 100%)')
-        .css('background', 'linear-gradient(to right, rgb('                            + green_left_forBg[0] + ',' + green_left_forBg[1] + ',' + green_left_forBg[2] + ') 0%, rgb('                 + green_right_forBg[0] + ',' + green_right_forBg[1] + ', ' + green_right_forBg[2] + ') 100%)');
+        .css('background', '-moz-linear-gradient(left, rgb('                           + green_left_forBg.r + ',' + green_left_forBg.g + ',' + green_left_forBg.b + ') 0%, rgb('                 + green_right_forBg.r+ ','  + green_right_forBg.g + ', ' + green_right_forBg.b + ') 100%)')
+        .css('background', '-webkit-gradient(left top, right top, color-stop(0%, rgb(' + green_left_forBg.r + ',' + green_left_forBg.g + ',' + green_left_forBg.b + ')), color-stop(100%, rgb('  + green_right_forBg.r + ',' + green_right_forBg.g + ', ' + green_right_forBg.b + ')))')
+        .css('background', '-webkit-linear-gradient(left, rgb('                        + green_left_forBg.r + ',' + green_left_forBg.g + ',' + green_left_forBg.b + ') 0%, rgb('                 + green_right_forBg.r + ',' + green_right_forBg.g + ', ' + green_right_forBg.b + ') 100%)')
+        .css('background', '-o-linear-gradient(left, rgb('                             + green_left_forBg.r + ',' + green_left_forBg.g + ',' + green_left_forBg.b + ') 0%, rgb('                 + green_right_forBg.r + ',' + green_right_forBg.g + ', ' + green_right_forBg.b + ') 100%)')
+        .css('background', '-ms-linear-gradient(left, rgb('                            + green_left_forBg.r + ',' + green_left_forBg.g + ',' + green_left_forBg.b + ') 0%, rgb('                 + green_right_forBg.r + ',' + green_right_forBg.g + ', ' + green_right_forBg.b + ') 100%)')
+        .css('background', 'linear-gradient(to right, rgb('                            + green_left_forBg.r + ',' + green_left_forBg.g + ',' + green_left_forBg.b + ') 0%, rgb('                 + green_right_forBg.r + ',' + green_right_forBg.g + ', ' + green_right_forBg.b + ') 100%)');
     
     bgColorblindnessFilterTargets.eq(2) // blue
-        .css('background', '-moz-linear-gradient(left, rgb('                           + blue_left_forBg[0] + ',' + blue_left_forBg[1] + ',' + blue_left_forBg[2] + ') 0%, rgb('                 + blue_right_forBg[0]+ ','  + blue_right_forBg[1] + ', ' + blue_right_forBg[2] + ') 100%)')
-        .css('background', '-webkit-gradient(left top, right top, color-stop(0%, rgb(' + blue_left_forBg[0] + ',' + blue_left_forBg[1] + ',' + blue_left_forBg[2] + ')), color-stop(100%, rgb('  + blue_right_forBg[0] + ',' + blue_right_forBg[1] + ', ' + blue_right_forBg[2] + ')))')
-        .css('background', '-webkit-linear-gradient(left, rgb('                        + blue_left_forBg[0] + ',' + blue_left_forBg[1] + ',' + blue_left_forBg[2] + ') 0%, rgb('                 + blue_right_forBg[0] + ',' + blue_right_forBg[1] + ', ' + blue_right_forBg[2] + ') 100%)')
-        .css('background', '-o-linear-gradient(left, rgb('                             + blue_left_forBg[0] + ',' + blue_left_forBg[1] + ',' + blue_left_forBg[2] + ') 0%, rgb('                 + blue_right_forBg[0] + ',' + blue_right_forBg[1] + ', ' + blue_right_forBg[2] + ') 100%)')
-        .css('background', '-ms-linear-gradient(left, rgb('                            + blue_left_forBg[0] + ',' + blue_left_forBg[1] + ',' + blue_left_forBg[2] + ') 0%, rgb('                 + blue_right_forBg[0] + ',' + blue_right_forBg[1] + ', ' + blue_right_forBg[2] + ') 100%)')
-        .css('background', 'linear-gradient(to right, rgb('                            + blue_left_forBg[0] + ',' + blue_left_forBg[1] + ',' + blue_left_forBg[2] + ') 0%, rgb('                 + blue_right_forBg[0] + ',' + blue_right_forBg[1] + ', ' + blue_right_forBg[2] + ') 100%)');
+        .css('background', '-moz-linear-gradient(left, rgb('                           + blue_left_forBg.r + ',' + blue_left_forBg.g + ',' + blue_left_forBg.b + ') 0%, rgb('                 + blue_right_forBg.r+ ','  + blue_right_forBg.g + ', ' + blue_right_forBg.b + ') 100%)')
+        .css('background', '-webkit-gradient(left top, right top, color-stop(0%, rgb(' + blue_left_forBg.r + ',' + blue_left_forBg.g + ',' + blue_left_forBg.b + ')), color-stop(100%, rgb('  + blue_right_forBg.r + ',' + blue_right_forBg.g + ', ' + blue_right_forBg.b + ')))')
+        .css('background', '-webkit-linear-gradient(left, rgb('                        + blue_left_forBg.r + ',' + blue_left_forBg.g + ',' + blue_left_forBg.b + ') 0%, rgb('                 + blue_right_forBg.r + ',' + blue_right_forBg.g + ', ' + blue_right_forBg.b + ') 100%)')
+        .css('background', '-o-linear-gradient(left, rgb('                             + blue_left_forBg.r + ',' + blue_left_forBg.g + ',' + blue_left_forBg.b + ') 0%, rgb('                 + blue_right_forBg.r + ',' + blue_right_forBg.g + ', ' + blue_right_forBg.b + ') 100%)')
+        .css('background', '-ms-linear-gradient(left, rgb('                            + blue_left_forBg.r + ',' + blue_left_forBg.g + ',' + blue_left_forBg.b + ') 0%, rgb('                 + blue_right_forBg.r + ',' + blue_right_forBg.g + ', ' + blue_right_forBg.b + ') 100%)')
+        .css('background', 'linear-gradient(to right, rgb('                            + blue_left_forBg.r + ',' + blue_left_forBg.g + ',' + blue_left_forBg.b + ') 0%, rgb('                 + blue_right_forBg.r + ',' + blue_right_forBg.g + ', ' + blue_right_forBg.b + ') 100%)');
     
     fontColorblindnessFilterTargets.removeClass('hide');
     bgColorblindnessFilterTargets.removeClass('hide');
@@ -964,50 +964,50 @@ function buildColorDataObject( fontInRGBA, bgInRGB, fontColorInHex, bgColorInHex
   colorDataObj.brighterColorIs          = defineBrighterLuminance(fontLuminance, bgLuminance);
   colorDataObj.noRedRGB_font            = cbTranslate(colorDataObj.fontColorSansAlpha.r,colorDataObj.fontColorSansAlpha.g,colorDataObj.fontColorSansAlpha.b, 'red', 'no');
   colorDataObj.noRedRGB_bg              = cbTranslate(colorDataObj.bgColors.r,colorDataObj.bgColors.g,colorDataObj.bgColors.b, 'red', 'no');
-  colorDataObj.noRedRGB_fontLuminance   = calcLuminance(colorDataObj.noRedRGB_font[0], colorDataObj.noRedRGB_font[1], colorDataObj.noRedRGB_font[2]);
-  colorDataObj.noRedRGB_bgLuminance     = calcLuminance(colorDataObj.noRedRGB_bg[0], colorDataObj.noRedRGB_bg[1], colorDataObj.noRedRGB_bg[2]);
+  colorDataObj.noRedRGB_fontLuminance   = calcLuminance(colorDataObj.noRedRGB_font.r, colorDataObj.noRedRGB_font.g, colorDataObj.noRedRGB_font.b);
+  colorDataObj.noRedRGB_bgLuminance     = calcLuminance(colorDataObj.noRedRGB_bg.r, colorDataObj.noRedRGB_bg.g, colorDataObj.noRedRGB_bg.b);
   colorDataObj.noRed_brighterColorIs    = defineBrighterLuminance(colorDataObj.noRedRGB_fontLuminance, colorDataObj.noRedRGB_bgLuminance);
 
   colorDataObj.lowRedRGB_font           = cbTranslate(colorDataObj.fontColorSansAlpha.r,colorDataObj.fontColorSansAlpha.g,colorDataObj.fontColorSansAlpha.b, 'red', 'low');
   colorDataObj.lowRedRGB_bg             = cbTranslate(colorDataObj.bgColors.r,colorDataObj.bgColors.g,colorDataObj.bgColors.b, 'red', 'low');
-  colorDataObj.lowRedRGB_fontLuminance  = calcLuminance(colorDataObj.lowRedRGB_font[0], colorDataObj.lowRedRGB_font[1], colorDataObj.lowRedRGB_font[2]);
-  colorDataObj.lowRedRGB_bgLuminance    = calcLuminance(colorDataObj.lowRedRGB_bg[0], colorDataObj.lowRedRGB_bg[1], colorDataObj.lowRedRGB_bg[2]);
+  colorDataObj.lowRedRGB_fontLuminance  = calcLuminance(colorDataObj.lowRedRGB_font.r, colorDataObj.lowRedRGB_font.g, colorDataObj.lowRedRGB_font.b);
+  colorDataObj.lowRedRGB_bgLuminance    = calcLuminance(colorDataObj.lowRedRGB_bg.r, colorDataObj.lowRedRGB_bg.g, colorDataObj.lowRedRGB_bg.b);
   colorDataObj.lowRed_brighterColorIs   = defineBrighterLuminance(colorDataObj.lowRedRGB_fontLuminance, colorDataObj.lowRedRGB_bgLuminance);
 
   colorDataObj.noGreenRGB_font          = cbTranslate(colorDataObj.fontColorSansAlpha.r,colorDataObj.fontColorSansAlpha.g,colorDataObj.fontColorSansAlpha.b, 'green', 'no');
   colorDataObj.noGreenRGB_bg            = cbTranslate(colorDataObj.bgColors.r,colorDataObj.bgColors.g,colorDataObj.bgColors.b, 'green', 'no');
-  colorDataObj.noGreenRGB_fontLuminance = calcLuminance(colorDataObj.noGreenRGB_font[0], colorDataObj.noGreenRGB_font[1], colorDataObj.noGreenRGB_font[2]);
-  colorDataObj.noGreenRGB_bgLuminance   = calcLuminance(colorDataObj.noGreenRGB_bg[0], colorDataObj.noGreenRGB_bg[1], colorDataObj.noGreenRGB_bg[2]);
+  colorDataObj.noGreenRGB_fontLuminance = calcLuminance(colorDataObj.noGreenRGB_font.r, colorDataObj.noGreenRGB_font.g, colorDataObj.noGreenRGB_font.b);
+  colorDataObj.noGreenRGB_bgLuminance   = calcLuminance(colorDataObj.noGreenRGB_bg.r, colorDataObj.noGreenRGB_bg.g, colorDataObj.noGreenRGB_bg.b);
   colorDataObj.noGreen_brighterColorIs  = defineBrighterLuminance(colorDataObj.noGreenRGB_fontLuminance, colorDataObj.noGreenRGB_bgLuminance);
 
   colorDataObj.lowGreenRGB_font         = cbTranslate(colorDataObj.fontColorSansAlpha.r,colorDataObj.fontColorSansAlpha.g,colorDataObj.fontColorSansAlpha.b, 'green', 'low');
   colorDataObj.lowGreenRGB_bg           = cbTranslate(colorDataObj.bgColors.r,colorDataObj.bgColors.g,colorDataObj.bgColors.b, 'green', 'low');
-  colorDataObj.lowGreenRGB_fontLuminance= calcLuminance(colorDataObj.lowGreenRGB_font[0], colorDataObj.lowGreenRGB_font[1], colorDataObj.lowGreenRGB_font[2]);
-  colorDataObj.lowGreenRGB_bgLuminance  = calcLuminance(colorDataObj.lowGreenRGB_bg[0], colorDataObj.lowGreenRGB_bg[1], colorDataObj.lowGreenRGB_bg[2]);
+  colorDataObj.lowGreenRGB_fontLuminance= calcLuminance(colorDataObj.lowGreenRGB_font.r, colorDataObj.lowGreenRGB_font.g, colorDataObj.lowGreenRGB_font.b);
+  colorDataObj.lowGreenRGB_bgLuminance  = calcLuminance(colorDataObj.lowGreenRGB_bg.r, colorDataObj.lowGreenRGB_bg.g, colorDataObj.lowGreenRGB_bg.b);
   colorDataObj.lowGreen_brighterColorIs = defineBrighterLuminance(colorDataObj.lowGreenRGB_fontLuminance, colorDataObj.lowGreenRGB_bgLuminance);
 
   colorDataObj.noBlueRGB_font           = cbTranslate(colorDataObj.fontColorSansAlpha.r,colorDataObj.fontColorSansAlpha.g,colorDataObj.fontColorSansAlpha.b, 'blue', 'no');
   colorDataObj.noBlueRGB_bg             = cbTranslate(colorDataObj.bgColors.r,colorDataObj.bgColors.g,colorDataObj.bgColors.b, 'blue', 'no');
-  colorDataObj.noBlueRGB_fontLuminance  = calcLuminance(colorDataObj.noBlueRGB_font[0], colorDataObj.noBlueRGB_font[1], colorDataObj.noBlueRGB_font[2]);
-  colorDataObj.noBlueRGB_bgLuminance    = calcLuminance(colorDataObj.noBlueRGB_bg[0], colorDataObj.noBlueRGB_bg[1], colorDataObj.noBlueRGB_bg[2]);
+  colorDataObj.noBlueRGB_fontLuminance  = calcLuminance(colorDataObj.noBlueRGB_font.r, colorDataObj.noBlueRGB_font.g, colorDataObj.noBlueRGB_font.b);
+  colorDataObj.noBlueRGB_bgLuminance    = calcLuminance(colorDataObj.noBlueRGB_bg.r, colorDataObj.noBlueRGB_bg.g, colorDataObj.noBlueRGB_bg.b);
   colorDataObj.noBlue_brighterColorIs   = defineBrighterLuminance(colorDataObj.noBlueRGB_fontLuminance, colorDataObj.noBlueRGB_bgLuminance);
 
   colorDataObj.lowBlueRGB_font          = cbTranslate(colorDataObj.fontColorSansAlpha.r,colorDataObj.fontColorSansAlpha.g,colorDataObj.fontColorSansAlpha.b, 'blue', 'low');
   colorDataObj.lowBlueRGB_bg            = cbTranslate(colorDataObj.bgColors.r,colorDataObj.bgColors.g,colorDataObj.bgColors.b, 'blue', 'low');
-  colorDataObj.lowBlueRGB_fontLuminance = calcLuminance(colorDataObj.lowBlueRGB_font[0], colorDataObj.lowBlueRGB_font[1], colorDataObj.lowBlueRGB_font[2]);
-  colorDataObj.lowBlueRGB_bgLuminance   = calcLuminance(colorDataObj.lowBlueRGB_bg[0], colorDataObj.lowBlueRGB_bg[1], colorDataObj.lowBlueRGB_bg[2]);
+  colorDataObj.lowBlueRGB_fontLuminance = calcLuminance(colorDataObj.lowBlueRGB_font.r, colorDataObj.lowBlueRGB_font.g, colorDataObj.lowBlueRGB_font.b);
+  colorDataObj.lowBlueRGB_bgLuminance   = calcLuminance(colorDataObj.lowBlueRGB_bg.r, colorDataObj.lowBlueRGB_bg.g, colorDataObj.lowBlueRGB_bg.b);
   colorDataObj.lowBlue_brighterColorIs  = defineBrighterLuminance(colorDataObj.lowBlueRGB_fontLuminance, colorDataObj.lowBlueRGB_bgLuminance);
 
   colorDataObj.noColorRGB_font          = cbTranslate(colorDataObj.fontColorSansAlpha.r,colorDataObj.fontColorSansAlpha.g,colorDataObj.fontColorSansAlpha.b, 'gray', 'no');
   colorDataObj.noColorRGB_bg            = cbTranslate(colorDataObj.bgColors.r,colorDataObj.bgColors.g,colorDataObj.bgColors.b, 'gray', 'no');
-  colorDataObj.noColorRGB_fontLuminance = calcLuminance(colorDataObj.noColorRGB_font[0], colorDataObj.noColorRGB_font[1], colorDataObj.noColorRGB_font[2]);
-  colorDataObj.noColorRGB_bgLuminance   = calcLuminance(colorDataObj.noColorRGB_bg[0], colorDataObj.noColorRGB_bg[1], colorDataObj.noColorRGB_bg[2]);
+  colorDataObj.noColorRGB_fontLuminance = calcLuminance(colorDataObj.noColorRGB_font.r, colorDataObj.noColorRGB_font.g, colorDataObj.noColorRGB_font.b);
+  colorDataObj.noColorRGB_bgLuminance   = calcLuminance(colorDataObj.noColorRGB_bg.r, colorDataObj.noColorRGB_bg.g, colorDataObj.noColorRGB_bg.b);
   colorDataObj.noColor_brighterColorIs  = defineBrighterLuminance(colorDataObj.noColorRGB_fontLuminance, colorDataObj.noColorRGB_bgLuminance);
 
   colorDataObj.lowColorRGB_font         = cbTranslate(colorDataObj.fontColorSansAlpha.r,colorDataObj.fontColorSansAlpha.g,colorDataObj.fontColorSansAlpha.b, 'gray', 'low');
   colorDataObj.lowColorRGB_bg           = cbTranslate(colorDataObj.bgColors.r,colorDataObj.bgColors.g,colorDataObj.bgColors.b, 'gray', 'low');
-  colorDataObj.lowColorRGB_fontLuminance= calcLuminance(colorDataObj.lowColorRGB_font[0], colorDataObj.lowColorRGB_font[1], colorDataObj.lowColorRGB_font[2]);
-  colorDataObj.lowColorRGB_bgLuminance  = calcLuminance(colorDataObj.lowColorRGB_bg[0], colorDataObj.lowColorRGB_bg[1], colorDataObj.lowColorRGB_bg[2]);
+  colorDataObj.lowColorRGB_fontLuminance= calcLuminance(colorDataObj.lowColorRGB_font.r, colorDataObj.lowColorRGB_font.g, colorDataObj.lowColorRGB_font.b);
+  colorDataObj.lowColorRGB_bgLuminance  = calcLuminance(colorDataObj.lowColorRGB_bg.r, colorDataObj.lowColorRGB_bg.g, colorDataObj.lowColorRGB_bg.b);
   colorDataObj.lowColor_brighterColorIs = defineBrighterLuminance(colorDataObj.lowColorRGB_fontLuminance, colorDataObj.lowColorRGB_bgLuminance);
 // END set values for different forms of colorblindness
 

@@ -1,0 +1,153 @@
+/*swatch-ui.css*/
+
+body {
+  font-family: 'Avenir-Medium';
+}
+
+#swatch-container {
+  padding-top: 10px;
+  padding-left: 10px;
+}
+
+#swatch-container h3 {
+  font-size: 10px;
+  display: inline;
+  position: absolute;
+}
+
+#bg-swatch-container h3 {
+  margin-top: -15px;
+  margin-left: 10px;
+}
+
+#fg-swatch-container h3 {
+  margin-top: 105px;
+  margin-left: 40px;
+
+}
+
+#fg-sans-alpha-display h3.swatch.fg-sans-alpha {
+  z-index: 2;
+  font-size: 11.5px;
+  text-align: center;
+  margin-left: -16px;
+  margin-top: 80px;
+}
+#fg-sans-alpha-display h3.swatch.fg-sans-alpha::after {
+  content: '';
+  background: url(../media/checkerboard-pattern.png);
+  opacity: 0.1;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  position: absolute;
+  z-index: -1; 
+  border-radius: inherit;  
+}
+#fg-sans-alpha-display h3.swatch.fg-sans-alpha::before {
+  display: inline-block;
+  position: absolute;
+  content: '';
+  width: 0;
+  height: 0;
+  border-top: 4px solid transparent;
+  border-bottom: 4px solid transparent;
+  border-right: 4px solid black;
+  transform: rotate(135deg);
+  margin-top: -8px;
+  margin-left: 37px;
+}
+
+.swatch {
+  display: block;
+  position: absolute;
+  width:    70px;
+  height:   70px;
+  border:   1.5px solid black;
+  border-radius: 8px;
+  background: transparent;  
+  outline: none;
+}
+
+.swatch:focus,
+.swatch:hover {
+  box-shadow: 2px 2px 2px rgba(0,0,0,0.5);
+}
+
+#bg-swatch-container .swatch {
+  background: white;
+}
+
+
+.swatch.fg-sans-alpha,
+#fg-swatch-container .swatch {
+  margin-left: 32px;
+  margin-top: 32px;
+}
+
+.swatch.fg-sans-alpha {
+  transition: 0.35s;
+  transition-delay: 0.5s;
+  width: 38px;
+  height: 38px;
+  border-radius: 8px 0px 8px 0px;
+  z-index: 1;
+}
+
+:not(h3).swatch.fg-sans-alpha:focus,
+:not(h3).swatch.fg-sans-alpha:hover {
+  margin-left:  25px !important;
+  margin-top:   25px !important;
+  width:        50px !important;
+  height:       50px !important;
+  border-radius: 8px !important;
+}
+
+.swatch.trans-bg {
+  background-image: url('../media/checkerboard-pattern.png');
+  z-index: -1;
+}
+
+.switch-swatch-button {
+  position: absolute;
+  border-radius: 0px 0px 0px 5px;
+  border: 0px solid rgb(100,100,100);
+  border-width: 0px 0px 2px 2px;
+  width: 10px;
+  height: 10px;
+  top: 75px;
+  left: 23px;
+}
+
+.switch-swatch-button:focus,
+.switch-swatch-button:hover {
+  border-color: black;
+}
+.switch-swatch-button:focus::before,
+.switch-swatch-button:focus::after,
+.switch-swatch-button:hover::before,
+.switch-swatch-button:hover::after {
+  border-right-color: black;
+}
+
+.switch-swatch-button::before,
+.switch-swatch-button::after {
+  display: inline-block;
+  position: absolute;
+  content: '';
+  width: 0;
+  height: 0;
+  border-top: 5px solid transparent;
+  border-bottom: 5px solid transparent;
+  border-right: 5px solid rgb(100,100,100);
+  transform: rotate(180deg);
+  margin-top: 6px;
+  margin-left: 6px;
+}
+
+.switch-swatch-button::after {
+  transform: rotate(90deg);
+  margin-top:   -5px;
+  margin-left:  -3px;
+}
