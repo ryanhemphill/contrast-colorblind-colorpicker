@@ -52,14 +52,15 @@
         <div class="cp_settings-menu_NEW">
           <div class="cp_settings_border-top_NEW"></div>
           <div class="cp_settings-menu_active-tool-title_NEW">
-            <span id="cp_tool-menu" class="btn-group" tabindex="0">
-              <button type="button" class="btn btn-default dropdown-toggle btn-hide-styles" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            <!-- <span id="cp_tool-menu" class="btn-group" tabindex="0"> -->
+            <span id="cp_tool-menu" class="btn-group">
+              <span type="button" class="btn btn-default dropdown-toggle btn-hide-styles" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                 <a id="cp_settings-button" href="javascript:void(0);">
                   <span class="fa fa-universal-access fa-lg"></span>
                   Accessibility Tools...
                   <span class="cp_caret-right hide"></span>
                 </a>
-              </button>
+              </span>
               <ul class="dropdown-menu">
                 <li><a href="javascript:void(0);" class="off"><span class="fa fa-close"> </span> No Tools (Off)</a></li>
                 <li><a href="javascript:void(0);" class="contrast"><span class="fa fa-adjust"> </span> Use Contrast Analysis Tools (WCAG 2.0)</a></li>
@@ -73,9 +74,9 @@
           <div id="cp_settings-active-tool" class="cp_settings-menu_active-tool-container_NEW hide">
             <div id="contrast-settings-container" class="settings-group-container hide">
               <div id="cp_contrast-range-filter-button-group" class="btn-group">
-                <button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <span type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                   <a id="cp_range-filter-button" data-filter-state="off" href="javascript:void(0);"><span class="fa fa-adjust"></span> Contrast Range Filter <span class="caret"></span></a>
-                </button>
+                </span>
                 <ul class="dropdown-menu">
                   <li><a href="javascript:void(0);" class="selected off"><span class="fa fa-circle-o"></span> None (Off)</a></li>
                   <li><a href="javascript:void(0);" class="aa_large"><span class="fa fa-circle-o"></span> Apply AA/Large Text (3 to 1) Filter</a></li>
@@ -96,9 +97,9 @@
 
             <div id="colorblindness-settings-container" class="settings-group-container hide">
               <div id="cp_colorblindness-filter-button-group" class="btn-group">
-                <button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <span type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                   <a id="cp_colorblindness-filter-button" data-filter-state="normal" href="javascript:void(0);"><span class="fa fa-low-vision"></span> Colorblindness Filters <span class="caret"></span></a>
-                </button>
+                </span>
                 <ul class="dropdown-menu">
                   <li><a href="javascript:void(0);" class="selected off"><span class="fa fa-circle-o"></span> Normal (Off)</a></li>
                   <li><a href="javascript:void(0);" class="protanopia"><span class="fa fa-circle-o"></span> Protanopia (No Red)</a></li>
